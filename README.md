@@ -3,14 +3,14 @@ Aplikacja sieciowa kierowana do kadry dydaktycznej, pracowników Uczelni i stude
 
 ### Przydatne komendy
 Uruchomienie wszystkiego: 
-```
+````
     docker-compose up
-```
+````
 Zrzut bazy danych:
-```
+````
     ./dump.sh
-```
+````
 Przywrócenie bazy danych:
-```
+````
     ./restore.sh
-```
+````
