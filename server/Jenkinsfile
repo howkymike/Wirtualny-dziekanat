@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+    
+    environment {
+        EMAIL_RECIPIENTS = 'mike@agh.edu.pl'
+    }
+
+    //triggers {
+        //cron('H */8 * * *')
+        //pollSCM('* * * * *')
+    //}
+
+    stages {
+        stage('Build & Unit test backend') {
+            steps {
+                dir("server") {
+                    sh './gradlew clean test --no-daemon'
+                }
+            }
+        }
+        // TODO SONAR integration
+        // TODO run with Docker
+        // TOOD frontend
+    }
+    post {
+        always {
+            deleteDir()
+        }
+//        success {
+//            sendEmail("Successful");
+//        }
+//        unstable {
+//            sendEmail("Unstable");
+//        }
+//        failure {
+//            sendEmail("Failed");
+//        }
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+}
+
+def sendEmail(status) {
+    mail(
+            to: "$EMAIL_RECIPIENTS",
+            subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
+            body: "Ilosc zmian:\n " + entries.length + "\n\n Logi z konsoli at: $BUILD_URL/console" + "\n")
+}
