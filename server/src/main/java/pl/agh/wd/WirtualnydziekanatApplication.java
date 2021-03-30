@@ -1,4 +1,4 @@
-package com.wirtualnidziekani.wirtualnydziekanat;
+package pl.agh.wd;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+
 public class WirtualnydziekanatApplication {
 
 	public static void main(String[] args) {
