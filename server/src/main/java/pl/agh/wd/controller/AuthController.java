@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.agh.wd.payload.request.LoginRequest;
@@ -21,6 +22,7 @@ import pl.agh.wd.repository.UserRepository;
 import pl.agh.wd.service.UserDetailsImpl;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private static final String[] REGISTER_PRIVILEGE_ROLES = {"ROLE_ADMIN"};
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -75,7 +79,17 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
 
-        // TODO: only ADMIN should create accounts
+        boolean privUser = false;
+        Object currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(currentPrincipal instanceof UserDetailsImpl) {
+            UserDetails userDetails = (UserDetails) currentPrincipal;
+            privUser = userDetails.getAuthorities().stream()
+                    .anyMatch(r -> Arrays.asList(REGISTER_PRIVILEGE_ROLES).contains(r.getAuthority()));
+        }
+        if(!privUser)
+            return ResponseEntity.
+                    badRequest().
+                    body(new MessageResponse("Error: You do not have power to create people!"));
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
