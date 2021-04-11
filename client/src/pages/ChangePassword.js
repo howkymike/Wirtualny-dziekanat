@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 
 import styled from "styled-components";
 import {Alert, Button, Form, FormGroup, Input} from "reactstrap";
@@ -33,9 +33,11 @@ const ChangePassword = props => {
     const {fetchApi} = useContext(userContext);
 
     const handleSendPassword = async () => {
-        if(!newPassword.length){
+        if(error) return;
+
+        if(!newPassword || !repeatPassword){
             setError(true);
-            setMessage("Zaleca sie wprowadzic haslo xd");
+            setMessage(newPassword ? "Proszę powtorzyć hasło." : "Proszę wprowadzić hasło.");
             return;
         }
 
@@ -48,40 +50,37 @@ const ChangePassword = props => {
         setMessage(result.message);
     };
 
-    const verifyPassword = (value, passwd) => {
-        if(value && passwd && passwd !== value ) {
+    useEffect(() => {
+        if(newPassword && newPassword.length < 5){
             setError(true);
-            setMessage("Hasla musza byc takie same.");
-        }else{
+            setMessage("Hasło powinno zawierać przynajmniej 5 znaków.");
+        }else if(newPassword && repeatPassword && newPassword !== repeatPassword ) {
+            setError(true);
+            setMessage("Hasła muszą być takie same.");
+        }else {
             setError(false);
             setMessage("");
         }
-    };
+    }, [newPassword, repeatPassword]);
 
     return(
         <Box>
             <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
-                <h4>Zmien haslo</h4>
+                <h4>Zmien hasło</h4>
                 <hr/>
-                <p >Wprowadź nowe haslo.</p>
+                <p >Wprowadź nowe hasło.</p>
                 <hr/>
                 <FormGroup>
-                    <Input  type="password" placeholder="Nowe haslo" name="password" value={newPassword}
-                            onChange={ e => {
-                                setNewPassword(e.target.value);
-                                verifyPassword(e.target.value, repeatPassword);
-                            }}/>
+                    <Input  type="password" placeholder="Nowe hasło" name="password" value={newPassword}
+                            onChange={ e => setNewPassword(e.target.value)}/>
                 </FormGroup>
                 <FormGroup>
-                    <Input  type="password" placeholder="Wpisz ponowie haslo" name="repeatPassword" value={repeatPassword}
-                            onChange={ e => {
-                                setRepeatPassword(e.target.value);
-                                verifyPassword(e.target.value, newPassword);
-                            }}/>
+                    <Input  type="password" placeholder="Wpisz ponownie hasło" name="repeatPassword" value={repeatPassword}
+                            onChange={ e => setRepeatPassword(e.target.value)}/>
                 </FormGroup>
                 <LinkWrapper><Link to="/login">Powrót do logowania</Link></LinkWrapper>
                 <FormGroup>
-                    <Button block color="primary">Zmien</Button>
+                    <Button block color="primary">Zmień</Button>
                 </FormGroup>
                 <FormGroup>
                     {

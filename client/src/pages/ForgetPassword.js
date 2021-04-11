@@ -33,7 +33,7 @@ const ForgetPassword = props => {
     const handleSendUsername = async () => {
         if(!username.length){
             setError(true);
-            setMessage("Prosze podac swój login");
+            setMessage("Proszę podać swój login");
             return
         }
 
