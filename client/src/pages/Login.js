@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Input, Alert } from 'reactstrap';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 
 import { userContext } from '../context/userContext';
@@ -8,11 +8,17 @@ import { userContext } from '../context/userContext';
 const LoginBox = styled.div` 
     width: 30em;
     padding: 1em;
-    background: #1D4350; 
-    background: -webkit-linear-gradient(to bottom, #A43931, #1D4350);  
-    background: linear-gradient(to bottom, #A43931, #1D4350); 
+    border-radius: 10px;
+    background-color: #F5F3F5;
+    color: #303030;
     margin: auto;
     text-align: center;
+`;
+
+const ForgotPassword = styled.div`
+    width: 100%;  
+    padding: 10px;
+    text-align: left;
 `;
 
 const Login = props => {
@@ -50,11 +56,13 @@ const Login = props => {
                 <FormGroup>
                     <Input type="password" placeholder="Hasło" value={password} onChange={ e => setPassword(e.target.value) } />
                 </FormGroup>
+
+                <ForgotPassword><Link to={"forgetPassword"}>Zapomiałem hasła</Link></ForgotPassword>
                 <FormGroup>
-                    <Button block>Zaloguj</Button>
+                    <Button block color="primary">Zaloguj</Button>
                 </FormGroup>
                 <FormGroup>
-                    { error !== "" && 
+                    { error !== "" &&
                         <Alert color="danger" fade={false}>
                             {error}
                         </Alert>

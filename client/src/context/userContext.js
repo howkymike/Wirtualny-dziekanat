@@ -57,7 +57,7 @@ const UserProvider = ({children}) => {
     }
 
     const fetchApi = async (/** @type {RequestInfo} */ address, /** @type {RequestInit | undefined} */ init) => {
-        const result = await fetch(address, {
+        const result = await fetch(api + address, {
             headers: {
                 'Content-Type': "application/json",
                 'Authorization': "Bearer " + token,
@@ -66,7 +66,7 @@ const UserProvider = ({children}) => {
             ...init
         });
 
-        return await result.json();
+        return [await result.json(), result.ok];
     }
 
     const logout = () => {
