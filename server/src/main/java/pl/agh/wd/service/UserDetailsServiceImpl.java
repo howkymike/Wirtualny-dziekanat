@@ -54,6 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getIsNew(),
                 authorities);
     }
 

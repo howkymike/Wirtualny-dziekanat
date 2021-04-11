@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import FirstTime from './pages/FirstTime';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -55,6 +56,9 @@ function App() {
                                 </Route>
                                 <Route path="/changePassword/:token">
                                     <ChangePassword/>
+                                </Route>
+                                <Route path="/firsttime/:token">
+                                    <FirstTime />
                                 </Route>
                             </Switch>
                         </Main>

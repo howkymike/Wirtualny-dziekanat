@@ -9,24 +9,34 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import pl.agh.wd.payload.request.FirstTimeRequest;
 import pl.agh.wd.payload.request.LoginRequest;
 import pl.agh.wd.payload.request.RegisterRequest;
+import pl.agh.wd.payload.response.FirstTimeResponse;
 import pl.agh.wd.payload.response.JwtResponse;
 import pl.agh.wd.payload.response.MessageResponse;
+import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.jwt.JwtUtils;
+import pl.agh.wd.model.FirstTimeToken;
 import pl.agh.wd.model.Role;
 import pl.agh.wd.model.RoleEnum;
 import pl.agh.wd.model.User;
 import pl.agh.wd.repository.RoleRepository;
 import pl.agh.wd.repository.UserRepository;
+import pl.agh.wd.repository.FirstTimeTokenRepository;
 import pl.agh.wd.service.UserDetailsImpl;
+import pl.agh.wd.service.FirstTimeTokenService;
 
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.UUID;
+
 
 /**
  * Responsible for handling login and register calls
@@ -50,6 +60,12 @@ public class AuthController {
     RoleRepository roleRepository;
 
     @Autowired
+    private FirstTimeTokenService tokenService;
+
+    @Autowired
+    FirstTimeTokenRepository tokenRepository;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
@@ -69,11 +85,51 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        if(!userDetails.isNew()) {
+            return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles
+            ));
+        } else {
+            Optional<User> userOptional = userRepository.findById(userDetails.getId());
+
+            if(userOptional.isPresent()) {
+                FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), userOptional.get());
+
+                tokenRepository.save(token);
+
+                return ResponseEntity.ok(new FirstTimeResponse(
+                    token.getToken()
+                ));
+            } else 
+                return ResponseEntity.ok(new SuccessResponse(false, "kek"));
+          
+        }
+    }
+
+    @PostMapping("/firsttime")
+    public ResponseEntity<?> firstTime(@Valid @RequestBody FirstTimeRequest request) {
+        Optional<User> user = tokenService.getUserByToken(request.getToken());
+        
+        if(!user.isPresent()) {
+            return ResponseEntity.ok(new SuccessResponse(false, "Wrong link"));
+        }
+
+        if(!request.getPassword().equals(request.getPassword2())) {
+            return ResponseEntity.ok(new SuccessResponse(false, "Passwords are diffrent"));
+        }
+        
+
+        User usr = user.get();
+
+        usr.setPassword(encoder.encode(request.getPassword()));
+        usr.setIsNew(false);
+
+        userRepository.save(usr);
+
+        return ResponseEntity.ok(new SuccessResponse(true, "Password changed"));
     }
 
     @PostMapping("/register")

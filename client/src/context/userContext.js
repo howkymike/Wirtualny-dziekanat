@@ -47,6 +47,11 @@ const UserProvider = ({children}) => {
             throw new Error("Can't login");
         }
 
+        if(json.firstTime) {
+            history.push("/firsttime/" + json.token);
+            return;
+        }
+
         setLogin(json);
 
         localStorage.setItem("token", json.token);
@@ -57,6 +62,7 @@ const UserProvider = ({children}) => {
     }
 
     const fetchApi = async (/** @type {RequestInfo} */ address, /** @type {RequestInit | undefined} */ init) => {
+        
         const result = await fetch(api + address, {
             headers: {
                 'Content-Type': "application/json",

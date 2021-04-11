@@ -6,7 +6,7 @@ import {Link, useParams} from "react-router-dom";
 
 import {userContext} from "../context/userContext";
 
-const Box = styled.div` 
+export const Box = styled.div` 
     width: 30em;
     padding: 1em;
     border-radius: 10px;
@@ -16,7 +16,7 @@ const Box = styled.div`
     text-align: center;
 `;
 
-const LinkWrapper = styled.div`
+export const LinkWrapper = styled.div`
     width: 100%;  
     padding: 10px;
     text-align: left;
