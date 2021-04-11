@@ -45,6 +45,12 @@ public class User {
     @Size(max = 128)
     private String password;
 
+    @NotBlank
+    private int failedLoginAttempts;
+
+    @NotBlank
+    private boolean isBlocked;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -55,6 +61,8 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.failedLoginAttempts = 0;
+        this.isBlocked = false;
     }
 
 }
