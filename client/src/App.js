@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Unlock from './pages/Unlock';
 
 const Wrapper = styled.div` 
     min-height: 100vh;
@@ -33,11 +34,14 @@ function App() {
         <Router>
             <UserProvider>
                 <Wrapper className="App">
-                    <Route path={/^(?!\/login)(?!\/register)(?!\/$)[/\w]*/} exact component={Nav} />
+                    <Route path={/^(?!\/unlock)(?!\/login)(?!\/register)(?!\/$)[/\w]*/} exact component={Nav} />
                     <Right>
                         <Header></Header>
                         <Main>
                             <Switch>
+                                <Route path="/unlock">
+                                    <Unlock />
+                                </Route>
                                 <Route path="/login">
                                     <Login />
                                 </Route>
