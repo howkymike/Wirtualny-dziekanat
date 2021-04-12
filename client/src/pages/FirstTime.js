@@ -54,9 +54,9 @@ const ChangePassword = props => {
     return(
         <Box>
             <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
-                <h4>Ustaw Hasło {password}</h4>
+                <h4>Ustaw Hasło</h4>
                 <hr/>
-                <p >Zmień przed pierwszym zalogowaniem {password2}</p>
+                <p >Zmień przed pierwszym zalogowaniem</p>
                 <hr/>
                 <FormGroup>
                     <Input  type="password" placeholder="Nowe hasło" value={password}
