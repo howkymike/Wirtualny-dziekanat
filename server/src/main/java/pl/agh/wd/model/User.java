@@ -48,6 +48,14 @@ public class User {
     @NotBlank
     private Boolean isNew;
 
+    @NotBlank
+    @Size(max = 128)
+    private String name;
+
+    @NotBlank
+    @Size(max = 128)
+    private String surname;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
