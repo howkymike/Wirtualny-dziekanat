@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ddf69623-db13-4e10-b0a6-1a091e3fabac",
+		"_postman_id": "37505409-8768-4f55-94eb-1e4aa22a2469",
 		"name": "WirtualnyDziekanat",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -107,6 +107,66 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "login as admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"mike\",\n    \"password\": \"mike123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxODM0MzI1MywiZXhwIjoxNjE4NDMwODUzfQ.5B3bTwisnfNvffTmmobLFimq6uwHjkfQy25FW2rIqVxA2jOb1bWTlKdrZ3m_ylvPyO1CyZWlW4IVikv3idIIpA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
