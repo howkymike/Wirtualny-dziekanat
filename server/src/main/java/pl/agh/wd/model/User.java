@@ -48,6 +48,9 @@ public class User {
     @NotBlank
     private Boolean isNew;
 
+    private boolean locked = false;
+    private int failedLoginCounter = 0;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -60,5 +63,6 @@ public class User {
         this.password = password;
         this.isNew = true;
     }
+
 
 }
