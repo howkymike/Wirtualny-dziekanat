@@ -1,29 +1,27 @@
 version: "3.9"
+
 services:
   react:
+    network_mode: "host"
     container_name: React
     image: node:15.12.0-alpine3.10
     command: sh -c "npm install && npm start"
-    ports:
-      - 3000:3000
     working_dir: /app
     volumes:
       - ./client:/app
   spring:
+    network_mode: "host"
     container_name: Szpring
     image: gradle:6.8-jdk11
     working_dir: /app
     volumes:
       - ./server:/app
     command: sh -c "gradle build --continuous --quiet & gradle bootRun"
-    ports:
-      - 8080:8080
   postgres:
+    network_mode: "host"
     container_name: Postgres
     image: postgres:13.2
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: dziekanat
-    ports:
-      - 5432:5432
