@@ -55,7 +55,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getEmail(),
                 user.getPassword(),
                 user.getIsNew(),
-                authorities);
+                authorities,
+                user.isLocked());
     }
 
     public void changeUserPassword(User user, String newPassword){

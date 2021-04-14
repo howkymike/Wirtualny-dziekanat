@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @GetMapping("/supersecret")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String adminSecret() {
         return "You are powerful now :D";
     }
