@@ -22,14 +22,14 @@ public class Faculty {
     protected String name;
 
     // I don't know if multiple "faculty" will break things
-    @OneToMany(mappedBy="faculty")
+    /*@OneToMany(mappedBy="faculty")
     private Set<FieldOfStudy> fieldsOfStudy;
 
     @OneToMany(mappedBy="faculty")
     private Set<Professor> professors;
 
     @OneToMany(mappedBy="faculty")
-    private Set<Clerk> clerks;
+    private Set<Clerk> clerks;*/
 
 
 

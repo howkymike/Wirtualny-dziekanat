@@ -33,7 +33,7 @@ public class Professor {
     }
 
     // This should get us a many-to-many through a Professor weak entity that has a User PKEY id as user_id.
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "course_professors",
             joinColumns = @JoinColumn(name = "user_id"),
