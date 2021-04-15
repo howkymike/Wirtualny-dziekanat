@@ -1,10 +1,73 @@
 {
 	"info": {
-		"_postman_id": "37505409-8768-4f55-94eb-1e4aa22a2469",
+		"_postman_id": "51577837-ee13-485b-a708-48cf3219b354",
 		"name": "WirtualnyDziekanat",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/:role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":role"
+							],
+							"variable": [
+								{
+									"key": "role",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "register",
 			"request": {
@@ -115,7 +178,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"mike\",\n    \"password\": \"mike123\"\n}",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -137,6 +200,36 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "forget password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/forgetPassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"forgetPassword"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -144,7 +237,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxODM0MzI1MywiZXhwIjoxNjE4NDMwODUzfQ.5B3bTwisnfNvffTmmobLFimq6uwHjkfQy25FW2rIqVxA2jOb1bWTlKdrZ3m_ylvPyO1CyZWlW4IVikv3idIIpA",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxODUxNTA3NywiZXhwIjoxNjE4NjAyNjc3fQ.DTXt3O6JY3BxPq8eAzGomDvTI9-GxPnz9zCkZ69qKHKWz0-6NYefl9hJtVpgleFaT8IIj1VdyjS-3hLoOwMMEQ",
 				"type": "string"
 			}
 		]
