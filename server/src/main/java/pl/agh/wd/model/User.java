@@ -50,6 +50,13 @@ public class User {
     @NotBlank
     private Boolean isNew;
 
+    @NotBlank
+    @Size(max = 128)
+    private String name;
+
+    @NotBlank
+    @Size(max = 128)
+    private String surname;
     private boolean locked = false;
     private int failedLoginCounter = 0;
 

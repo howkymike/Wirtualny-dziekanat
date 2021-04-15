@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import FirstTime from './pages/FirstTime';
+import PlatformInfo from "./pages/PlatformInfo";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -48,6 +49,7 @@ function App() {
                                 <Route path="/student">
                                     adwdawd
                                 </Route>
+                                <Route path="/admin/platform" component={PlatformInfo}/>
                                 <Route exact path="/">
                                     <Home/>
                                 </Route>
