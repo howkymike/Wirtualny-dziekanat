@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +51,9 @@ public class User {
 
     private boolean locked = false;
     private int failedLoginCounter = 0;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lockedAt = new Date(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
