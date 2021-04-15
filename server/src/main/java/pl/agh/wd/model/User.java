@@ -16,6 +16,7 @@ import java.util.Set;
  * Basic users table, should be extended to allow additional properties
  *
  * @author howkymike
+ * @author sadowicz
  */
 
 @Entity

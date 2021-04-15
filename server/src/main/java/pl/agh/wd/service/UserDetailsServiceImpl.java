@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * It gives access to use UserDetailsImpl
  *
  * @author howkymike
+ * @author sadowicz
  */
 
 @Service

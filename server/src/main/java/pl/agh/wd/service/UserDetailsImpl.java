@@ -18,6 +18,7 @@ import pl.agh.wd.model.User;
  * For now it only adds email
  *
  * @author howkymike
+ * @author sadowicz
  */
 
 public class UserDetailsImpl implements UserDetails{
