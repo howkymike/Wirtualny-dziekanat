@@ -11,6 +11,8 @@ const UserProvider = ({children}) => {
     let [username, setUsername] = useState("");
     let [roles, setRoles] = useState([]);
 
+    const [attemptsRemaining, setAttemptsRemaining] = useState(3);
+
     const history = useHistory();
 
     const setLogin = ({token, username, roles}) => {
@@ -42,10 +44,18 @@ const UserProvider = ({children}) => {
 
         if(!result.ok) {
             if(json.error === "Unauthorized")
-                throw new Error("Wrong credentials");
+                if(json.message === "Bad credentials" && attemptsRemaining) {
+                    setAttemptsRemaining(attemptsRemaining - 1);
+                    if(attemptsRemaining)
+                        throw new Error("Wrong credentials\nRemaining attempts " + attemptsRemaining);
+                }
+                else if(json.message === "User account is locked" || !attemptsRemaining)
+                    throw new Error("Account locked");
 
             throw new Error("Can't login");
         }
+
+        setAttemptsRemaining(3)
 
         if(json.firstTime) {
             history.push("/firsttime/" + json.token);
