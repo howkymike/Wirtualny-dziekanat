@@ -91,6 +91,8 @@ public class LoginApplicationTests {
         loginRequest.setUsername("Dawid Jarosz");
         loginRequest.setPassword("Kocham Svena");
         ResponseEntity response = controller.authenticateUser(loginRequest);
+
+        assert(response.getStatusCode().toString().equals("200 OK"));
         assert (response.getBody().toString().contains("pl.agh.wd.payload.response.FirstTimeResponse"));
     }
 
@@ -119,6 +121,7 @@ public class LoginApplicationTests {
         firstTimeRequest.setPassword("aaabbb");
         firstTimeRequest.setPassword2("aaabbb");
         ResponseEntity response = controller.firstTime(firstTimeRequest);
+        assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
     }
 }

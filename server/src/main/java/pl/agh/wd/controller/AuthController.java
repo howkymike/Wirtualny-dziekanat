@@ -105,7 +105,7 @@ public class AuthController {
                     token.getToken()
                 ));
             } else 
-                return ResponseEntity.ok(new SuccessResponse(false, "kek"));
+                return ResponseEntity.badRequest().body(new SuccessResponse(false, "User not found"));
           
         }
     }
@@ -115,11 +115,13 @@ public class AuthController {
         Optional<User> user = tokenService.getUserByToken(request.getToken());
         
         if(!user.isPresent()) {
-            return ResponseEntity.ok(new SuccessResponse(false, "Wrong link"));
+            return ResponseEntity.badRequest()
+                    .body(new SuccessResponse(false, "Wrong link"));
         }
 
         if(!request.getPassword().equals(request.getPassword2())) {
-            return ResponseEntity.ok(new SuccessResponse(false, "Passwords are diffrent"));
+            return ResponseEntity.badRequest()
+                    .body(new SuccessResponse(false, "Passwords are diffrent"));
         }
         
 
