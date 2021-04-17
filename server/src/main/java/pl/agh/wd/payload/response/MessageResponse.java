@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Handles API responses
+ * Handles simple API responses
  *
  * @author: howkymike
  */

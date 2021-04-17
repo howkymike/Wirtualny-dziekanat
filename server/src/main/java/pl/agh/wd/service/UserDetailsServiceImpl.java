@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * It gives access to use UserDetailsImpl
  *
  * @author howkymike
+ * @author sadowicz
  */
 
 @Service
@@ -56,7 +57,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getPassword(),
                 user.getIsNew(),
                 authorities,
-                user.isLocked());
+                user.isLocked(),
+                user.getLockedAt());
     }
 
     public void changeUserPassword(User user, String newPassword){

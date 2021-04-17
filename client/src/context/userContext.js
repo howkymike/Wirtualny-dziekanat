@@ -6,10 +6,12 @@ export const api = "http://localhost:8080/api";
 
 const UserProvider = ({children}) => {
 
-    let [logged, setLogged] = useState(false);
-    let [token, setToken] = useState(null);
-    let [username, setUsername] = useState("");
-    let [roles, setRoles] = useState([]);
+    let [username, setUsername] = useState(localStorage.getItem("username") || "");
+    let [token, setToken] = useState(localStorage.getItem("token"));
+    let [roles, setRoles] = useState(JSON.parse(localStorage.getItem("roles") || "[]"));
+    let [logged, setLogged] = useState(!!username.length);
+    
+    const [attemptsRemaining, setAttemptsRemaining] = useState(3);
 
     const history = useHistory();
 
@@ -42,10 +44,18 @@ const UserProvider = ({children}) => {
 
         if(!result.ok) {
             if(json.error === "Unauthorized")
-                throw new Error("Wrong credentials");
+                if(json.message === "Bad credentials" && attemptsRemaining) {
+                    setAttemptsRemaining(attemptsRemaining - 1);
+                    if(attemptsRemaining)
+                        throw new Error("Wrong credentials\nRemaining attempts " + attemptsRemaining);
+                }
+                else if(json.message === "User account is locked" || !attemptsRemaining)
+                    throw new Error("Account locked");
 
             throw new Error("Can't login");
         }
+
+        setAttemptsRemaining(3)
 
         if(json.firstTime) {
             history.push("/firsttime/" + json.token);
@@ -87,17 +97,6 @@ const UserProvider = ({children}) => {
 
         history.push("/");
     }
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        const username = localStorage.getItem("username");
-        const roles = JSON.parse(localStorage.getItem("roles") || "[]");
-
-        if(token && username && roles) {
-            setLogin({token, username, roles});
-        }
-
-    }, []);
 
     useEffect(() => {
         console.log(logged);

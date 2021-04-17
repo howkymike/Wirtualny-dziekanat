@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.agh.wd.repository.UserRepository;
 
+import java.util.Date;
+
 
 /**
  * Service responsible for locking user accounts
@@ -26,8 +28,10 @@ public class UserLockingService {
         userRepository.findByUsername(username).ifPresent(user -> {
             if (!user.isLocked()) {
                 int failedLoginCounter = user.getFailedLoginCounter();
-                if (failedLoginCounter >= maxFailedLogins)
+                if (failedLoginCounter >= maxFailedLogins) {
                     user.setLocked(true);
+                    user.setLockedAt(new Date());
+                }
                 else
                     user.setFailedLoginCounter(failedLoginCounter + 1);
                 userRepository.save(user);

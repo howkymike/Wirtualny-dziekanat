@@ -1,5 +1,6 @@
 package pl.agh.wd.service;
 
+import java.util.Date;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -17,10 +18,13 @@ import pl.agh.wd.model.User;
  * For now it only adds email
  *
  * @author howkymike
+ * @author sadowicz
  */
 
 public class UserDetailsImpl implements UserDetails{
     private static final long serialVersionUID = 1L;
+
+    private static final long MAX_LOCK_TIME = 24 * 60 * 60 * 1000;
 
     private final Long id;
 
@@ -37,8 +41,10 @@ public class UserDetailsImpl implements UserDetails{
 
     private final Boolean isLocked;
 
+    private final Date lockedAt;
+
     public UserDetailsImpl(Long id, String username, String email, String password, Boolean isNew,
-                           Collection<? extends GrantedAuthority> authorities, Boolean isLocked) {
+                           Collection<? extends GrantedAuthority> authorities, Boolean isLocked, Date lockedAt) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -46,6 +52,7 @@ public class UserDetailsImpl implements UserDetails{
         this.authorities = authorities;
         this.isNew = isNew;
         this.isLocked = isLocked;
+        this.lockedAt = lockedAt;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -60,7 +67,8 @@ public class UserDetailsImpl implements UserDetails{
                 user.getPassword(),
                 user.getIsNew(),
                 authorities,
-                user.isLocked());
+                user.isLocked(),
+                user.getLockedAt());
     }
 
     @Override
@@ -93,7 +101,12 @@ public class UserDetailsImpl implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isLocked;
+        Date now = new Date();
+        long lockedFor = now.getTime() - lockedAt.getTime();
+
+        Boolean lockExpired = lockedFor >= MAX_LOCK_TIME;
+
+        return (!isLocked || lockExpired);
     }
 
     @Override
