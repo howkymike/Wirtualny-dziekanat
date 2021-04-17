@@ -98,7 +98,7 @@ public class LoginApplicationTests {
 
     @Test
     public void testFirstTimeLogin() throws Exception {
-        User user = new User("Dawid Jarosz", "dawidsven69@gmail.com", encoder.encode("Kocham Svena"));
+        User user = new User("Dawid Jarosz2", "dawidsven696@gmail.com", encoder.encode("Kocham Svena"));
         userRepository.save(user);
         FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);
         tokenRepository.save(token);
@@ -107,19 +107,34 @@ public class LoginApplicationTests {
         firstTimeRequest.setPassword("aaabbb");
         firstTimeRequest.setPassword2("aaabbb");
         controller.firstTime(firstTimeRequest);
-        user = userRepository.findByUsername("Dawid Jarosz").get();
+        user = userRepository.findByUsername("Dawid Jarosz2").get();
         assert(!user.getIsNew());
         assert(encoder.matches("aaabbb", user.getPassword()));
     }
 
     @Test
     public void testFirstTimeLoginUserNotPresent() throws Exception {
-        User user = new User("Dawid Jarosz", "dawidsven69@gmail.com", encoder.encode("Kocham Svena"));
+        User user = new User("Dawid Jarosz", "dawidsven696@gmail.com", encoder.encode("Kocham Svena"));
         FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);
         FirstTimeRequest firstTimeRequest = new FirstTimeRequest();
         firstTimeRequest.setToken(token.getToken());
         firstTimeRequest.setPassword("aaabbb");
         firstTimeRequest.setPassword2("aaabbb");
+        ResponseEntity response = controller.firstTime(firstTimeRequest);
+        assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
+        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
+    }
+
+    @Test
+    public void testFirstTimeLoginPasswordsNoEqual() throws Exception {
+        User user = new User("Dawid Jarosz21", "dawidsven6969@gmail.com", encoder.encode("Kocham Svena"));
+        userRepository.save(user);
+        FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);
+        tokenRepository.save(token);
+        FirstTimeRequest firstTimeRequest = new FirstTimeRequest();
+        firstTimeRequest.setToken(token.getToken());
+        firstTimeRequest.setPassword("aaabbb");
+        firstTimeRequest.setPassword2("aaabbb2");
         ResponseEntity response = controller.firstTime(firstTimeRequest);
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
