@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Input, Table } from 'reactstrap';
+import { Input, Table, Button } from 'reactstrap';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faUserTimes } from '@fortawesome/free-solid-svg-icons'
+import MessageBox from '../components/MessageBox'
 
 import { userContext } from '../context/userContext';
 
@@ -18,11 +22,14 @@ const StudentList = props => {
     let [listType, setListType] = useState("student");
     let [loading, setLoading] = useState(true);
     let [list, setList] = useState([]);
+    const [deleteMsg, setDeleteMsg] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
+
     const { fetchApi } = useContext(userContext);
 
     useEffect(() => {
 
-        fetchApi("/user/" + listType + "/").then(res => {
+        fetchApi("/users/" + listType + "/").then(res => {
             if(res[1]) {
                 setList(res[0].list);
                 setLoading(false);
@@ -30,6 +37,26 @@ const StudentList = props => {
         });
 
     }, [listType, fetchApi]);
+
+    const onUserDelete = (key) => {
+        setUserToDelete(key);
+        setDeleteMsg(true);
+    };
+
+    const onAcceptUserDelete = async () => {
+        const user = list[userToDelete].owner;
+
+        const [, isOk] = await fetchApi("/users/" + user.id, {
+            method: "DELETE",
+        });
+
+        if(isOk){
+            setList(list.filter(usr => usr.owner.id != user.id));
+        }
+
+        setDeleteMsg(false)
+    };
+
 
     return(
         <Wrapper>
@@ -74,10 +101,29 @@ const StudentList = props => {
                             {   listType === "professor" &&
                                 <td>{ user.title }</td>
                             }
+                            <td>
+                                <Button color="danger" onClick={() => onUserDelete(key)}>
+                                    <FontAwesomeIcon icon={faUserTimes} />
+                                </Button>
+                            </td>
                         </tr>
                     )) }
                 </tbody>
             </Table>
+            
+            {   deleteMsg &&
+                <MessageBox
+                    onAccept={() => onAcceptUserDelete()}
+                    onReject={() => setDeleteMsg(false)}
+                    cancelBtnText={"Nie"}
+                    okBtnText={"Tak"}
+                    >
+                    {"Czy napewno chcesz usunąć tego użytkownika?"}
+                </MessageBox>
+            }
+
+                      
+
         </Wrapper>
     );
 }
