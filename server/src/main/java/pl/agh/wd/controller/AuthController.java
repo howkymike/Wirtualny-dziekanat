@@ -42,7 +42,7 @@ import java.util.UUID;
  * Responsible for handling login and register calls
  *
  * @author howkymike
- * @author dopiszcie sie XD
+ * @author tfujstary69
  */
 
 @RestController
