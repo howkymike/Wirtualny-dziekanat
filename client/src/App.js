@@ -13,9 +13,10 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import FirstTime from './pages/FirstTime';
 import PlatformInfo from "./pages/PlatformInfo";
+import StudentList from './pages/StudentList';
 
 const Wrapper = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   color: #ffffff;
   background: rgb(27, 38, 79);
   background: linear-gradient(52deg, rgba(27, 38, 79, 1) 1%, rgba(39, 70, 144, 1) 100%);
@@ -26,6 +27,7 @@ const Right = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-y: auto;
 `;
 
 const Main = styled.main`
@@ -50,9 +52,9 @@ function App() {
                                     adwdawd
                                 </Route>
                                 <Route path="/admin/platform" component={PlatformInfo}/>
-                                <Route exact path="/">
-                                    <Home/>
-                                </Route>
+
+                                <Route path="/admin/list" component={ StudentList } />
+
                                 <Route path="/forgetPassword">
                                     <ForgetPassword/>
                                 </Route>
@@ -61,6 +63,10 @@ function App() {
                                 </Route>
                                 <Route path="/firsttime/:token">
                                     <FirstTime />
+                                </Route>
+
+                                <Route exact path="/">
+                                    <Home/>
                                 </Route>
                             </Switch>
                         </Main>

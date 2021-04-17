@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import CanvasJSReact from "../lib/canvasjs.react";
 import {userContext} from "../context/userContext";
 import {Container, Table} from 'reactstrap';
@@ -50,7 +50,15 @@ const PlatformInfo = props => {
             committedChart.render();
 
     }
-    setInterval(updateChart, updateInterval);
+
+    useEffect(() => {
+        const int = setInterval( () => updateChart(), updateInterval);
+        updateChart();
+        return () => {
+            clearInterval(int);
+        }
+    }, []);
+    
 
 
     const chartOptionsUsage = {

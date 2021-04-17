@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,10 +47,12 @@ public class User {
     private String email;
 
     @NotBlank
+    @JsonIgnore
     @Size(max = 128)
     private String password;
 
     @NotBlank
+    @JsonIgnore
     private Boolean isNew;
 
     @NotBlank
@@ -57,9 +62,12 @@ public class User {
     @NotBlank
     @Size(max = 128)
     private String surname;
+    @JsonIgnore
     private boolean locked = false;
+    @JsonIgnore
     private int failedLoginCounter = 0;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date lockedAt = new Date(0);
 
