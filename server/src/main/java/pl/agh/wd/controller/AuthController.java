@@ -140,7 +140,7 @@ public class AuthController {
 
         boolean privUser = false;
         Object currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(currentPrincipal instanceof UserDetailsImpl) {
+        if(currentPrincipal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) currentPrincipal;
             privUser = userDetails.getAuthorities().stream()
                     .anyMatch(r -> Arrays.asList(REGISTER_PRIVILEGE_ROLES).contains(r.getAuthority()));
