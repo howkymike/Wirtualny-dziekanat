@@ -37,13 +37,13 @@ public class PasswordResetApplicationTests {
 
     @Test
     public void testForgetPasswordSuccess() throws Exception {
-        User user = new User("howkymike", "howkymike123@gmail.com", encoder.encode("jestemKozakiemZWietu"));
+        User user = new User("howkymike2", "howkymike555@gmail.com", encoder.encode("jestemKozakiemZWietu"));
         userRepository.save(user);
-        Optional<User> userOptional = userRepository.findByUsername("howkymike");
+        Optional<User> userOptional = userRepository.findByUsername("howkymike2");
         assert(userOptional.isPresent());
 
         ForgetPasswordRequest fpRequest = new ForgetPasswordRequest();
-        fpRequest.setUsername("howkymike");
+        fpRequest.setUsername("howkymike2");
 
         ResponseEntity response = controller.forgetPassword(fpRequest);
 
@@ -51,17 +51,18 @@ public class PasswordResetApplicationTests {
 
         assert(response.getStatusCode().toString().equals("200 OK"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+
     }
 
     @Test
     public void testForgetPasswordFailure() throws Exception {
 
-        Optional<User> userOptional = userRepository.findByUsername("howkymike");
+        Optional<User> userOptional = userRepository.findByUsername("howkymike3");
         // Assert for "howkymike" not being in DB - this test relies on that being true
         assert(userOptional.isEmpty());
 
         ForgetPasswordRequest fpRequest = new ForgetPasswordRequest();
-        fpRequest.setUsername("howkymike");
+        fpRequest.setUsername("howkymike3");
         ResponseEntity response = controller.forgetPassword(fpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
@@ -99,27 +100,28 @@ public class PasswordResetApplicationTests {
         Optional<User> testUser = userRepository.findByUsername("howkymike");
         assert(testUser.isPresent());
         assert(encoder.matches("WietKrule", testUser.get().getPassword()));
+
     }
 
     @Test
     public void testChangePasswordFailure() throws Exception {
 
-        User user = new User("howkymike", "howkymike123@gmail.com", encoder.encode("jestemKozakiemZWietu"));
+        User user = new User("howkymike1", "howkymike345@gmail.com", encoder.encode("jestemKozakiemZWietu"));
         userRepository.save(user);
-        PasswordResetToken prToken = new PasswordResetToken("TokenDlaHowkymike", user);
+        PasswordResetToken prToken = new PasswordResetToken("TokenDlaHowkymike1", user);
 
         {
-            Optional<User> userOptional = userRepository.findByUsername("howkymike");
+            Optional<User> userOptional = userRepository.findByUsername("howkymike1");
             assert(userOptional.isPresent());
 
-            PasswordResetToken testToken  = prTokenRepository.findByToken("TokenDlaHowkymike");
+            PasswordResetToken testToken  = prTokenRepository.findByToken("TokenDlaHowkymike1");
             assert(testToken==null);
 
         }
 
         ChangePasswordRequest cpRequest = new ChangePasswordRequest();
         cpRequest.setNewPassword("WietKrule");
-        cpRequest.setToken("TokenDlaHowkymike");
+        cpRequest.setToken("TokenDlaHowkymike1");
 
         ResponseEntity response = controller.changePassword(cpRequest);
 
@@ -133,7 +135,7 @@ public class PasswordResetApplicationTests {
         Thread.sleep(1000); // Sleep for 1s (should expire token)
         prTokenRepository.save(prToken);
         {
-            PasswordResetToken testToken  = prTokenRepository.findByToken("TokenDlaHowkymike");
+            PasswordResetToken testToken  = prTokenRepository.findByToken("TokenDlaHowkymike1");
             assert(testToken!=null);
         }
 

@@ -111,7 +111,6 @@ public class RegisterApplicationTests {
         signUpRequest.setPassword("Raucha-Dawidela");
         signUpRequest.setEmail("wdoope@motzno.com");
         ResponseEntity response = controller.registerUser(signUpRequest);
-        System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("200 OK"));
     }
 }
