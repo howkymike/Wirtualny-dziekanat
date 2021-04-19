@@ -1,30 +1,96 @@
 import React, {useContext, useEffect} from 'react';
-import CanvasJSReact from "../lib/canvasjs.react";
 import {userContext} from "../context/userContext";
-import {Container, Table} from 'reactstrap';
+import { Container, Table} from 'reactstrap';
+import {CanvasJSChart} from 'canvasjs-react-charts'
+
+let memoryUsageData = []; // memory usage data points
+let memoryCommittedData = []; // memory committed data points
+
+const genUsageData = () => ({
+    animationEnabled: true,
+    exportEnabled: true,
+    theme: "light1",
+    title :{
+        text: "Heap Memory"
+    },
+    axisY: {
+        title: "Memory",
+        includeZero: false,
+        suffix: "GB"
+    },
+    axisX: {
+        title: "Time",
+        suffix: "s"
+    },
+    toolTip: {
+        shared: true
+    },
+    data: [
+        {
+            type: "line",
+            name: "Memory usage",
+            showInLegend: true,
+            dataPoints : memoryUsageData
+        },
+        {
+            type: "spline",
+            name: "Memory committed",
+            showInLegend: true,
+            dataPoints : memoryCommittedData
+        }]
+});
+const genCommitedData = () => ({
+    animationEnabled: true,
+    exportEnabled: true,
+    theme: "light2",
+    title :{
+        text: "Heap Memory commited"
+    },
+    axisY: {
+        title: "Memory",
+        includeZero: false,
+        suffix: "GB"
+    },
+    axisX: {
+        title: "Time",
+        suffix: "s"
+    },
+    data: [
+        {
+            type: "spline",
+            name: "2016",
+            dataPoints : memoryCommittedData
+        },
+        {
+            type: "spline",
+            name: "2016",
+            dataPoints : memoryUsageData
+        }
+    ]
+});
 
 
-
-const PlatformInfo = props => {
-    let CanvasJSChart = CanvasJSReact.CanvasJSChart;
-    let usageChart, committedChart;
-
+const PlatformInfo = () => {
     let xVal = 1;
-    const updateInterval = 5000;
+    const updateInterval = 3000;
     const {fetchApi} = useContext(userContext);
 
-    let memoryUsageData = []; // memory usage data points
-    let memoryCommittedData = []; // memory committed data points
+    const [fetchResponse, setFetchResponse] = React.useState({
+        memoryUsedOptions: [],
+        memoryCommitedOptions: [],
+        os: "unknown",
+        memoryInit: 0,
+        memoryMax: 0,
+        threadsData: []
+    });
 
-    const updateChart = async () => {
+    const {memoryUsedOptions, memoryCommitedOptions, os, memoryInit, memoryMax, threadsData} = fetchResponse;
+
+    const fetchNewData = async () => {
         const [result, isOk] = await fetchApi("/admin/platforminfo", {
             method: 'GET'
         })
         if(isOk) {
-            setOS(result["os"]);
-            setMemoryInit(result["memoryMap"]["init"]);
-            setMemoryMax(result["memoryMap"]["max"]);
-
             memoryUsageData.push({x: xVal,y:result["memoryMap"]["used"]});
             memoryCommittedData.push({x: xVal,y:result["memoryMap"]["committed"]});
             xVal++;
@@ -32,120 +98,68 @@ const PlatformInfo = props => {
                 memoryUsageData.shift();
                 memoryCommittedData.shift();
             }
-
-            setThreadsData(result["threadList"].map((thread, idx) => {
-                const {name, state, cpu_time} = thread;
-                return (
-                    <tr key={idx}>
-                        <td>{name}</td>
-                        <td>{state}</td>
-                        <td>{cpu_time}</td>
-                    </tr>
-                )
-            }));
+            setFetchResponse({
+                memoryUsedOptions: genUsageData(),
+                memoryCommitedOptions: genCommitedData(),
+                os: result["os"],
+                memoryInit: result["memoryMap"]["init"],
+                memoryMax: result["memoryMap"]["max"],
+                threadsData: result["threadList"]
+            });
         }
-        if(usageChart !== undefined)
-            usageChart.render();
-        if(committedChart !== undefined)
-            committedChart.render();
-
     }
+
 
     useEffect(() => {
-        const int = setInterval( () => updateChart(), updateInterval);
-        updateChart();
-        return () => {
-            clearInterval(int);
-        }
-    }, []);
-    
+        const interval = setInterval(() => fetchNewData(), updateInterval)
+
+        return () => clearInterval(interval)
+    }, [])
 
 
-    const chartOptionsUsage = {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light1",
-        title :{
-            text: "Heap Memory used"
-        },
-        axisY: {
-            title: "Memory",
-            includeZero: false,
-            suffix: "GB"
-        },
-        axisX: {
-            title: "Time",
-            suffix: "s"
-        },
-        data: [{
-            type: "line",
-            dataPoints : memoryUsageData
-        }]
-    }
 
-    const chartOptionsCommited = {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light2",
-        title :{
-            text: "Heap Memory commited"
-        },
-        axisY: {
-            title: "Memory",
-            includeZero: false,
-            suffix: "GB"
-        },
-        axisX: {
-            title: "Time",
-            suffix: "s"
-        },
-        data: [{
-            type: "line",
-            dataPoints : memoryCommittedData
-        }]
-    }
-
-    const [os, setOS] = React.useState("Unknown");
-    const [memoryInit, setMemoryInit] = React.useState(0);
-    const [memoryMax, setMemoryMax] = React.useState(0);
-    const [threadsData, setThreadsData] = React.useState(0);
 
     return (
-        <Container>
-            <div>
-                <h1>Informacje o platformie</h1>
+    <Container style={{color: "black",fontSize: 20}}>
+        <div className='card'>
+            <h3 className='m-2'>System: {os}</h3>
+        </div>
+        <div className='mt-5 card' style={{background: "#ECEFF1"}}>
+            <div className='m-2'>
+            <div className='s'>Pamięć</div>
+            <div color="primary">Initial memory: {memoryInit} GB</div>
+            <div>Max memory: {memoryMax} GB</div>
             </div>
             <div>
-                <h3>System: {os}</h3>
+                <CanvasJSChart options = {memoryUsedOptions}/>
             </div>
-            <div className='mt-5'>
-                <h3>Pamięć</h3>
-                <h4>Initial memory: {memoryInit}</h4>
-                <h4>Max memory: {memoryMax}</h4>
-                <CanvasJSChart options = {chartOptionsUsage}
-                        onRef={ref => usageChart = ref}
-                />
-                <CanvasJSChart options = {chartOptionsCommited}
-                               onRef={ref => committedChart = ref}
-                />
+        </div>
+        <div className='mt-5 card' style={{background: "#B0BEC5"}}>
+            <div style={{fontSize: 40, background: "#ECEFF1"}}>
+                <p style={{margin: 8}}>Wątki</p>
             </div>
-            <div className='mt-5'>
-                <h3>Wątki</h3>
-                <Table dark>
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>State</th>
-                        <th>CPU time</th>
+            <Table light>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>State</th>
+                    <th>CPU time</th>
+                </tr>
+                </thead>
+                <tbody>
+                { threadsData.map((thread,index) => (
+                    <tr key={ index }>
+                        <td>{index}</td>
+                        <td>{thread.name}</td>
+                        <td>{thread.state}</td>
+                        <td>{thread.cpu_time}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                        {threadsData}
-                    </tbody>
-                </Table>
-            </div>
-        </Container>
+                )) }
+                </tbody>
+            </Table>
+        </div>
+    </Container>
     );
 }
 

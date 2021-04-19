@@ -51,7 +51,7 @@ const StudentList = props => {
         });
 
         if(isOk){
-            setList(list.filter(usr => usr.owner.id != user.id));
+            setList(list.filter(usr => usr.owner.id !== user.id));
         }
 
         setDeleteMsg(false)
