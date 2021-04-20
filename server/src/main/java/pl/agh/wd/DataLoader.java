@@ -59,6 +59,11 @@ public class DataLoader implements ApplicationRunner {
                 encoder.encode("kamil"));
         user.setName("Kamil");
         user.setSurname("Wiercik");
+        user.setCountry("Polska");
+        user.setCity("Kraków");
+        user.setAddress("Al. Mickiewicza 25");
+        user.setPostalCode("31-445");
+        user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
         userRepository.save(user);
@@ -79,6 +84,11 @@ public class DataLoader implements ApplicationRunner {
                 encoder.encode("baba"));
         user.setName("Baba");
         user.setSurname("Z dziekanatu");
+        user.setCountry("Polska");
+        user.setCity("Kraków");
+        user.setAddress("Al. Linux jest z****isty 25");
+        user.setPostalCode("31-445");
+        user.setTelephone("420420420");
         user.setRoles(roles);
         user.setIsNew(false);
         userRepository.save(user);
@@ -94,6 +104,11 @@ public class DataLoader implements ApplicationRunner {
                 encoder.encode("onder"));
         user.setName("Zdzisław");
         user.setSurname("Onderka");
+        user.setCountry("Polska");
+        user.setCity("Kraków");
+        user.setAddress("A-0 Kanciapa");
+        user.setPostalCode("31-445");
+        user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
         userRepository.save(user);

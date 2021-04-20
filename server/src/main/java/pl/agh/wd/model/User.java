@@ -71,6 +71,21 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lockedAt = new Date(0);
 
+    @Size(max=128)
+    private String city;
+
+    @Size(max=128)
+    private String country;
+
+    @Size(max=128)
+    private String postalCode;
+
+    @Size(max=128)
+    private String telephone;
+
+    @Size(max=128)
+    private String address;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
