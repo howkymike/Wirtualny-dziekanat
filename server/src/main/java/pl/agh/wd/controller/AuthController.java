@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import pl.agh.wd.payload.request.ChangeActualPasswordRequest;
 import pl.agh.wd.payload.request.FirstTimeRequest;
 import pl.agh.wd.payload.request.LoginRequest;
 import pl.agh.wd.payload.request.RegisterRequest;
@@ -202,4 +203,32 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("Success: User has been registered."));
     }
+
+    @PostMapping("/changeactualpassword")
+    public ResponseEntity<?> changeActualPassword(@Valid @RequestBody ChangeActualPasswordRequest request) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username = "";
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (encoder.matches(request.getActualPassword(),user.getPassword())) {
+                if (request.getNewPassword().equals(request.getSecondNewPassword())) {
+                    user.setPassword(encoder.encode(request.getNewPassword()));
+                    userRepository.save(user);
+                    return ResponseEntity.ok().body(new MessageResponse("Success: Password changed"));
+                }
+                return ResponseEntity.badRequest().body(new MessageResponse("Fail: Passwords are different"));
+            }
+            return ResponseEntity.badRequest().body(new MessageResponse("Fail: Actual password doesnt match to user password"));
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Fail: You are not loged in"));
+    }
+
 }
