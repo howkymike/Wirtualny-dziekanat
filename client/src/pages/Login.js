@@ -23,38 +23,47 @@ const ForgotPassword = styled.div`
 
 const Login = props => {
 
-    const { login, logged } = useContext(userContext);
+    const { login, logged, roles } = useContext(userContext);
     const history = useHistory();
 
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
     let [error, setError] = useState("");
 
+    const getHomeAddress = (role) => {
+        switch (role) {
+            case "ROLE_ADMIN": return "/admin";
+            case "ROLE_STUDENT": return "/student";
+            case "ROLE_STUFF": return "/stuff";
+        }
+    }
+
     const handleLogin = async () => {
         try {
-            if(await login(username, password))
-                history.push('/student');
-        } catch(e) {
+            if (await login(username, password))
+                history.push(getHomeAddress(roles[0]));
+        } catch (e) {
             console.log("Error", e);
             setError(e.message);
         }
     }
 
     useEffect(() => {
-        if(logged)
-            history.push('/student');
+        if (logged)
+            history.push(getHomeAddress(roles[0]));
+        console.log(roles)
     }, [logged, history]);
 
-    return(
+    return (
         <LoginBox>
-            <Form onSubmit={ e => { e.preventDefault(); handleLogin() } }>
+            <Form onSubmit={e => { e.preventDefault(); handleLogin() }}>
                 <h4>Zaloguj się</h4>
                 <hr />
                 <FormGroup>
-                    <Input type="text" placeholder="Login" value={username} onChange={ e => setUsername(e.target.value) } />
+                    <Input type="text" placeholder="Login" value={username} onChange={e => setUsername(e.target.value)} />
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" placeholder="Hasło" value={password} onChange={ e => setPassword(e.target.value) } />
+                    <Input type="password" placeholder="Hasło" value={password} onChange={e => setPassword(e.target.value)} />
                 </FormGroup>
 
                 <ForgotPassword><Link to={"forgetPassword"}>Zapomiałem hasła</Link></ForgotPassword>
@@ -62,7 +71,7 @@ const Login = props => {
                     <Button block color="primary">Zaloguj</Button>
                 </FormGroup>
                 <FormGroup>
-                    { error !== "" &&
+                    {error !== "" &&
                         <Alert color="danger" fade={false}>
                             {error}
                         </Alert>
