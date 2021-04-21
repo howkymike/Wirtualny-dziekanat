@@ -35,6 +35,7 @@ const Login = props => {
             case "ROLE_ADMIN": return "/admin";
             case "ROLE_STUDENT": return "/student";
             case "ROLE_STUFF": return "/stuff";
+            default: return "";
         }
     }
 
@@ -52,7 +53,7 @@ const Login = props => {
         if (logged)
             history.push(getHomeAddress(roles[0]));
         console.log(roles)
-    }, [logged, history]);
+    }, [logged, history, roles]);
 
     return (
         <LoginBox>

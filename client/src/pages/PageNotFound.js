@@ -1,4 +1,3 @@
-import { useRouteMatch } from "react-router";
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -12,9 +11,6 @@ const Wrapper = styled.div`
 `
 
 const PageNotFound = props => {
-
-    const {path, url} = useRouteMatch();
-
     return(
         <Wrapper>
             <h3>404 not found</h3>
