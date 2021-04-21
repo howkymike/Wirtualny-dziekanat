@@ -4,6 +4,8 @@ import Login from '../pages/Login';
 import ForgetPassword from "../pages/ForgetPassword";
 import ChangePassword from "../pages/ChangePassword";
 import FirstTime from '../pages/FirstTime';
+import PageNotFound from '../pages/PageNotFound';
+
 
 const AuthRoutes = props => {
 
@@ -17,12 +19,17 @@ const AuthRoutes = props => {
                 <ForgetPassword />
             </Route>
 
-            <Route  exact path="/changePassword/:token">
+            <Route exact path="/changePassword/:token">
                 <ChangePassword />
             </Route>
 
             <Route exact path="/firsttime/:token">
                 <FirstTime />
+            </Route>
+
+            { /* Page not found */ }
+            <Route path="*">
+                <PageNotFound />
             </Route>
         </Switch>
     );

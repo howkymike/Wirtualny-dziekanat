@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 import Home from './pages/Home';
+import PageNotFound from './pages/PageNotFound';
 
 import AdminPanelRoutes from './routes/AdminPanelRoutes';
 import AuthRoutes from './routes/AuthRoutes';
@@ -51,15 +52,19 @@ function App() {
 
                                 {/* Panels */}
                                 <Route path="/student">
-                                   <StudentPanelRoutes/>
+                                    <StudentPanelRoutes />
                                 </Route>
 
                                 <Route path="/admin">
                                     <AdminPanelRoutes />
                                 </Route>
-                                
-                                <AuthRoutes/>
 
+                                <AuthRoutes />
+
+                                { /* Page not found */}
+                                <Route path="*">
+                                    <PageNotFound />
+                                </Route>
                             </Switch>
                         </Main>
                         <Footer />
