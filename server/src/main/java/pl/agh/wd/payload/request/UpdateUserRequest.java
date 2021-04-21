@@ -47,9 +47,6 @@ public class UpdateUserRequest {
     @NotBlank
     private String address;
 
-    private Set<String> role;
+    private Set<UpdateRoleRequest> roles;
 
-    @NotBlank
-    @Size(min = 8, max = 40)
-    private String password;
 }
