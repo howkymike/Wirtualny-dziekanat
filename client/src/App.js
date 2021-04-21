@@ -12,13 +12,6 @@ import PageNotFound from './pages/PageNotFound';
 import AdminPanelRoutes from './routes/AdminPanelRoutes';
 import AuthRoutes from './routes/AuthRoutes';
 import StudentPanelRoutes from './routes/StudentPanelRoutes';
-import Login from './pages/Login';
-import ForgetPassword from "./pages/ForgetPassword";
-import ChangePassword from "./pages/ChangePassword";
-import FirstTime from './pages/FirstTime';
-import PlatformInfo from "./pages/PlatformInfo";
-import StudentList from './pages/StudentList';
-import ChangeActualPassword from "./pages/ChangeActualPassword";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -60,12 +53,6 @@ function App() {
                                 <Route path="/student">
                                     <StudentPanelRoutes />
                                 </Route>
-                                <Route path="/changeactualpassword">
-                                    <ChangeActualPassword/>
-                                </Route>
-                                <Route path="/admin/platform" component={PlatformInfo}/>
-
-                                <Route path="/admin/list" component={ StudentList } />
 
                                 <Route path="/admin">
                                     <AdminPanelRoutes />

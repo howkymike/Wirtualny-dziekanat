@@ -3,6 +3,8 @@ import { Switch, Route, useRouteMatch } from 'react-router';
 import PlatformInfo from '../pages/PlatformInfo';
 import StudentList from '../pages/StudentList';
 import PageNotFound from '../pages/PageNotFound';
+import ChangeActualPassword from '../pages/ChangeActualPassword';
+import Summary from '../pages/Summary';
 
 
 const AdminPanelRoutes = props => {
@@ -12,7 +14,7 @@ const AdminPanelRoutes = props => {
     return (
         <Switch>
             <Route exact path={path}>
-                { /* Admin home */ }
+                <Summary type="admin" />
             </Route>
             
             <Route exact path={`${path}/platform`}>
@@ -21,6 +23,10 @@ const AdminPanelRoutes = props => {
 
             <Route exact path={`${path}/list`}>
                 <StudentList />
+            </Route>
+
+            <Route exact path={`${path}/changeactualpassword`}>
+                <ChangeActualPassword />
             </Route>
 
             { /* Page not found */ }

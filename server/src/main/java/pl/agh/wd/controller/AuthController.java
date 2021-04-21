@@ -214,7 +214,7 @@ public class AuthController {
         } else {
             username = principal.toString();
         }
-        System.out.println(username);
+
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

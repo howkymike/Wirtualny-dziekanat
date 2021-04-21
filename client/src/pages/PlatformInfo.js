@@ -112,7 +112,7 @@ const PlatformInfo = () => {
 
     useEffect(() => {
         const interval = setInterval(() => fetchNewData(), updateInterval)
-
+        fetchNewData();
         return () => clearInterval(interval)
     }, [])
 
@@ -138,7 +138,7 @@ const PlatformInfo = () => {
             <div style={{fontSize: 40, background: "#ECEFF1"}}>
                 <p style={{margin: 8}}>Wątki</p>
             </div>
-            <Table light>
+            <Table>
                 <thead>
                 <tr>
                     <th>#</th>

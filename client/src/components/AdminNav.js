@@ -14,6 +14,9 @@ const AdminNav = props => {
             <Link to="/admin/platform">
                 Platforma
             </Link>
+            <Link to="/admin/changeactualpassword">
+                Zmien haslo
+            </Link>
         </>
     )
 }
