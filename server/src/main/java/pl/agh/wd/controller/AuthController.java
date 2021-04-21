@@ -230,5 +230,4 @@ public class AuthController {
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Fail: You are not loged in"));
     }
-
 }
