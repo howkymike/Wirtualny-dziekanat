@@ -10,6 +10,7 @@ import pl.agh.wd.repository.StudentRepository;
 import pl.agh.wd.repository.UserRepository;
 
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -58,4 +59,8 @@ public class UserService {
     public Iterable<Professor> getProfessorList() {
         return professorRepository.findAll();
     }
+
+    public Optional<User> findByUsername(String username) { return userRepository.findByUsername(username); }
+
+
 }
