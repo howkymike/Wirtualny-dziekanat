@@ -1,19 +1,17 @@
 import styled from 'styled-components';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import {UserProvider} from './context/userContext';
+import { UserProvider } from './context/userContext';
 
 import Nav from './components/Nav';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
 import Home from './pages/Home';
-import Login from './pages/Login';
-import ForgetPassword from "./pages/ForgetPassword";
-import ChangePassword from "./pages/ChangePassword";
-import FirstTime from './pages/FirstTime';
-import PlatformInfo from "./pages/PlatformInfo";
-import StudentList from './pages/StudentList';
+
+import AdminPanelRoutes from './routes/AdminPanelRoutes';
+import AuthRoutes from './routes/AuthRoutes';
+import StudentPanelRoutes from './routes/StudentPanelRoutes';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -40,37 +38,31 @@ function App() {
         <Router>
             <UserProvider>
                 <Wrapper className="App">
-                    <Route path={/^(?!\/login)(?!\/register)(?!\/forgetPassword)(?!\/changePassword)(?!\/$)[/\w]*/} exact component={Nav}/>
+                    <Route path={["/admin", "/student"]}>
+                        <Nav />
+                    </Route>
                     <Right>
                         <Header></Header>
                         <Main>
                             <Switch>
-                                <Route path="/login">
-                                    <Login/>
-                                </Route>
-                                <Route path="/student">
-                                    adwdawd
-                                </Route>
-                                <Route path="/admin/platform" component={PlatformInfo}/>
-
-                                <Route path="/admin/list" component={ StudentList } />
-
-                                <Route path="/forgetPassword">
-                                    <ForgetPassword/>
-                                </Route>
-                                <Route path="/changePassword/:token">
-                                    <ChangePassword/>
-                                </Route>
-                                <Route path="/firsttime/:token">
-                                    <FirstTime />
-                                </Route>
-
                                 <Route exact path="/">
-                                    <Home/>
+                                    <Home />
                                 </Route>
+
+                                {/* Panels */}
+                                <Route path="/student">
+                                   <StudentPanelRoutes/>
+                                </Route>
+
+                                <Route path="/admin">
+                                    <AdminPanelRoutes />
+                                </Route>
+                                
+                                <AuthRoutes/>
+
                             </Switch>
                         </Main>
-                        <Footer/>
+                        <Footer />
                     </Right>
                 </Wrapper>
             </UserProvider>
