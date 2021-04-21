@@ -12,9 +12,6 @@ const Wrapper = styled.div`
 `
 
 const PageNotFound = props => {
-
-    const {path, url} = useRouteMatch();
-
     return(
         <Wrapper>
             <h3>404 not found</h3>
