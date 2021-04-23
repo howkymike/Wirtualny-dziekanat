@@ -1,5 +1,6 @@
 package pl.agh.wd.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UpdateUserRequest {
 
     @NotBlank
@@ -47,6 +49,11 @@ public class UpdateUserRequest {
     @NotBlank
     private String address;
 
-    private Set<UpdateRoleRequest> roles;
+    private Set<String> roles;
 
+    private UpdateLecturerRequest lecturerData;
+
+    private UpdateClerkRequest stuffData;
+
+    private UpdateStudentRequest studentData;
 }
