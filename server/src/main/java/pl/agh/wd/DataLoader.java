@@ -12,7 +12,6 @@ import pl.agh.wd.model.RoleEnum;
 import pl.agh.wd.model.Student;
 import pl.agh.wd.model.User;
 import pl.agh.wd.repository.RoleRepository;
-import pl.agh.wd.repository.StudentRepository;
 import pl.agh.wd.repository.UserRepository;
 
 import java.util.HashSet;
@@ -44,6 +43,11 @@ public class DataLoader implements ApplicationRunner {
                 encoder.encode("admin"));
         user.setName("Sven");
         user.setSurname("Raucha-Cumilaa");
+        user.setCountry("Polska");
+        user.setCity("Kraków");
+        user.setAddress("Al. Mickiewicza 25");
+        user.setPostalCode("31-445");
+        user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
         userRepository.save(user);
