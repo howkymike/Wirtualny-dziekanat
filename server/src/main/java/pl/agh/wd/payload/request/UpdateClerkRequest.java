@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UpdateClerkRequest extends UpdateRoleRequest {
+public class UpdateClerkRequest {
 
     @NotBlank
     private long facultyId;
