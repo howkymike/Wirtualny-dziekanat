@@ -73,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"lecturer\",\n        \"student\"\n    ],\n    \"adminData\": {},\n    \"lecturerData\": {\n        \"title\": \"dr\",\n        \"facultyId\": 1 \n    },\n    \"stuffData\": {},\n    \"studentData\": {\n        \"index\": 304357\n    }\n}",
+							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"lecturer\",\n        \"admin\",\n        \"student\",\n        \"stuff\"\n    ],\n    \"lecturerData\": {\n        \"title\": \"dr\",\n        \"facultyId\": 1 \n    },\n    \"stuffData\": {\n        \"facultyId\" : 1\n    },\n    \"studentData\": {\n        \"index\": 304359\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
