@@ -24,7 +24,7 @@ public class Student {
     @Column(name="user_id")
     private long user_id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name="user_id", referencedColumnName="id")
     protected User owner;
 

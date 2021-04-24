@@ -8,6 +8,7 @@ const AdminNav = props => {
             <Link to="/student">
                 Podsumowanie
             </Link>
+            <Link to="/student/changeactualpassword">Zmien haslo</Link>
         </>
     )
 }

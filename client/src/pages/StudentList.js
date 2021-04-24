@@ -8,7 +8,7 @@ import MessageBox from '../components/MessageBox'
 
 import { userContext } from '../context/userContext';
 
-const Wrapper = styled.div` 
+export const Wrapper = styled.div` 
     margin: 2em;
     background-color: #fff;
     border-radius: 10px;

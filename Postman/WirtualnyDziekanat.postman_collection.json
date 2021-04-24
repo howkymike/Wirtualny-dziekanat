@@ -32,7 +32,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "3"
+									"value": "1"
 								}
 							]
 						}
@@ -59,8 +59,38 @@
 							"variable": [
 								{
 									"key": "role",
-									"value": ""
+									"value": "student"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"lecturer\",\n        \"admin\",\n        \"student\",\n        \"stuff\"\n    ],\n    \"lecturerData\": {\n        \"title\": \"mgr\",\n        \"facultyId\": 1 \n    },\n    \"stuffData\": {\n        \"facultyId\" : 1\n    },\n    \"studentData\": {\n        \"index\": 304359\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"4"
 							]
 						}
 					},
@@ -237,7 +267,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxODUxNTA3NywiZXhwIjoxNjE4NjAyNjc3fQ.DTXt3O6JY3BxPq8eAzGomDvTI9-GxPnz9zCkZ69qKHKWz0-6NYefl9hJtVpgleFaT8IIj1VdyjS-3hLoOwMMEQ",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxOTAyNTUzMCwiZXhwIjoxNjE5MTEzMTMwfQ.zygR5eVBC-qXcQ6PtRSX9IHMkeix2c5FaO9lbSPUjXOiT6efW8UGc6kOUn4SPomUShc9_ap5beTIpSfFn57QlQ",
 				"type": "string"
 			}
 		]
