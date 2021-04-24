@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.request.EditDataRequest;
+import pl.agh.wd.payload.request.UpdateUserRequest;
 import pl.agh.wd.payload.response.ListResponse;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
@@ -25,7 +26,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     UserRepository userRepository;
 
@@ -46,6 +47,20 @@ public class UserController {
         }
 
         return ResponseEntity.ok(new SuccessResponse(false, "DDD"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest request, @PathVariable Long userId) {
+        User user = userService.getUserById(request.getId());
+
+        if(user == null) {
+            return  ResponseEntity.badRequest().body(new MessageResponse("User id is invalid."));
+        }
+        else {
+            userService.updateUser(user, request);
+            return ResponseEntity.ok(new MessageResponse("User updated."));
+        }
     }
 
     @PatchMapping("/update")
