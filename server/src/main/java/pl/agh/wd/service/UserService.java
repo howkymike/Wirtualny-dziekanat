@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.agh.wd.model.*;
+import pl.agh.wd.payload.request.UpdateClerkRequest;
+import pl.agh.wd.payload.request.UpdateLecturerRequest;
+import pl.agh.wd.payload.request.UpdateStudentRequest;
 import pl.agh.wd.payload.request.UpdateUserRequest;
 import pl.agh.wd.repository.*;
 
@@ -67,29 +70,8 @@ public class UserService {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
 
-                        Optional<Professor> existingProfessor = professorRepository.findById(user.getId());
-                        Professor professor;
-
-                        if(existingProfessor.isEmpty()) {
-                            professor = new Professor();
-                            professor.setOwner(user);
-                        }
-                        else {
-                            professor = existingProfessor.get();
-                        }
-
-                        professor.setTitle(request.getLecturerData().getTitle());
-
-                        Optional<Faculty> facultyProfessor = facultyRepository
-                                .findById(request.getLecturerData().getFacultyId());
-
-                        if(facultyProfessor.isPresent()) {
-                            professor.setFaculty(facultyProfessor.get());
-                        }
-                        else {
-                            throw new RuntimeException("Error: Faculty is not found.");
-                        }
-                        professorRepository.save(professor);
+                        UpdateLecturerRequest lecturerData = request.getLecturerData();
+                        updateLecturer(user, lecturerData);
 
                         break;
                     case "stuff":
@@ -97,27 +79,8 @@ public class UserService {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminStuff);
 
-                        Optional<Clerk> existingClerk = clerkRepository.findById(user.getId());
-                        Clerk clerk;
-
-                        if(existingClerk.isEmpty()) {
-                            clerk = new Clerk();
-                            clerk.setOwner(user);
-                        }
-                        else {
-                            clerk = existingClerk.get();
-                        }
-
-                        Optional<Faculty> facultyClerk = facultyRepository
-                                .findById(request.getLecturerData().getFacultyId());
-
-                        if(facultyClerk.isPresent()) {
-                            clerk.setFaculty(facultyClerk.get());
-                        }
-                        else {
-                            throw new RuntimeException("Error: Faculty is not found.");
-                        }
-                        clerkRepository.save(clerk);
+                        UpdateClerkRequest stuffData = request.getStuffData();
+                        updateStuff(user, stuffData);
 
                         break;
                     case "student":
@@ -125,18 +88,8 @@ public class UserService {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
 
-                        Optional<Student> existingStudent = studentRepository.findById(user.getId());
-                        Student student;
-                        if(existingStudent.isEmpty()) {
-                            student = new Student();
-                            student.setUser_id(user.getId());
-                            student.setOwner(user);
-                        }
-                        else {
-                            student = existingStudent.get();
-                        }
-                        student.setIndex((int)request.getStudentData().getIndex());
-                        studentRepository.save(student);
+                        UpdateStudentRequest studentData = request.getStudentData();
+                        updateStudent(user, studentData);
 
                         break;
                     default:
@@ -177,5 +130,70 @@ public class UserService {
 
     public Iterable<Professor> getProfessorList() {
         return professorRepository.findAll();
+    }
+
+    private void updateLecturer(@NotNull User user, @NotNull UpdateLecturerRequest request) {
+        Optional<Professor> existingProfessor = professorRepository.findById(user.getId());
+        Professor professor;
+
+        if(existingProfessor.isEmpty()) {
+            professor = new Professor();
+            professor.setOwner(user);
+        }
+        else {
+            professor = existingProfessor.get();
+        }
+
+        professor.setTitle(request.getTitle());
+
+        Optional<Faculty> facultyProfessor = facultyRepository
+                .findById(request.getFacultyId());
+
+        if(facultyProfessor.isPresent()) {
+            professor.setFaculty(facultyProfessor.get());
+        }
+        else {
+            throw new RuntimeException("Error: Faculty is not found.");
+        }
+        professorRepository.save(professor);
+    }
+
+    private void updateStuff(@NotNull User user, @NotNull UpdateClerkRequest request) {
+        Optional<Clerk> existingClerk = clerkRepository.findById(user.getId());
+        Clerk clerk;
+
+        if(existingClerk.isEmpty()) {
+            clerk = new Clerk();
+            clerk.setOwner(user);
+        }
+        else {
+            clerk = existingClerk.get();
+        }
+
+        Optional<Faculty> facultyClerk = facultyRepository
+                .findById(request.getFacultyId());
+
+        if(facultyClerk.isPresent()) {
+            clerk.setFaculty(facultyClerk.get());
+        }
+        else {
+            throw new RuntimeException("Error: Faculty is not found.");
+        }
+        clerkRepository.save(clerk);
+    }
+
+    private void updateStudent(@NotNull User user, @NotNull UpdateStudentRequest request) {
+        Optional<Student> existingStudent = studentRepository.findById(user.getId());
+        Student student;
+        if(existingStudent.isEmpty()) {
+            student = new Student();
+            student.setUser_id(user.getId());
+            student.setOwner(user);
+        }
+        else {
+            student = existingStudent.get();
+        }
+        student.setIndex((int)request.getIndex());
+        studentRepository.save(student);
     }
 }
