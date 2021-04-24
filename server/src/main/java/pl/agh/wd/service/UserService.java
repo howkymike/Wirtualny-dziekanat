@@ -53,11 +53,7 @@ public class UserService {
         Set<String> strRoles = request.getRoles();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
+        if (strRoles != null) {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
@@ -97,6 +93,31 @@ public class UserService {
                 }
             });
         }
+        else {
+            throw new RuntimeException("Error: No roles defined in request.");
+        }
+
+        user.getRoles().forEach(role -> {
+            switch(role.getName()) {
+                case ROLE_LECTURER:
+                    if(!strRoles.contains("lecturer")) {
+                        professorRepository.deleteById(user.getId());
+                    }
+                    break;
+                case ROLE_STUFF:
+                    if(!strRoles.contains("stuff")) {
+                        clerkRepository.deleteById(user.getId());
+                    }
+                    break;
+                case ROLE_STUDENT:
+                    if(!strRoles.contains("student")) {
+                        studentRepository.deleteById(user.getId());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
 
         user.setRoles(roles);
         userRepository.save(user);
