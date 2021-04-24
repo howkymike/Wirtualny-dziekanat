@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.agh.wd.model.*;
-import pl.agh.wd.repository.ClerkRepository;
-import pl.agh.wd.repository.ProfessorRepository;
-import pl.agh.wd.repository.StudentRepository;
-import pl.agh.wd.repository.UserRepository;
+import pl.agh.wd.payload.request.UpdateUserRequest;
+import pl.agh.wd.repository.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -25,8 +26,127 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private FacultyRepository facultyRepository;
+
     public User getUserById(Long id){
         return userRepository.findById(id).orElse(null);
+    }
+
+    public void updateUser(@NotNull User user, @NotNull UpdateUserRequest request) {
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setCity(request.getCity());
+        user.setCountry(request.getCountry());
+        user.setPostalCode(request.getPostalCode());
+        user.setTelephone(request.getTelephone());
+        user.setAddress(request.getAddress());
+
+        Set<String> strRoles = request.getRoles();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                        break;
+                    case "lecturer":
+                        Role modRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+
+                        Optional<Professor> existingProfessor = professorRepository.findById(user.getId());
+                        Professor professor;
+
+                        if(existingProfessor.isEmpty()) {
+                            professor = new Professor();
+                            professor.setOwner(user);
+                        }
+                        else {
+                            professor = existingProfessor.get();
+                        }
+
+                        professor.setTitle(request.getLecturerData().getTitle());
+
+                        Optional<Faculty> facultyProfessor = facultyRepository
+                                .findById(request.getLecturerData().getFacultyId());
+
+                        if(facultyProfessor.isPresent()) {
+                            professor.setFaculty(facultyProfessor.get());
+                        }
+                        else {
+                            throw new RuntimeException("Error: Faculty is not found.");
+                        }
+                        professorRepository.save(professor);
+
+                        break;
+                    case "stuff":
+                        Role adminStuff = roleRepository.findByName(RoleEnum.ROLE_STUFF)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminStuff);
+
+                        Optional<Clerk> existingClerk = clerkRepository.findById(user.getId());
+                        Clerk clerk;
+
+                        if(existingClerk.isEmpty()) {
+                            clerk = new Clerk();
+                            clerk.setOwner(user);
+                        }
+                        else {
+                            clerk = existingClerk.get();
+                        }
+
+                        Optional<Faculty> facultyClerk = facultyRepository
+                                .findById(request.getLecturerData().getFacultyId());
+
+                        if(facultyClerk.isPresent()) {
+                            clerk.setFaculty(facultyClerk.get());
+                        }
+                        else {
+                            throw new RuntimeException("Error: Faculty is not found.");
+                        }
+                        clerkRepository.save(clerk);
+
+                        break;
+                    case "student":
+                        Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+
+                        Optional<Student> existingStudent = studentRepository.findById(user.getId());
+                        Student student;
+                        if(existingStudent.isEmpty()) {
+                            student = new Student();
+                            student.setUser_id(user.getId());
+                            student.setOwner(user);
+                        }
+                        else {
+                            student = existingStudent.get();
+                        }
+                        student.setIndex((int)request.getStudentData().getIndex());
+                        studentRepository.save(student);
+
+                        break;
+                    default:
+                        throw new RuntimeException("Error: Role is not found.");
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 
     public void deleteUser(@NotNull User user){
