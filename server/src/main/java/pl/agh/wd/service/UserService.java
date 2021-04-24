@@ -50,6 +50,43 @@ public class UserService {
         user.setTelephone(request.getTelephone());
         user.setAddress(request.getAddress());
 
+        Set<Role> newRoles = updateRoles(user, request);
+
+        user.setRoles(newRoles);
+        userRepository.save(user);
+    }
+
+    public void deleteUser(@NotNull User user){
+        for (Role role : user.getRoles()) {
+            switch (role.getName()){
+                case ROLE_STUDENT:
+                    studentRepository.deleteById(user.getId());
+                    break;
+                case ROLE_LECTURER:
+                    professorRepository.deleteById(user.getId());
+                    break;
+                case ROLE_STUFF:
+                    clerkRepository.deleteById(user.getId());
+                    break;
+            }
+        }
+
+        userRepository.deleteById(user.getId());
+    }
+    
+    public Iterable<Student> getStudentList() {
+        return studentRepository.findAll();
+    }
+
+    public Iterable<Clerk> getClerkList() {
+        return clerkRepository.findAll();
+    }
+
+    public Iterable<Professor> getProfessorList() {
+        return professorRepository.findAll();
+    }
+
+    private Set<Role> updateRoles(@NotNull User user, @NotNull UpdateUserRequest request) {
         Set<String> strRoles = request.getRoles();
         Set<Role> roles = new HashSet<>();
 
@@ -97,6 +134,12 @@ public class UserService {
             throw new RuntimeException("Error: No roles defined in request.");
         }
 
+        deleteEmptyRoles(user, strRoles);
+
+        return roles;
+    }
+
+    private void deleteEmptyRoles(@NotNull User user, Set<String> strRoles) {
         user.getRoles().forEach(role -> {
             switch(role.getName()) {
                 case ROLE_LECTURER:
@@ -118,39 +161,6 @@ public class UserService {
                     break;
             }
         });
-
-        user.setRoles(roles);
-        userRepository.save(user);
-    }
-
-    public void deleteUser(@NotNull User user){
-        for (Role role : user.getRoles()) {
-            switch (role.getName()){
-                case ROLE_STUDENT:
-                    studentRepository.deleteById(user.getId());
-                    break;
-                case ROLE_LECTURER:
-                    professorRepository.deleteById(user.getId());
-                    break;
-                case ROLE_STUFF:
-                    clerkRepository.deleteById(user.getId());
-                    break;
-            }
-        }
-
-        userRepository.deleteById(user.getId());
-    }
-    
-    public Iterable<Student> getStudentList() {
-        return studentRepository.findAll();
-    }
-
-    public Iterable<Clerk> getClerkList() {
-        return clerkRepository.findAll();
-    }
-
-    public Iterable<Professor> getProfessorList() {
-        return professorRepository.findAll();
     }
 
     private void updateLecturer(@NotNull User user, @NotNull UpdateLecturerRequest request) {
