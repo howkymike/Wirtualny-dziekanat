@@ -11,6 +11,7 @@ import pl.agh.wd.payload.request.UpdateUserRequest;
 import pl.agh.wd.repository.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -227,4 +228,8 @@ public class UserService {
         student.setIndex((int)request.getIndex());
         studentRepository.save(student);
     }
+
+    public Optional<User> findByUsername(String username) { return userRepository.findByUsername(username); }
+
+
 }

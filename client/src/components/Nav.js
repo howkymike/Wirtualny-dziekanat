@@ -47,7 +47,6 @@ const Nav = props => {
                 {   
                     roles[0] && roles[0] === "ROLE_STUDENT" && <StudentNav />
                 }
-                <Link to="/changeactualpassword">Zmien haslo</Link>
                 <Link to="/" onClick={ () => logout() }>
                     Wyloguj
                 </Link>

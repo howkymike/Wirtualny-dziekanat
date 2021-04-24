@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {userContext} from "../context/userContext";
 import { Container, Table} from 'reactstrap';
 import {CanvasJSChart} from 'canvasjs-react-charts'
@@ -39,54 +39,24 @@ const genUsageData = () => ({
             dataPoints : memoryCommittedData
         }]
 });
-const genCommitedData = () => ({
-    animationEnabled: true,
-    exportEnabled: true,
-    theme: "light2",
-    title :{
-        text: "Heap Memory commited"
-    },
-    axisY: {
-        title: "Memory",
-        includeZero: false,
-        suffix: "GB"
-    },
-    axisX: {
-        title: "Time",
-        suffix: "s"
-    },
-    data: [
-        {
-            type: "spline",
-            name: "2016",
-            dataPoints : memoryCommittedData
-        },
-        {
-            type: "spline",
-            name: "2016",
-            dataPoints : memoryUsageData
-        }
-    ]
-});
 
 
 const PlatformInfo = () => {
     let xVal = 1;
-    const updateInterval = 3000;
+    const UPDATE_INTERVAL = 3000;
     const {fetchApi} = useContext(userContext);
 
     const [fetchResponse, setFetchResponse] = React.useState({
-        memoryUsedOptions: [],
-        memoryCommitedOptions: [],
+        memoryOptions: {},
         os: "unknown",
         memoryInit: 0,
         memoryMax: 0,
         threadsData: []
     });
 
-    const {memoryUsedOptions, memoryCommitedOptions, os, memoryInit, memoryMax, threadsData} = fetchResponse;
+    const {memoryOptions, os, memoryInit, memoryMax, threadsData} = fetchResponse;
 
-    const fetchNewData = async () => {
+    const fetchNewData = useCallback(async () => {
         const [result, isOk] = await fetchApi("/admin/platforminfo", {
             method: 'GET'
         })
@@ -99,22 +69,21 @@ const PlatformInfo = () => {
                 memoryCommittedData.shift();
             }
             setFetchResponse({
-                memoryUsedOptions: genUsageData(),
-                memoryCommitedOptions: genCommitedData(),
+                memoryOptions: genUsageData(),
                 os: result["os"],
                 memoryInit: result["memoryMap"]["init"],
                 memoryMax: result["memoryMap"]["max"],
                 threadsData: result["threadList"]
             });
         }
-    }
+    }, [fetchApi, xVal]);
 
 
     useEffect(() => {
-        const interval = setInterval(() => fetchNewData(), updateInterval)
-
-        return () => clearInterval(interval)
-    }, [])
+        fetchNewData().then();
+        const interval = setInterval(() => fetchNewData(), UPDATE_INTERVAL);
+        return () => clearInterval(interval);
+    }, [fetchNewData]);
 
 
 
@@ -130,15 +99,15 @@ const PlatformInfo = () => {
             <div color="primary">Initial memory: {memoryInit} GB</div>
             <div>Max memory: {memoryMax} GB</div>
             </div>
-            <div>
-                <CanvasJSChart options = {memoryUsedOptions}/>
+            <div className='mt-2'>
+                <CanvasJSChart options = {memoryOptions}/>
             </div>
         </div>
         <div className='mt-5 card' style={{background: "#B0BEC5"}}>
-            <div style={{fontSize: 40, background: "#ECEFF1"}}>
+            <div style={{fontSize: 30, background: "#ECEFF1"}}>
                 <p style={{margin: 8}}>Wątki</p>
             </div>
-            <Table light>
+            <Table>
                 <thead>
                 <tr>
                     <th>#</th>
@@ -151,9 +120,9 @@ const PlatformInfo = () => {
                 { threadsData.map((thread,index) => (
                     <tr key={ index }>
                         <td>{index}</td>
-                        <td>{thread.name}</td>
-                        <td>{thread.state}</td>
-                        <td>{thread.cpu_time}</td>
+                        <td>{thread['name']}</td>
+                        <td>{thread['state']}</td>
+                        <td>{thread['cpu_time']}</td>
                     </tr>
                 )) }
                 </tbody>
