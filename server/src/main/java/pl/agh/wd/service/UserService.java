@@ -145,17 +145,23 @@ public class UserService {
             switch(role.getName()) {
                 case ROLE_LECTURER:
                     if(!strRoles.contains("lecturer")) {
-                        professorRepository.deleteById(user.getId());
+                        Optional <Professor> optionalProfessor = professorRepository.findById(user.getId());
+                        if(optionalProfessor.isPresent())
+                            professorRepository.deleteById(user.getId());
                     }
                     break;
                 case ROLE_STUFF:
                     if(!strRoles.contains("stuff")) {
-                        clerkRepository.deleteById(user.getId());
+                        Optional <Clerk> optionalClerk = clerkRepository.findById(user.getId());
+                        if(optionalClerk.isPresent())
+                            clerkRepository.deleteById(user.getId());
                     }
                     break;
                 case ROLE_STUDENT:
                     if(!strRoles.contains("student")) {
-                        studentRepository.deleteById(user.getId());
+                        Optional <Student> optionalStudent = studentRepository.findById(user.getId());
+                        if(optionalStudent.isPresent())
+                            studentRepository.deleteById(user.getId());
                     }
                     break;
                 default:

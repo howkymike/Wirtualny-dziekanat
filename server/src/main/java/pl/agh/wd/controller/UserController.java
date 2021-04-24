@@ -46,7 +46,7 @@ public class UserController {
 
         }
 
-        return ResponseEntity.ok(new SuccessResponse(false, "DDD"));
+        return ResponseEntity.badRequest().body(new SuccessResponse(false, "DDD"));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
