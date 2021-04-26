@@ -1,6 +1,5 @@
 package pl.agh.wd.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,9 +48,9 @@ public class UserResponse {
     private String address;
 
     private Set<String> roles;
-    private ProfessorResponse professor;
+    private LecturerResponse lecturer;
     private StudentResponse student;
-    private ClerkResponse clerk;
+    private ClerkResponse stuff;
 
     public UserResponse(User user){
         id = user.getId();

@@ -87,12 +87,12 @@ public class UserController {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "ROLE_ADMIN":
                         Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
                         break;
-                    case "lecturer":
+                    case "ROLE_LECTURER":
                         Role modRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
@@ -108,10 +108,10 @@ public class UserController {
                             professor = existingProfessor.get();
                         }
 
-                        professor.setTitle(request.getLecturerData().getTitle());
+                        professor.setTitle(request.getLecturer().getTitle());
 
                         Optional<Faculty> facultyProfessor = facultyRepository
-                                .findById(request.getLecturerData().getFacultyId());
+                                .findById(request.getLecturer().getFacultyId());
 
                         if(facultyProfessor.isPresent()) {
                             professor.setFaculty(facultyProfessor.get());
@@ -122,7 +122,7 @@ public class UserController {
                         professorRepository.save(professor);
 
                         break;
-                    case "stuff":
+                    case "ROLE_STUFF":
                         Role adminStuff = roleRepository.findByName(RoleEnum.ROLE_STUFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminStuff);
@@ -139,7 +139,7 @@ public class UserController {
                         }
 
                         Optional<Faculty> facultyClerk = facultyRepository
-                                .findById(request.getLecturerData().getFacultyId());
+                                .findById(request.getStuff().getFacultyId());
 
                         if(facultyClerk.isPresent()) {
                             clerk.setFaculty(facultyClerk.get());
@@ -150,7 +150,7 @@ public class UserController {
                         clerkRepository.save(clerk);
 
                         break;
-                    case "student":
+                    case "ROLE_STUDENT":
                         Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
@@ -165,7 +165,7 @@ public class UserController {
                         else {
                             student = existingStudent.get();
                         }
-                        student.setIndex((int)request.getStudentData().getIndex());
+                        student.setIndex((int)request.getStudent().getIndex());
                         studentRepository.save(student);
 
                         break;
@@ -199,7 +199,7 @@ public class UserController {
                     break;
                 case ROLE_STUFF:
                     Optional<Clerk> clerk = userService.getClerkById(id);
-                    clerk.ifPresent(value -> userResponse.setClerk(new ClerkResponse(value)));
+                    clerk.ifPresent(value -> userResponse.setStuff(new ClerkResponse(value)));
                     break;
                 case ROLE_STUDENT:
                     Optional<Student> student = userService.getStudentById(id);
@@ -207,7 +207,7 @@ public class UserController {
                     break;
                 case ROLE_LECTURER:
                     Optional<Professor> professor = userService.getProfessorById(id);
-                    professor.ifPresent(value -> userResponse.setProfessor(new ProfessorResponse(value)));
+                    professor.ifPresent(value -> userResponse.setLecturer(new LecturerResponse(value)));
                     break;
             }
         }

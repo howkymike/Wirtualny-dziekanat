@@ -8,14 +8,14 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class ProfessorResponse {
+public class LecturerResponse {
     @NotBlank
     private String title;
 
     @NotBlank
     private long facultyId;
 
-    public ProfessorResponse(Professor professor){
+    public LecturerResponse(Professor professor){
         title = professor.getTitle();
         facultyId = professor.getFaculty().getFaculty_id();
     }
