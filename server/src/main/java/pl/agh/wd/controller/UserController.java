@@ -7,13 +7,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import pl.agh.wd.model.User;
+import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.EditDataRequest;
 import pl.agh.wd.payload.request.UpdateUserRequest;
 import pl.agh.wd.payload.response.ListResponse;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.UserRepository;
+import pl.agh.wd.payload.response.*;
+import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserService;
 
 import java.util.Optional;
@@ -88,6 +90,40 @@ public class UserController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Zaktualizowano dane"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id){
+
+        User user = userService.getUserById(id);
+        if(user == null){
+            return ResponseEntity.badRequest()
+                    .body(new SuccessResponse(false, "User not Found."));
+        }
+
+        UserResponse userResponse = new UserResponse(user);
+
+        for(Role role : user.getRoles()){
+            switch (role.getName()){
+                case ROLE_ADMIN:
+                    break;
+                case ROLE_STUFF:
+                    Optional<Clerk> clerk = userService.getClerkById(id);
+                    clerk.ifPresent(value -> userResponse.setStuff(new ClerkResponse(value)));
+                    break;
+                case ROLE_STUDENT:
+                    Optional<Student> student = userService.getStudentById(id);
+                    student.ifPresent(value -> userResponse.setStudent(new StudentResponse(value)));
+                    break;
+                case ROLE_LECTURER:
+                    Optional<Professor> professor = userService.getProfessorById(id);
+                    professor.ifPresent(value -> userResponse.setLecturer(new LecturerResponse(value)));
+                    break;
+            }
+        }
+
+        return ResponseEntity.ok(userResponse);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
