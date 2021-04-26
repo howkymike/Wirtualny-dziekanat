@@ -170,10 +170,10 @@ public class UserControllerTests {
                 updateRequest.setName("bogaty");
                 updateRequest.setSurname("fchu");
 
-                updateRequest.setRoles(Collections.singleton("student"));
+                updateRequest.setRoles(Collections.singleton("ROLE_STUDENT"));
                 UpdateStudentRequest studentRequest = new UpdateStudentRequest();
                 studentRequest.setIndex(304294);
-                updateRequest.setStudentData(studentRequest);
+                updateRequest.setStudent(studentRequest);
 
                 ResponseEntity responseStudent = controller.updateUser(updateRequest, 99999L);
                 assert(responseStudent.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
@@ -194,15 +194,15 @@ public class UserControllerTests {
                 Optional<Student> optionalStudentAfter = studentRepository.findById(userOptionalAfter.get().getId());
                 assert(optionalStudentAfter.isPresent());
                 assert(optionalStudentAfter.get().getIndex() == 304294);
-                updateRequest.setStudentData(null);
+                updateRequest.setStudent(null);
 
                 UpdateClerkRequest clerkRequest = new UpdateClerkRequest();
                 clerkRequest.setFacultyId(1L);
                 Optional<Faculty> optionalFaculty = facultyRepository.findById(1L);
                 assert(optionalFaculty.isPresent());
 
-                updateRequest.setStuffData(clerkRequest);
-                updateRequest.setRoles(Collections.singleton("stuff"));
+                updateRequest.setStuff(clerkRequest);
+                updateRequest.setRoles(Collections.singleton("ROLE_STUFF"));
 
                 ResponseEntity responseClerk = controller.updateUser(updateRequest, 99999L);
                 assert(responseClerk.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
@@ -211,8 +211,8 @@ public class UserControllerTests {
                 Optional<Clerk> optionalClerkAfter = clerkRepository.findById(userOptionalAfter.get().getId());
                 assert(optionalClerkAfter.isPresent());
                 assert(optionalClerkAfter.get().getFaculty().getFaculty_id() == 1L);
-                updateRequest.setStuffData(null);
-                updateRequest.setStudentData(null);
+                updateRequest.setStuff(null);
+                updateRequest.setStudent(null);
 
                 UpdateLecturerRequest lecturerRequest = new UpdateLecturerRequest();
                 lecturerRequest.setFacultyId(1L);
@@ -221,9 +221,9 @@ public class UserControllerTests {
                 Optional<User> optionalUserForLecturer = userRepository.findByUsername("bogdanobananideluxe");
                 assert(optionalUserForLecturer.isPresent());
                 updateRequest.setId(optionalUserForLecturer.get().getId());
-                updateRequest.setLecturerData(lecturerRequest);
+                updateRequest.setLecturer(lecturerRequest);
                 updateRequest.setRoles(null);
-                updateRequest.setRoles(Collections.singleton("lecturer"));
+                updateRequest.setRoles(Collections.singleton("ROLE_LECTURER"));
 
                 ResponseEntity responseLecturer = controller.updateUser(updateRequest, 99999L);
 
