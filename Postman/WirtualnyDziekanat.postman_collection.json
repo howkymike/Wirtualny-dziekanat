@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "51577837-ee13-485b-a708-48cf3219b354",
+		"_postman_id": "514c6571-770a-412e-a7fd-aa0ebe060306",
 		"name": "WirtualnyDziekanat",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -8,6 +8,91 @@
 		{
 			"name": "Users",
 			"item": [
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/:role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":role"
+							],
+							"variable": [
+								{
+									"key": "role",
+									"value": "student"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/user/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"ROLE_LECTURER\",\n        \"ROLE_ADMIN\",\n        \"ROLE_STUDENT\",\n        \"ROLE_STUFF\"\n    ],\n    \"lecturer\": {\n        \"title\": \"mgr\",\n        \"facultyId\": 1 \n    },\n    \"stuff\": {\n        \"facultyId\" : 1\n    },\n    \"student\": {\n        \"index\": 304359\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Delete user",
 					"request": {
@@ -38,65 +123,91 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Get users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/users/:role",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								":role"
-							],
-							"variable": [
-								{
-									"key": "role",
-									"value": "student"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update user",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"lecturer\",\n        \"admin\",\n        \"student\",\n        \"stuff\"\n    ],\n    \"lecturerData\": {\n        \"title\": \"mgr\",\n        \"facultyId\": 1 \n    },\n    \"stuffData\": {\n        \"facultyId\" : 1\n    },\n    \"studentData\": {\n        \"index\": 304359\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/users/4",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								"4"
-							]
-						}
-					},
-					"response": []
 				}
 			]
+		},
+		{
+			"name": "Get roles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/roles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get faculties",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/faculties",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"faculties"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin stuff",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxNzA5NTQ1MCwiZXhwIjoxNjE3MTgzMDUwfQ.qOO7vIWRAGTI_fxNPZAck2dTO4CBQngmYoywklTEm-MKedWvUNLdxXoO252Tt0Jm5UHQ63tt0kf1kp22FA1qRw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/admin/supersecret",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"supersecret"
+					]
+				}
+			},
+			"response": []
 		},
 		{
 			"name": "register",
@@ -153,49 +264,6 @@
 						"api",
 						"auth",
 						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "admin stuff",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxNzA5NTQ1MCwiZXhwIjoxNjE3MTgzMDUwfQ.qOO7vIWRAGTI_fxNPZAck2dTO4CBQngmYoywklTEm-MKedWvUNLdxXoO252Tt0Jm5UHQ63tt0kf1kp22FA1qRw",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/admin/supersecret",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"admin",
-						"supersecret"
 					]
 				}
 			},
@@ -267,7 +335,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxOTAyNTUzMCwiZXhwIjoxNjE5MTEzMTMwfQ.zygR5eVBC-qXcQ6PtRSX9IHMkeix2c5FaO9lbSPUjXOiT6efW8UGc6kOUn4SPomUShc9_ap5beTIpSfFn57QlQ",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxOTQyODQxOCwiZXhwIjoxNjE5NTE2MDE4fQ.8_Oqan3xolj2WNRswnW5fCLIg64diyVjzB-FLDulblY1kULap9aePaicqReyCPJvM0hdbhqJxf1dZgw9_teyUg",
 				"type": "string"
 			}
 		]
