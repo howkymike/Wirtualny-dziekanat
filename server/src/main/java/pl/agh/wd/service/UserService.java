@@ -13,7 +13,6 @@ import pl.agh.wd.repository.*;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -38,6 +37,17 @@ public class UserService {
 
     public User getUserById(Long id){
         return userRepository.findById(id).orElse(null);
+    }
+    public Optional<Student> getStudentById(Long id){
+        return studentRepository.findById(id);
+    }
+
+    public Optional<Clerk>  getClerkById(Long id){
+        return clerkRepository.findById(id);
+    }
+
+    public Optional<Professor>  getProfessorById(Long id){
+        return professorRepository.findById(id);
     }
 
     public void updateUser(@NotNull User user, @NotNull UpdateUserRequest request) {
@@ -94,35 +104,35 @@ public class UserService {
         if (strRoles != null) {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "ROLE_ADMIN":
                         Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
                         break;
-                    case "lecturer":
+                    case "ROLE_LECTURER":
                         Role modRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
 
-                        UpdateLecturerRequest lecturerData = request.getLecturerData();
+                        UpdateLecturerRequest lecturerData = request.getLecturer();
                         updateLecturer(user, lecturerData);
 
                         break;
-                    case "stuff":
+                    case "ROLE_STUFF":
                         Role adminStuff = roleRepository.findByName(RoleEnum.ROLE_STUFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminStuff);
 
-                        UpdateClerkRequest stuffData = request.getStuffData();
+                        UpdateClerkRequest stuffData = request.getStuff();
                         updateStuff(user, stuffData);
 
                         break;
-                    case "student":
+                    case "ROLE_STUDENT":
                         Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
 
-                        UpdateStudentRequest studentData = request.getStudentData();
+                        UpdateStudentRequest studentData = request.getStudent();
                         updateStudent(user, studentData);
 
                         break;
@@ -144,18 +154,24 @@ public class UserService {
         user.getRoles().forEach(role -> {
             switch(role.getName()) {
                 case ROLE_LECTURER:
-                    if(!strRoles.contains("lecturer")) {
-                        professorRepository.deleteById(user.getId());
+                    if(!strRoles.contains("ROLE_LECTURER")) {
+                        Optional <Professor> optionalProfessor = professorRepository.findById(user.getId());
+                        if(optionalProfessor.isPresent())
+                            professorRepository.deleteById(user.getId());
                     }
                     break;
                 case ROLE_STUFF:
-                    if(!strRoles.contains("stuff")) {
-                        clerkRepository.deleteById(user.getId());
+                    if(!strRoles.contains("ROLE_STUFF")) {
+                        Optional <Clerk> optionalClerk = clerkRepository.findById(user.getId());
+                        if(optionalClerk.isPresent())
+                            clerkRepository.deleteById(user.getId());
                     }
                     break;
                 case ROLE_STUDENT:
-                    if(!strRoles.contains("student")) {
-                        studentRepository.deleteById(user.getId());
+                    if(!strRoles.contains("ROLE_STUDENT")) {
+                        Optional <Student> optionalStudent = studentRepository.findById(user.getId());
+                        if(optionalStudent.isPresent())
+                            studentRepository.deleteById(user.getId());
                     }
                     break;
                 default:

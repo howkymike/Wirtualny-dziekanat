@@ -49,11 +49,12 @@ public class UpdateUserRequest {
     @NotBlank
     private String address;
 
+    @NotBlank
     private Set<String> roles;
 
-    private UpdateLecturerRequest lecturerData;
+    private UpdateLecturerRequest lecturer;
 
-    private UpdateClerkRequest stuffData;
+    private UpdateClerkRequest stuff;
 
-    private UpdateStudentRequest studentData;
+    private UpdateStudentRequest student;
 }
