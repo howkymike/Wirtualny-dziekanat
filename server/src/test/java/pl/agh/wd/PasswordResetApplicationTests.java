@@ -50,7 +50,7 @@ public class PasswordResetApplicationTests {
         // forgetPassword should send an email with a token that leads to password reset - would that even be testable?
 
         assert(response.getStatusCode().toString().equals("200 OK"));
-        assert(messageResponse.getMessage().equals(""));
+        assert(messageResponse != null && !messageResponse.getMessage().isEmpty());
 
     }
 
