@@ -33,7 +33,7 @@ const Menu = styled.ul`
     }
 `;
 
-const Nav = props => {
+const Nav = () => {
 
     const { username, logout, roles } = useContext(userContext);
     

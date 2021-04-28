@@ -21,7 +21,7 @@ const ForgotPassword = styled.div`
     text-align: left;
 `;
 
-const Login = props => {
+const Login = () => {
 
     const { login, logged, roles } = useContext(userContext);
     const history = useHistory();

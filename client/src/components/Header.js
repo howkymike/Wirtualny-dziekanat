@@ -7,7 +7,7 @@ const MainHeader = styled.header`
 `;
 
 
-const Header = props => {
+const Header = () => {
     return(
         <MainHeader>
             <h2>

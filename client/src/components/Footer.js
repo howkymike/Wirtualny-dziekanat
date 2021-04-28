@@ -6,7 +6,7 @@ const MainFooter = styled.footer`
     text-align: center;
 `;
 
-const Footer = props => {
+const Footer = () => {
     return(
         <MainFooter>
             Wirtaulni dziekani &copy; Wirtualny Dziekanat

@@ -33,7 +33,7 @@ const Role = styled(Badge)`
 
 `
 
-const StudentList = props => {
+const StudentList = () => {
 
     let [listType, setListType] = useState("student");
     let [loading, setLoading] = useState(true);
