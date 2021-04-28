@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -84,7 +85,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         if(!userDetails.isNew()) {
@@ -115,7 +116,7 @@ public class AuthController {
     public ResponseEntity<?> firstTime(@Valid @RequestBody FirstTimeRequest request) {
         Optional<User> user = tokenService.getUserByToken(request.getToken());
         
-        if(!user.isPresent()) {
+        if(user.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new SuccessResponse(false, "Wrong link"));
         }

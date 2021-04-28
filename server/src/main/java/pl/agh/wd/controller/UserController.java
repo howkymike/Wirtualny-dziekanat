@@ -10,12 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.EditDataRequest;
 import pl.agh.wd.payload.request.UpdateUserRequest;
-import pl.agh.wd.payload.response.ListResponse;
-import pl.agh.wd.payload.response.MessageResponse;
-import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.UserRepository;
 import pl.agh.wd.payload.response.*;
-import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserService;
 
 import java.util.Optional;
@@ -75,7 +71,7 @@ public class UserController {
 
         Optional<User> userOptional = userService.findByUsername(userDetails.getUsername());
 
-        if (!userOptional.isPresent())
+        if (userOptional.isEmpty())
             return ResponseEntity.badRequest().body(new MessageResponse("Nie jesteś zalogowany"));
 
         User user = userOptional.get();
@@ -108,16 +104,16 @@ public class UserController {
             switch (role.getName()){
                 case ROLE_ADMIN:
                     break;
-                case ROLE_STUFF:
+                case ROLE_STAFF:
                     Optional<Clerk> clerk = userService.getClerkById(id);
-                    clerk.ifPresent(value -> userResponse.setStuff(new ClerkResponse(value)));
+                    clerk.ifPresent(value -> userResponse.setStaff(new ClerkResponse(value)));
                     break;
                 case ROLE_STUDENT:
                     Optional<Student> student = userService.getStudentById(id);
                     student.ifPresent(value -> userResponse.setStudent(new StudentResponse(value)));
                     break;
                 case ROLE_LECTURER:
-                    Optional<Professor> professor = userService.getProfessorById(id);
+                    Optional<Lecturer> professor = userService.getProfessorById(id);
                     professor.ifPresent(value -> userResponse.setLecturer(new LecturerResponse(value)));
                     break;
             }

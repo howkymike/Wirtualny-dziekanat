@@ -104,7 +104,7 @@ public class UserDetailsImpl implements UserDetails{
         Date now = new Date();
         long lockedFor = now.getTime() - lockedAt.getTime();
 
-        Boolean lockExpired = lockedFor >= MAX_LOCK_TIME;
+        boolean lockExpired = lockedFor >= MAX_LOCK_TIME;
 
         return (!isLocked || lockExpired);
     }

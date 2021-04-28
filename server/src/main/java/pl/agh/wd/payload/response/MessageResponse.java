@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * Handles simple API responses
  *
- * @author: howkymike
+ * @author howkymike
  */
 
 @Getter

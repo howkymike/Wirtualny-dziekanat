@@ -2,7 +2,7 @@ package pl.agh.wd.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.agh.wd.model.Professor;
+import pl.agh.wd.model.Lecturer;
 
 import javax.validation.constraints.NotBlank;
 
@@ -15,8 +15,8 @@ public class LecturerResponse {
     @NotBlank
     private long facultyId;
 
-    public LecturerResponse(Professor professor){
-        title = professor.getTitle();
-        facultyId = professor.getFaculty().getFaculty_id();
+    public LecturerResponse(Lecturer lecturer){
+        title = lecturer.getTitle();
+        facultyId = lecturer.getFaculty().getId();
     }
 }

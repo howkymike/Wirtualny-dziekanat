@@ -1,52 +1,47 @@
 package pl.agh.wd.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * roles table
- * It is created here but populated using data.sql file.
+ * same note as in the Lecturer.java
  *
+ * @author howkymike
+ * @author bakoo
  */
-
 @Entity
-@Table(name = "students")
+@Table(name = "student")
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"courseStudents"})
 public class Student {
 
     @Id
-    @Column(name="user_id")
-    private long user_id;
+    private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn(name="user_id", referencedColumnName="id")
-    protected User owner;
+    @OneToOne(fetch= FetchType.LAZY)
+    @MapsId
+    private User user;
 
     @Column(name="index")
-    protected int index;
-
-    public void setOwner(User owner)
-    {
-        this.owner = owner;
-        this.user_id = owner.getId();
-    }
+    private int index;
 
     // This should get us a many-to-many through a Student weak entity that has a User PKEY id as user_id.
-    // TODO: resolve adding stuff to course_student table
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "course_students",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private Set<Course> currentCourses;
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private Set<CourseStudent> courseStudents = new HashSet<>();
 
     @ManyToMany(mappedBy = "currentStudents")
     Set<FieldOfStudy> fieldsOfStudy;
 
+    public Student(User user, int index) {
+        this.user = user;
+        this.index = index;
+    }
 }

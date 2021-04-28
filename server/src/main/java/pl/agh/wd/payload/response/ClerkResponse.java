@@ -13,6 +13,6 @@ public class ClerkResponse {
     private long facultyId;
 
     public ClerkResponse(Clerk clerk){
-        facultyId = clerk.getFaculty().getFaculty_id();
+        facultyId = clerk.getFaculty().getId();
     }
 }

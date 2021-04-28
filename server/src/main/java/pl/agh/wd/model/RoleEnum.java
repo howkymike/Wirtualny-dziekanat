@@ -9,6 +9,6 @@ package pl.agh.wd.model;
 public enum RoleEnum {
     ROLE_ADMIN,
     ROLE_LECTURER,
-    ROLE_STUFF,
+    ROLE_STAFF,
     ROLE_STUDENT
 }

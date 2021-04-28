@@ -19,10 +19,7 @@ public class FirstTimeTokenService {
 
     public Optional<User> getUserByToken(String token){
         Optional<FirstTimeToken> fToken = tokenRepository.findByToken(token);
-        if(fToken.isPresent())
-            return Optional.of(fToken.get().getUser());
-        else
-            return Optional.empty();
+        return fToken.map(FirstTimeToken::getUser);
     }
 
 }

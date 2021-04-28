@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Handles /api/admin/platforminfo response
  *
- * @author: howkymike
+ * @author howkymike
  */
 
 @Getter
@@ -55,7 +55,7 @@ public class PlatformInfoResponse {
     }
 
     private void setThreads() {
-        threadList = new ArrayList<ThreadModel>();
+        threadList = new ArrayList<>();
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         for(Long threadID : threadMXBean.getAllThreadIds()) {
             ThreadInfo info = threadMXBean.getThreadInfo(threadID);

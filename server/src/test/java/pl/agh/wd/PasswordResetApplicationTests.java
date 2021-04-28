@@ -26,7 +26,7 @@ public class PasswordResetApplicationTests {
     UserRepository userRepository;
 
     @Autowired
-    ForgetPasswordController controller;
+    ForgetPasswordController forgetPasswordController;
 
     @Autowired
     PasswordEncoder encoder;
@@ -45,12 +45,12 @@ public class PasswordResetApplicationTests {
         ForgetPasswordRequest fpRequest = new ForgetPasswordRequest();
         fpRequest.setUsername("howkymike2");
 
-        ResponseEntity response = controller.forgetPassword(fpRequest);
-
+        ResponseEntity<?> response = forgetPasswordController.forgetPassword(fpRequest);
+        MessageResponse messageResponse = (MessageResponse) response.getBody();
         // forgetPassword should send an email with a token that leads to password reset - would that even be testable?
 
         assert(response.getStatusCode().toString().equals("200 OK"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+        assert(messageResponse.getMessage().equals(""));
 
     }
 
@@ -63,7 +63,7 @@ public class PasswordResetApplicationTests {
 
         ForgetPasswordRequest fpRequest = new ForgetPasswordRequest();
         fpRequest.setUsername("howkymike3");
-        ResponseEntity response = controller.forgetPassword(fpRequest);
+        ResponseEntity<?> response = forgetPasswordController.forgetPassword(fpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
@@ -93,7 +93,7 @@ public class PasswordResetApplicationTests {
         cpRequest.setNewPassword("WietKrule");
         cpRequest.setToken("TokenDlaHowkymike");
 
-        ResponseEntity response = controller.changePassword(cpRequest);
+        ResponseEntity<?> response = forgetPasswordController.changePassword(cpRequest);
         assert(response.getStatusCode().toString().equals("200 OK"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
 
@@ -123,7 +123,7 @@ public class PasswordResetApplicationTests {
         cpRequest.setNewPassword("WietKrule");
         cpRequest.setToken("TokenDlaHowkymike1");
 
-        ResponseEntity response = controller.changePassword(cpRequest);
+        ResponseEntity<?> response = forgetPasswordController.changePassword(cpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
@@ -139,7 +139,7 @@ public class PasswordResetApplicationTests {
             assert(testToken!=null);
         }
 
-        response = controller.changePassword(cpRequest);
+        response = forgetPasswordController.changePassword(cpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));

@@ -7,15 +7,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.agh.wd.model.Role;
-import pl.agh.wd.model.RoleEnum;
-import pl.agh.wd.model.Student;
-import pl.agh.wd.model.User;
-import pl.agh.wd.repository.RoleRepository;
-import pl.agh.wd.repository.UserRepository;
+import pl.agh.wd.model.*;
+import pl.agh.wd.repository.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class DataLoader implements ApplicationRunner {
@@ -25,6 +20,27 @@ public class DataLoader implements ApplicationRunner {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private LecturerRepository lecturerRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private CourseStudentRepository courseStudentRepository;
+
+    @Autowired
+    private FieldOfStudyRepository fieldOfStudyRepository;
+
+    @Autowired
+    private FacultyRepository facultyRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private ClerkRepository clerkRepository;
 
     @Lazy
     @Autowired
@@ -70,17 +86,13 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
-        userRepository.save(user);
-
-        Student student = new Student();
-        student.setOwner(user);
-        
+        studentRepository.save(new Student(user, 123456));
     }
 
 
     private void createClerk() {
         Set<Role> roles = new HashSet<>();
-        Role clerkRole = roleRepository.findByName(RoleEnum.ROLE_STUFF)
+        Role clerkRole = roleRepository.findByName(RoleEnum.ROLE_STAFF)
                 .orElseThrow(() -> new RuntimeException("Error: Clerk Role is not found."));
         roles.add(clerkRole);
         User user = new User("baba",
@@ -95,34 +107,74 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("420420420");
         user.setRoles(roles);
         user.setIsNew(false);
-        userRepository.save(user);
+        clerkRepository.save(new Clerk(user));
     }
 
-    private void createProfessor() {
+    private void createLecturer() {
         Set<Role> roles = new HashSet<>();
         Role professorRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
                 .orElseThrow(() -> new RuntimeException("Error: Clerk Role is not found."));
         roles.add(professorRole);
-        User user = new User("onder",
+        User onderkaUser = new User("onder",
                 "wirt21ualnt2@gmail.com",
-                encoder.encode("onder"));
-        user.setName("Zdzisław");
-        user.setSurname("Onderka");
-        user.setCountry("Polska");
-        user.setCity("Kraków");
-        user.setAddress("A-0 Kanciapa");
-        user.setPostalCode("31-445");
-        user.setTelephone("696969696");
-        user.setRoles(roles);
-        user.setIsNew(false);
-        userRepository.save(user);
+                encoder.encode("onder"),
+                "Zdzisław",
+                "Onderka",
+                "Polska",
+                "Kraków",
+                "A-0 Kanciapa",
+                "31-445",
+                "696969696",
+                roles,
+                false);
+        lecturerRepository.save(new Lecturer(onderkaUser, "***PhD"));
     }
 
+    private void createFaculties() {
+        List<Faculty> facultyList = new ArrayList<>();
+        facultyList.add(new Faculty("GGIOS"));
+        facultyList.add(new Faculty("GGIS"));
+        facultyList.add(new Faculty("IET"));
+        facultyRepository.saveAll(facultyList);
+    }
+
+    private void createFieldOfStudy() {
+        FieldOfStudy it = new FieldOfStudy("Computer Science");
+        facultyRepository.findByName("IET").ifPresent(it::setFaculty);
+        fieldOfStudyRepository.save(it);
+
+        FieldOfStudy wildlife = new FieldOfStudy("Wildlife");
+        facultyRepository.findByName("GGIOS").ifPresent(wildlife::setFaculty);
+        fieldOfStudyRepository.save(wildlife);
+
+        FieldOfStudy sexualityStudies = new FieldOfStudy("Sexuality Studies");
+        facultyRepository.findByName("GGIS").ifPresent(sexualityStudies::setFaculty);
+        fieldOfStudyRepository.save(sexualityStudies);
+    }
+
+    private void createCourses() {
+        Course ecoCourse = new Course("Ecological space and sustainable development",
+                30,15,3,false);
+        fieldOfStudyRepository.findByName("Wildlife").ifPresent(ecoCourse::setFieldOfStudy);
+        lecturerRepository.findByUserUsername("onder").ifPresent(l -> ecoCourse.setCourseLecturers(new HashSet<>(Collections.singletonList(l))));
+        //studentRepository.findByUserUsername("kamil").ifPresent(s -> ecoCourse.setCourseStudents(new HashSet<>(Collections.singletonList(new CourseStudent(ecoCourse, s)))));
+        courseRepository.save(ecoCourse);
+        studentRepository.findByUserUsername("kamil").ifPresent(k -> courseStudentRepository.save(new CourseStudent(ecoCourse, k)));
+
+        Course blockChainCourse = new Course("Blockchain",
+                15,15,3,true);
+        fieldOfStudyRepository.findByName("Computer Science").ifPresent(blockChainCourse::setFieldOfStudy);
+        courseRepository.save(blockChainCourse);
+    }
 
     public void run(ApplicationArguments args) {
         createAdmin();
         createStudent();
         createClerk();
-        createProfessor();
+        createLecturer();
+
+        createFaculties();
+        createFieldOfStudy();
+        createCourses();
     }
 }

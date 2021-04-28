@@ -87,7 +87,7 @@ public class User {
     private String address;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(	name = "user_roles",
+    @JoinTable(	name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -99,5 +99,19 @@ public class User {
         this.isNew = true;
     }
 
+
+    public User(String username, String email, String password, String firstName, String lastName, String country,
+                String city, String address, String postalCode, String telephone, Set<Role> roles, boolean isNew ) {
+        this(username, email, password);
+        this.name = firstName;
+        this.surname = lastName;
+        this.country = country;
+        this.city = city;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.telephone = telephone;
+        this.roles = roles;
+        this.isNew = isNew;
+    }
 
 }

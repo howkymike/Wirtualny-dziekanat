@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import pl.agh.wd.model.Role;
 import pl.agh.wd.model.RoleEnum;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

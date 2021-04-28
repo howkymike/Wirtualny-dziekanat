@@ -24,7 +24,7 @@ public class UserService {
     private ClerkRepository clerkRepository;
 
     @Autowired
-    private ProfessorRepository professorRepository;
+    private LecturerRepository lecturerRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,8 +46,8 @@ public class UserService {
         return clerkRepository.findById(id);
     }
 
-    public Optional<Professor>  getProfessorById(Long id){
-        return professorRepository.findById(id);
+    public Optional<Lecturer>  getProfessorById(Long id){
+        return lecturerRepository.findById(id);
     }
 
     public void updateUser(@NotNull User user, @NotNull UpdateUserRequest request) {
@@ -74,9 +74,9 @@ public class UserService {
                     studentRepository.deleteById(user.getId());
                     break;
                 case ROLE_LECTURER:
-                    professorRepository.deleteById(user.getId());
+                    lecturerRepository.deleteById(user.getId());
                     break;
-                case ROLE_STUFF:
+                case ROLE_STAFF:
                     clerkRepository.deleteById(user.getId());
                     break;
             }
@@ -93,8 +93,8 @@ public class UserService {
         return clerkRepository.findAll();
     }
 
-    public Iterable<Professor> getProfessorList() {
-        return professorRepository.findAll();
+    public Iterable<Lecturer> getProfessorList() {
+        return lecturerRepository.findAll();
     }
 
     private Set<Role> updateRoles(@NotNull User user, @NotNull UpdateUserRequest request) {
@@ -118,13 +118,13 @@ public class UserService {
                         updateLecturer(user, lecturerData);
 
                         break;
-                    case "ROLE_STUFF":
-                        Role adminStuff = roleRepository.findByName(RoleEnum.ROLE_STUFF)
+                    case "ROLE_STAFF":
+                        Role adminStaff = roleRepository.findByName(RoleEnum.ROLE_STAFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminStuff);
+                        roles.add(adminStaff);
 
-                        UpdateClerkRequest stuffData = request.getStuff();
-                        updateStuff(user, stuffData);
+                        UpdateClerkRequest staffData = request.getStaff();
+                        updateStuff(user, staffData);
 
                         break;
                     case "ROLE_STUDENT":
@@ -155,13 +155,13 @@ public class UserService {
             switch(role.getName()) {
                 case ROLE_LECTURER:
                     if(!strRoles.contains("ROLE_LECTURER")) {
-                        Optional <Professor> optionalProfessor = professorRepository.findById(user.getId());
+                        Optional <Lecturer> optionalProfessor = lecturerRepository.findById(user.getId());
                         if(optionalProfessor.isPresent())
-                            professorRepository.deleteById(user.getId());
+                            lecturerRepository.deleteById(user.getId());
                     }
                     break;
-                case ROLE_STUFF:
-                    if(!strRoles.contains("ROLE_STUFF")) {
+                case ROLE_STAFF:
+                    if(!strRoles.contains("ROLE_STAFF")) {
                         Optional <Clerk> optionalClerk = clerkRepository.findById(user.getId());
                         if(optionalClerk.isPresent())
                             clerkRepository.deleteById(user.getId());
@@ -181,29 +181,28 @@ public class UserService {
     }
 
     private void updateLecturer(@NotNull User user, @NotNull UpdateLecturerRequest request) {
-        Optional<Professor> existingProfessor = professorRepository.findById(user.getId());
-        Professor professor;
+        Optional<Lecturer> existingProfessor = lecturerRepository.findById(user.getId());
+        Lecturer lecturer;
 
         if(existingProfessor.isEmpty()) {
-            professor = new Professor();
-            professor.setOwner(user);
+            lecturer = new Lecturer(user, "PhD");
         }
         else {
-            professor = existingProfessor.get();
+            lecturer = existingProfessor.get();
         }
 
-        professor.setTitle(request.getTitle());
+        lecturer.setTitle(request.getTitle());
 
         Optional<Faculty> facultyProfessor = facultyRepository
                 .findById(request.getFacultyId());
 
         if(facultyProfessor.isPresent()) {
-            professor.setFaculty(facultyProfessor.get());
+            lecturer.setFaculty(facultyProfessor.get());
         }
         else {
             throw new RuntimeException("Error: Faculty is not found.");
         }
-        professorRepository.save(professor);
+        lecturerRepository.save(lecturer);
     }
 
     private void updateStuff(@NotNull User user, @NotNull UpdateClerkRequest request) {
@@ -211,8 +210,7 @@ public class UserService {
         Clerk clerk;
 
         if(existingClerk.isEmpty()) {
-            clerk = new Clerk();
-            clerk.setOwner(user);
+            clerk = new Clerk(user);
         }
         else {
             clerk = existingClerk.get();
@@ -234,14 +232,12 @@ public class UserService {
         Optional<Student> existingStudent = studentRepository.findById(user.getId());
         Student student;
         if(existingStudent.isEmpty()) {
-            student = new Student();
-            student.setUser_id(user.getId());
-            student.setOwner(user);
+            student = new Student(user, (int)request.getIndex());
         }
         else {
             student = existingStudent.get();
+            student.setIndex((int)request.getIndex());
         }
-        student.setIndex((int)request.getIndex());
         studentRepository.save(student);
     }
 

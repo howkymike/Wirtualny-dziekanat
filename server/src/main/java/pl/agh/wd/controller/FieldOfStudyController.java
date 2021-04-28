@@ -5,18 +5,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.agh.wd.repository.FacultyRepository;
+import pl.agh.wd.repository.FieldOfStudyRepository;
 
 @RestController
-@RequestMapping("/api/faculties")
-public class FacultyController {
+@RequestMapping("/api/fieldofstudy")
+public class FieldOfStudyController {
 
     @Autowired
-    FacultyRepository facultyRepository;
+    FieldOfStudyRepository fieldOfStudyRepository;
 
     @GetMapping
     public ResponseEntity<?> getFaculties(){
-        return ResponseEntity.ok(facultyRepository.findAll());
+        return ResponseEntity.ok(fieldOfStudyRepository.findAll());
     }
 
 

@@ -62,7 +62,7 @@ public class LoginApplicationTests {
         loginRequest.setUsername("admin");
         loginRequest.setPassword("admin");
 
-        ResponseEntity response = controller.authenticateUser(loginRequest);
+        ResponseEntity<?> response = controller.authenticateUser(loginRequest);
 
         assert(response.getStatusCode().toString().equals("200 OK"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.JwtResponse"));
@@ -90,7 +90,7 @@ public class LoginApplicationTests {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("Dawid Jarosz");
         loginRequest.setPassword("Kocham Svena");
-        ResponseEntity response = controller.authenticateUser(loginRequest);
+        ResponseEntity<?> response = controller.authenticateUser(loginRequest);
 
         assert(response.getStatusCode().toString().equals("200 OK"));
         assert (response.getBody().toString().contains("pl.agh.wd.payload.response.FirstTimeResponse"));
@@ -120,7 +120,7 @@ public class LoginApplicationTests {
         firstTimeRequest.setToken(token.getToken());
         firstTimeRequest.setPassword("aaabbb");
         firstTimeRequest.setPassword2("aaabbb");
-        ResponseEntity response = controller.firstTime(firstTimeRequest);
+        ResponseEntity<?> response = controller.firstTime(firstTimeRequest);
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
     }
@@ -135,7 +135,7 @@ public class LoginApplicationTests {
         firstTimeRequest.setToken(token.getToken());
         firstTimeRequest.setPassword("aaabbb");
         firstTimeRequest.setPassword2("aaabbb2");
-        ResponseEntity response = controller.firstTime(firstTimeRequest);
+        ResponseEntity<?> response = controller.firstTime(firstTimeRequest);
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
     }

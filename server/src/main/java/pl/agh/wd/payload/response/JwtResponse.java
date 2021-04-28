@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Used for /api/auth/login response
  *
- * @author: howkymike
+ * @author howkymike
  */
 
 
