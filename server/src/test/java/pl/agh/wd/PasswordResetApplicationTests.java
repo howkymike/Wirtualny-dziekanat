@@ -11,6 +11,7 @@ import pl.agh.wd.model.PasswordResetToken;
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.request.ChangePasswordRequest;
 import pl.agh.wd.payload.request.ForgetPasswordRequest;
+import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.repository.PasswordResetTokenRepository;
 import pl.agh.wd.repository.UserRepository;
 
