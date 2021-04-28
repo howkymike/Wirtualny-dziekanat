@@ -10,7 +10,7 @@ const Wrapper = styled.div`
     text-align: center;
 `
 
-const PageNotFound = props => {
+const PageNotFound = () => {
     return(
         <Wrapper>
             <h3>404 not found</h3>

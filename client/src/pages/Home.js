@@ -41,7 +41,7 @@ const Box = styled.div`
     transition: transform .2s;
 `;
 
-const Home = props => {
+const Home = () => {
     return(
         <div>
             <CenterBox>

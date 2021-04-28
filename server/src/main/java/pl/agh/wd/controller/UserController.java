@@ -139,7 +139,7 @@ public class UserController {
     public ResponseEntity<?> getData(@PathVariable("type") String type)
     {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = "";
+        String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails)principal).getUsername();
         } else {

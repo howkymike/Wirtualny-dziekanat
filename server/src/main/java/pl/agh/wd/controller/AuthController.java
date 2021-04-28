@@ -44,7 +44,7 @@ import java.util.UUID;
  * Responsible for handling login and register calls
  *
  * @author howkymike
- * @author tfujstary69
+ * @author FEJTWOW
  */
 
 @RestController

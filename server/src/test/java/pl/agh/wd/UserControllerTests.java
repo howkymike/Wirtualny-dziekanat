@@ -13,11 +13,8 @@ import pl.agh.wd.payload.request.UpdateLecturerRequest;
 import pl.agh.wd.payload.request.UpdateStudentRequest;
 import pl.agh.wd.payload.request.UpdateUserRequest;
 import pl.agh.wd.repository.*;
-import pl.agh.wd.service.UserService;
-
 import java.util.Collections;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,8 +35,6 @@ public class UserControllerTests {
     @Autowired
     private LecturerRepository lecturerRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private FacultyRepository facultyRepository;
@@ -47,56 +42,53 @@ public class UserControllerTests {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
-    private UserService userService;
-
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
         assertThat(controller).isNotNull();
     }
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void indexFunctionTest() throws Exception {
+    void indexFunctionTest() {
 
         {
             String type = "student";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.ListResponse"));
             assert(response.getStatusCode().toString().equals("200 OK"));
         }
 
         {
             String type = "clerk";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.ListResponse"));
             assert(response.getStatusCode().toString().equals("200 OK"));
         }
 
         {
             String type = "professor";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.ListResponse"));
             assert(response.getStatusCode().toString().equals("200 OK"));
         }
 
         {
             String type = "ayaya";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
             assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         }
 
         {
             String type = "";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
             assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         }
 
         {
             String type = "student1";
-            ResponseEntity<?> response = controller.index(type);
+            ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
             assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
         }
@@ -104,7 +96,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void updateUserFailTest() throws Exception {
+    void updateUserFailTest() {
 
         {
             Optional<User> optionalUser = userRepository.findById(9999999L);
@@ -112,7 +104,7 @@ public class UserControllerTests {
 
             UpdateUserRequest updateRequest = new UpdateUserRequest();
             updateRequest.setId(9999999L);
-            ResponseEntity<?> response = controller.updateUser(updateRequest, 9999999L);
+            ResponseEntity response = controller.updateUser(updateRequest, 9999999L);
 
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
             assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
@@ -122,7 +114,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void updateUserRoleTest() throws Exception {
+    void updateUserRoleTest() {
         {
             User user = new User("bogdanobanani", "deluxe@gmail.com", encoder.encode("zloto"));
             userRepository.save(user);
@@ -169,7 +161,7 @@ public class UserControllerTests {
                 studentRequest.setIndex(304294);
                 updateRequest.setStudent(studentRequest);
 
-                ResponseEntity<?> responseStudent = controller.updateUser(updateRequest, 99999L);
+                ResponseEntity responseStudent = controller.updateUser(updateRequest, 99999L);
                 assert(responseStudent.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
                 assert(responseStudent.getStatusCode().toString().equals("200 OK"));
 
@@ -196,15 +188,15 @@ public class UserControllerTests {
                 assert(optionalFaculty.isPresent());
 
                 updateRequest.setStaff(clerkRequest);
-                updateRequest.setRoles(Collections.singleton("ROLE_STAFF"));
+                updateRequest.setRoles(Collections.singleton("ROLE_STUFF"));
 
-                ResponseEntity<?> responseClerk = controller.updateUser(updateRequest, 99999L);
+                ResponseEntity responseClerk = controller.updateUser(updateRequest, 99999L);
                 assert(responseClerk.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
                 assert(responseClerk.getStatusCode().toString().equals("200 OK"));
 
                 Optional<Clerk> optionalClerkAfter = clerkRepository.findById(userOptionalAfter.get().getId());
                 assert(optionalClerkAfter.isPresent());
-                assert(optionalClerkAfter.get().getFaculty().getFaculty_id() == 1L);
+                assert(optionalClerkAfter.get().getFaculty().getId() == 1L);
                 updateRequest.setStaff(null);
                 updateRequest.setStudent(null);
 
@@ -219,14 +211,14 @@ public class UserControllerTests {
                 updateRequest.setRoles(null);
                 updateRequest.setRoles(Collections.singleton("ROLE_LECTURER"));
 
-                ResponseEntity<?> responseLecturer = controller.updateUser(updateRequest, 99999L);
+                ResponseEntity responseLecturer = controller.updateUser(updateRequest, 99999L);
 
                 assert(responseLecturer.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
                 assert(responseLecturer.getStatusCode().toString().equals("200 OK"));
 
                 Optional<Lecturer> optionalLecturerAfter = lecturerRepository.findById(optionalUserForLecturer.get().getId());
                 assert(optionalLecturerAfter.isPresent());
-                assert(optionalLecturerAfter.get().getFaculty().getFaculty_id() == 1L);
+                assert(optionalLecturerAfter.get().getFaculty().getId() == 1L);
                 assert(optionalLecturerAfter.get().getTitle().equals("***pHD"));
 
             }
@@ -235,13 +227,13 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void deleteUserTest() throws Exception {
+    void deleteUserTest() {
 
         {
             Optional<User> optionalUser = userRepository.findById(9999999L);
             assert(optionalUser.isEmpty());
 
-            ResponseEntity<?> response = controller.deleteUser(9999999L);
+            ResponseEntity response = controller.deleteUser(9999999L);
 
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
             assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
@@ -252,7 +244,7 @@ public class UserControllerTests {
             {
                 Optional<User> optionalUser = userRepository.findByUsername("boromir");
                 assert(optionalUser.isPresent());
-                ResponseEntity<?> response = controller.deleteUser(optionalUser.get().getId());
+                ResponseEntity response = controller.deleteUser(optionalUser.get().getId());
                 assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
                 assert(response.getStatusCode().toString().equals("200 OK"));
                 Optional<User> deletedUser = userRepository.findByUsername("boromir");
@@ -263,9 +255,9 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void getDataTestWithAdmin() throws Exception {
+    void getDataTestWithAdmin() {
 
-        ResponseEntity<?> response = controller.getData("");
+        ResponseEntity response = controller.getData("");
         assert(response.getBody().toString().contains("pl.agh.wd.model.User"));
         assert(response.getStatusCode().toString().equals("200 OK"));
 
@@ -273,18 +265,18 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "aaa", roles={""})
-    void getDataTestWithBS() throws Exception {
+    void getDataTestWithBS() {
 
-        ResponseEntity<?> response = controller.getData("");
+        ResponseEntity response = controller.getData("");
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
 
     }
 
     @Test
-    void getDataTestWithNoUser() throws Exception {
+    void getDataTestWithNoUser() {
         try{
-            ResponseEntity<?> response = controller.getData("");
+            controller.getData("");
             assert(false);
         }
         catch (NullPointerException e)

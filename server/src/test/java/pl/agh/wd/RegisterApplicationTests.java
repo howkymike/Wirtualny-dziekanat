@@ -8,8 +8,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,17 +20,12 @@ import pl.agh.wd.repository.FirstTimeTokenRepository;
 import pl.agh.wd.repository.RoleRepository;
 import pl.agh.wd.repository.UserRepository;
 
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RegisterApplicationTests {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private AuthController controller;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     UserRepository userRepository;
@@ -57,54 +50,54 @@ public class RegisterApplicationTests {
 
 
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
         assertThat(controller).isNotNull();
     }
 
     @Test
-    void testRegisterNoAuth() throws Exception {
+    void testRegisterNoAuth() {
         RegisterRequest signUpRequest = new RegisterRequest();
         signUpRequest.setUsername("kamil");
         signUpRequest.setPassword("admin");
         signUpRequest.setEmail("wirtualnt@gmail.com");
         seciurityMock();
-        ResponseEntity<?> response = controller.registerUser(signUpRequest);
+        ResponseEntity response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void testRegisterWithExistingUsername() throws Exception {
+    void testRegisterWithExistingUsername() {
         RegisterRequest signUpRequest = new RegisterRequest();
         signUpRequest.setUsername("kamil");
         signUpRequest.setPassword("admin");
         signUpRequest.setEmail("wirtualnt123@gmail.com");
-        ResponseEntity<?> response = controller.registerUser(signUpRequest);
+        ResponseEntity response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void testRegisterWithExistingEmail() throws Exception {
+    void testRegisterWithExistingEmail() {
         RegisterRequest signUpRequest = new RegisterRequest();
         signUpRequest.setUsername("Sven");
         signUpRequest.setPassword("Raucha-Dawidela");
         signUpRequest.setEmail("wirtualnt@gmail.com");
-        ResponseEntity<?> response = controller.registerUser(signUpRequest);
+        ResponseEntity response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
 
     @Test
     @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
-    void testRegisterSuccess() throws Exception {
+    void testRegisterSuccess() {
         RegisterRequest signUpRequest = new RegisterRequest();
         signUpRequest.setUsername("Svenik");
         signUpRequest.setPassword("Raucha-Dawidela");
         signUpRequest.setEmail("wdoope@motzno.com");
-        ResponseEntity<?> response = controller.registerUser(signUpRequest);
+        ResponseEntity response = controller.registerUser(signUpRequest);
         assert(response.getStatusCode().toString().equals("200 OK"));
     }
 }

@@ -30,7 +30,7 @@ public class ThreeLoginAttemptsTests {
     UserLockingService userLockingService;
 
     @Test
-    public void testThreeLoginAttemptsBlockSuccess() throws Exception {
+    public void testThreeLoginAttemptsBlockSuccess() {
         User user = new User("bezimienny", "gothic2nockruka@gmail.com", encoder.encode("gomez"));
         userRepository.save(user);
 

@@ -23,7 +23,7 @@ const LinkWrapper = styled.div`
     text-align: left;
 `;
 
-const ForgetPassword = props => {
+const ForgetPassword = () => {
 
     let [error, setError] = useState(false);
     let [message, setMessage] = useState("");

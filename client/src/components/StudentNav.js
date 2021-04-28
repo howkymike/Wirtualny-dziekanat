@@ -2,7 +2,7 @@ import React from 'react';
 
 import Link from './Link';
 
-const AdminNav = props => {
+const AdminNav = () => {
     return(
         <>
             <Link to="/student">

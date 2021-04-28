@@ -11,7 +11,6 @@ import pl.agh.wd.model.PasswordResetToken;
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.request.ChangePasswordRequest;
 import pl.agh.wd.payload.request.ForgetPasswordRequest;
-import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.repository.PasswordResetTokenRepository;
 import pl.agh.wd.repository.UserRepository;
 
@@ -36,7 +35,7 @@ public class PasswordResetApplicationTests {
 
 
     @Test
-    public void testForgetPasswordSuccess() throws Exception {
+    public void testForgetPasswordSuccess() {
         User user = new User("howkymike2", "howkymike555@gmail.com", encoder.encode("jestemKozakiemZWietu"));
         userRepository.save(user);
         Optional<User> userOptional = userRepository.findByUsername("howkymike2");
@@ -55,7 +54,7 @@ public class PasswordResetApplicationTests {
     }
 
     @Test
-    public void testForgetPasswordFailure() throws Exception {
+    public void testForgetPasswordFailure() {
 
         Optional<User> userOptional = userRepository.findByUsername("howkymike3");
         // Assert for "howkymike" not being in DB - this test relies on that being true
@@ -70,7 +69,7 @@ public class PasswordResetApplicationTests {
     }
 
     @Test
-    public void testChangePasswordSuccess() throws Exception {
+    public void testChangePasswordSuccess() {
         User user = new User("howkymike", "howkymike123@gmail.com", encoder.encode("jestemKozakiemZWietu"));
         user.setIsNew(false);
         userRepository.save(user);
