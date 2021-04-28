@@ -7,18 +7,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.PlatformInfoResponse;
 import pl.agh.wd.repository.RoleRepository;
 import pl.agh.wd.repository.UserRepository;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Admin related API

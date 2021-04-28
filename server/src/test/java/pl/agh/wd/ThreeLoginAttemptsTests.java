@@ -3,12 +3,10 @@ package pl.agh.wd;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.agh.wd.controller.AuthController;
-import pl.agh.wd.controller.ForgetPasswordController;
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.request.LoginRequest;
 import pl.agh.wd.repository.UserRepository;
@@ -32,7 +30,7 @@ public class ThreeLoginAttemptsTests {
     UserLockingService userLockingService;
 
     @Test
-    public void testThreeLoginAttemptsBlockSuccess() throws Exception {
+    public void testThreeLoginAttemptsBlockSuccess() {
         User user = new User("bezimienny", "gothic2nockruka@gmail.com", encoder.encode("gomez"));
         userRepository.save(user);
 

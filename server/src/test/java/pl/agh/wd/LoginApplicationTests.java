@@ -46,18 +46,18 @@ public class LoginApplicationTests {
 
 
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
         assertThat(controller).isNotNull();
     }
 
     @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
+    public void greetingShouldReturnDefaultMessage() {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
                 String.class)).contains("Unauthorized");
     }
 
     @Test
-    public void testLoginSuccess() throws Exception {
+    public void testLoginSuccess() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("admin");
         loginRequest.setPassword("admin");
@@ -69,7 +69,7 @@ public class LoginApplicationTests {
     }
 
     @Test
-    public void testLoginFailure() throws Exception {
+    public void testLoginFailure() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("Dawid Jarosz");
         loginRequest.setPassword("Kocham Svena");
@@ -84,7 +84,7 @@ public class LoginApplicationTests {
     }
 
     @Test
-    public void testFirstLogin() throws Exception {
+    public void testFirstLogin() {
         User user = new User("Dawid Jarosz", "dawidsven69@gmail.com", encoder.encode("Kocham Svena"));
         userRepository.save(user);
         LoginRequest loginRequest = new LoginRequest();
@@ -97,7 +97,7 @@ public class LoginApplicationTests {
     }
 
     @Test
-    public void testFirstTimeLogin() throws Exception {
+    public void testFirstTimeLogin() {
         User user = new User("Dawid Jarosz2", "dawidsven696@gmail.com", encoder.encode("Kocham Svena"));
         userRepository.save(user);
         FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);
@@ -113,7 +113,7 @@ public class LoginApplicationTests {
     }
 
     @Test
-    public void testFirstTimeLoginUserNotPresent() throws Exception {
+    public void testFirstTimeLoginUserNotPresent() {
         User user = new User("Dawid Jarosz", "dawidsven696@gmail.com", encoder.encode("Kocham Svena"));
         FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);
         FirstTimeRequest firstTimeRequest = new FirstTimeRequest();
@@ -126,7 +126,7 @@ public class LoginApplicationTests {
     }
 
     @Test
-    public void testFirstTimeLoginPasswordsNoEqual() throws Exception {
+    public void testFirstTimeLoginPasswordsNoEqual() {
         User user = new User("Dawid Jarosz21", "dawidsven6969@gmail.com", encoder.encode("Kocham Svena"));
         userRepository.save(user);
         FirstTimeToken token = new FirstTimeToken(UUID.randomUUID().toString(), user);

@@ -15,7 +15,6 @@ import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.UserRepository;
 import pl.agh.wd.payload.response.*;
-import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserService;
 
 import java.util.Optional;
@@ -143,7 +142,7 @@ public class UserController {
     public ResponseEntity<?> getData(@PathVariable("type") String type)
     {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = "";
+        String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails)principal).getUsername();
         } else {

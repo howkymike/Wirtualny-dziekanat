@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.agh.wd.controller.UserController;
@@ -13,18 +12,10 @@ import pl.agh.wd.payload.request.UpdateClerkRequest;
 import pl.agh.wd.payload.request.UpdateLecturerRequest;
 import pl.agh.wd.payload.request.UpdateStudentRequest;
 import pl.agh.wd.payload.request.UpdateUserRequest;
-import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.repository.*;
-import pl.agh.wd.service.UserService;
-import pl.agh.wd.model.RoleEnum.*;
-
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
@@ -44,8 +35,6 @@ public class UserControllerTests {
     @Autowired
     private ProfessorRepository professorRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private FacultyRepository facultyRepository;
@@ -53,17 +42,14 @@ public class UserControllerTests {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
-    private UserService userService;
-
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
         assertThat(controller).isNotNull();
     }
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void indexFunctionTest() throws Exception {
+    void indexFunctionTest() {
 
         {
             String type = "student";
@@ -110,7 +96,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void updateUserFailTest() throws Exception {
+    void updateUserFailTest() {
 
         {
             Optional<User> optionalUser = userRepository.findById(9999999L);
@@ -128,7 +114,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void updateUserRoleTest() throws Exception {
+    void updateUserRoleTest() {
         {
             User user = new User("bogdanobanani", "deluxe@gmail.com", encoder.encode("zloto"));
             userRepository.save(user);
@@ -241,7 +227,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void deleteUserTest() throws Exception {
+    void deleteUserTest() {
 
         {
             Optional<User> optionalUser = userRepository.findById(9999999L);
@@ -269,7 +255,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN"})
-    void getDataTestWithAdmin() throws Exception {
+    void getDataTestWithAdmin() {
 
         ResponseEntity response = controller.getData("");
         assert(response.getBody().toString().contains("pl.agh.wd.model.User"));
@@ -279,7 +265,7 @@ public class UserControllerTests {
 
     @Test
     @WithMockUser(username = "aaa", roles={""})
-    void getDataTestWithBS() throws Exception {
+    void getDataTestWithBS() {
 
         ResponseEntity response = controller.getData("");
         assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
@@ -288,9 +274,9 @@ public class UserControllerTests {
     }
 
     @Test
-    void getDataTestWithNoUser() throws Exception {
+    void getDataTestWithNoUser() {
         try{
-            ResponseEntity response = controller.getData("");
+            controller.getData("");
             assert(false);
         }
         catch (NullPointerException e)
