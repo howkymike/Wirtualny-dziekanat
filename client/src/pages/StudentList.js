@@ -61,14 +61,14 @@ const StudentList = () => {
     };
 
     const onAcceptUserDelete = async () => {
-        const user = list[userToDelete].owner;
+        const user = list[userToDelete].user;
 
         const [, isOk] = await fetchApi("/users/" + user.id, {
             method: "DELETE",
         });
 
         if (isOk) {
-            setList(list.filter(usr => usr.owner.id !== user.id));
+            setList(list.filter(usr => usr.user.id !== user.id));
         }
 
         setDeleteMsg(false)
@@ -81,8 +81,8 @@ const StudentList = () => {
             <hr />
             <Input type="select" value={listType} onChange={e => setListType(e.target.value)}>
                 <option value="student">Studenci</option>
-                <option value="clerk">Pracownicy</option>
-                <option value="professor">Wykładowcy</option>
+                <option value="staff">Pracownicy</option>
+                <option value="lecturer">Wykładowcy</option>
             </Input>
             <hr />
             <Table>
@@ -97,7 +97,7 @@ const StudentList = () => {
                         {listType === "student" &&
                             <th>Indeks</th>
                         }
-                        {listType === "professor" &&
+                        {listType === "lecturer" &&
                             <th>Tytuł</th>
                         }
                     </tr>
@@ -111,12 +111,12 @@ const StudentList = () => {
                     {list.map((user, key) => (
                         <tr key={key}>
                             <td>{key + 1}</td>
-                            <td>{user.owner.name}</td>
-                            <td>{user.owner.surname}</td>
-                            <td>{user.owner.email}</td>
+                            <td>{user.user.name}</td>
+                            <td>{user.user.surname}</td>
+                            <td>{user.user.email}</td>
                             <td>
                                 <RoleContainer>
-                                    {user.owner.roles.map((role, key) => (
+                                    {user.user.roles.map((role, key) => (
                                         <Role key={key} color="primary">{role.name}</Role>
                                     ))}
                                 </RoleContainer>
@@ -124,7 +124,7 @@ const StudentList = () => {
                             {   listType === "student" &&
                                 <td>{user.index}</td>
                             }
-                            {   listType === "professor" &&
+                            {   listType === "lecturer" &&
                                 <td>{user.title}</td>
                             }
                             <td>
@@ -152,7 +152,7 @@ const StudentList = () => {
             }
             {
                 editUser ?
-                    <EditUserModal userId={editUser.owner.id} isOpen={true} onClose={() => setEditUser(null)} /> : ""
+                    <EditUserModal userId={editUser.user.id} isOpen={true} onClose={() => setEditUser(null)} /> : ""
             }
 
 
