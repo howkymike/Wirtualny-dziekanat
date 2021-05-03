@@ -104,9 +104,9 @@ public class UserController {
             switch (role.getName()){
                 case ROLE_ADMIN:
                     break;
-                case ROLE_STAFF:
+                case ROLE_CLERK:
                     Optional<Clerk> clerk = userService.getClerkById(id);
-                    clerk.ifPresent(value -> userResponse.setStaff(new ClerkResponse(value)));
+                    clerk.ifPresent(value -> userResponse.setClerk(new ClerkResponse(value)));
                     break;
                 case ROLE_STUDENT:
                     Optional<Student> student = userService.getStudentById(id);

@@ -54,7 +54,7 @@ public class UpdateUserRequest {
 
     private UpdateLecturerRequest lecturer;
 
-    private UpdateClerkRequest staff;
+    private UpdateClerkRequest clerk;
 
     private UpdateStudentRequest student;
 }

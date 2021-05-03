@@ -76,7 +76,7 @@ public class UserService {
                 case ROLE_LECTURER:
                     lecturerRepository.deleteById(user.getId());
                     break;
-                case ROLE_STAFF:
+                case ROLE_CLERK:
                     clerkRepository.deleteById(user.getId());
                     break;
             }
@@ -118,13 +118,13 @@ public class UserService {
                         updateLecturer(user, lecturerData);
 
                         break;
-                    case "ROLE_STAFF":
-                        Role adminStaff = roleRepository.findByName(RoleEnum.ROLE_STAFF)
+                    case "ROLE_CLERK":
+                        Role adminClerk = roleRepository.findByName(RoleEnum.ROLE_CLERK)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminStaff);
+                        roles.add(adminClerk);
 
-                        UpdateClerkRequest staffData = request.getStaff();
-                        updateStuff(user, staffData);
+                        UpdateClerkRequest clerkData = request.getClerk();
+                        updateClerk(user, clerkData);
 
                         break;
                     case "ROLE_STUDENT":
@@ -160,8 +160,8 @@ public class UserService {
                             lecturerRepository.deleteById(user.getId());
                     }
                     break;
-                case ROLE_STAFF:
-                    if(!strRoles.contains("ROLE_STAFF")) {
+                case ROLE_CLERK:
+                    if(!strRoles.contains("ROLE_CLERK")) {
                         Optional <Clerk> optionalClerk = clerkRepository.findById(user.getId());
                         if(optionalClerk.isPresent())
                             clerkRepository.deleteById(user.getId());
@@ -205,7 +205,7 @@ public class UserService {
         lecturerRepository.save(lecturer);
     }
 
-    private void updateStuff(@NotNull User user, @NotNull UpdateClerkRequest request) {
+    private void updateClerk(@NotNull User user, @NotNull UpdateClerkRequest request) {
         Optional<Clerk> existingClerk = clerkRepository.findById(user.getId());
         Clerk clerk;
 

@@ -50,7 +50,7 @@ public class UserResponse {
     private Set<String> roles;
     private LecturerResponse lecturer;
     private StudentResponse student;
-    private ClerkResponse staff;
+    private ClerkResponse clerk;
 
     public UserResponse(User user){
         id = user.getId();

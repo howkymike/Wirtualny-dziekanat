@@ -53,7 +53,7 @@ public class CourseController {
 
     // TODO: for now it just recreate the course, maybe it's alright maybe it's not
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     Course replaceEmployee(@RequestBody Course newCourse, @PathVariable Long id) {
         return courseRepository.findById(id)
                 .map(course -> {
@@ -79,7 +79,7 @@ public class CourseController {
 
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createCourse(@RequestBody CourseRequest courseRequest){
         Course newCourse = new Course(courseRequest.getName(),
                 courseRequest.getLecture_time(),

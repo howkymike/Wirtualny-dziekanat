@@ -98,7 +98,7 @@ const EditUserModal = props => {
             case "ROLE_ADMIN":  break;
             case "ROLE_STUDENT": newRole = { student: {} }; break;
             case "ROLE_LECTURER": newRole = { lecturer: {} }; break;
-            case "ROLE_STAFF": newRole = { staff: {} }; break;
+            case "ROLE_CLERK": newRole = { clerk: {} }; break;
             default: return;
         }
 
@@ -113,7 +113,7 @@ const EditUserModal = props => {
                 return <StudentTab user={newUserData} onUserChange={user => setNewUserData(user)} />
             case "Lecturer":
                 return <LecturerTab user={newUserData} onUserChange={user => setNewUserData(user)} />
-            case "Staff":
+            case "Clerk":
                 return "Not implemented"
             case "Admin":
                 return "Not implemented"

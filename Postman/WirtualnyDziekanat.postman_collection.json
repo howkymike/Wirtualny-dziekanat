@@ -70,7 +70,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"ROLE_LECTURER\",\n        \"ROLE_ADMIN\",\n        \"ROLE_STUDENT\",\n        \"ROLE_STUFF\"\n    ],\n    \"lecturer\": {\n        \"title\": \"mgr\",\n        \"facultyId\": 1 \n    },\n    \"stuff\": {\n        \"facultyId\" : 1\n    },\n    \"student\": {\n        \"index\": 304359\n    }\n}",
+							"raw": "{\n    \"id\": 4,\n    \"username\": \"zonder\",\n    \"email\": \"wirt21ualnt2@gmail.com\",\n    \"name\": \"Zdzisław\",\n    \"surname\": \"Onderka\",\n    \"city\": \"Kraków\",\n    \"country\": \"Polska\",\n    \"postalCode\": \"31-445\",\n    \"telephone\": \"696969696\",\n    \"address\": \"A-0 Kanciapa\",\n    \"roles\": [\n        \"ROLE_LECTURER\",\n        \"ROLE_ADMIN\",\n        \"ROLE_STUDENT\",\n        \"ROLE_CLERK\"\n    ],\n    \"lecturer\": {\n        \"title\": \"mgr\",\n        \"facultyId\": 1 \n    },\n    \"clerk\": {\n        \"facultyId\" : 1\n    },\n    \"student\": {\n        \"index\": 304359\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,7 +332,7 @@
 			"response": []
 		},
 		{
-			"name": "admin stuff",
+			"name": "admin clerk",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
