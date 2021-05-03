@@ -34,7 +34,7 @@ const Login = () => {
         switch (role) {
             case "ROLE_ADMIN": return "/admin";
             case "ROLE_STUDENT": return "/student";
-            case "ROLE_STAFF": return "/staff";
+            case "ROLE_CLERK": return "/clerk";
             default: return "";
         }
     }

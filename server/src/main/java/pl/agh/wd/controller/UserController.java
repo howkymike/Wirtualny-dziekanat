@@ -39,8 +39,8 @@ public class UserController {
             case "clerk":
                 return ResponseEntity.ok(new ListResponse(type, userService.getClerkList()));
 
-            case "professor":
-                return ResponseEntity.ok(new ListResponse(type, userService.getProfessorList()));
+            case "lecturer":
+                return ResponseEntity.ok(new ListResponse(type, userService.getLecturerList()));
 
         }
 
@@ -104,17 +104,17 @@ public class UserController {
             switch (role.getName()){
                 case ROLE_ADMIN:
                     break;
-                case ROLE_STAFF:
+                case ROLE_CLERK:
                     Optional<Clerk> clerk = userService.getClerkById(id);
-                    clerk.ifPresent(value -> userResponse.setStaff(new ClerkResponse(value)));
+                    clerk.ifPresent(value -> userResponse.setClerk(new ClerkResponse(value)));
                     break;
                 case ROLE_STUDENT:
                     Optional<Student> student = userService.getStudentById(id);
                     student.ifPresent(value -> userResponse.setStudent(new StudentResponse(value)));
                     break;
                 case ROLE_LECTURER:
-                    Optional<Lecturer> professor = userService.getProfessorById(id);
-                    professor.ifPresent(value -> userResponse.setLecturer(new LecturerResponse(value)));
+                    Optional<Lecturer> lecturer = userService.getLecturerById(id);
+                    lecturer.ifPresent(value -> userResponse.setLecturer(new LecturerResponse(value)));
                     break;
             }
         }

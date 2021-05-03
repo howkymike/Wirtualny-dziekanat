@@ -81,7 +81,7 @@ const StudentList = () => {
             <hr />
             <Input type="select" value={listType} onChange={e => setListType(e.target.value)}>
                 <option value="student">Studenci</option>
-                <option value="staff">Pracownicy</option>
+                <option value="clerk">Pracownicy</option>
                 <option value="lecturer">Wykładowcy</option>
             </Input>
             <hr />
