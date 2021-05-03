@@ -46,7 +46,7 @@ public class UserService {
         return clerkRepository.findById(id);
     }
 
-    public Optional<Lecturer>  getProfessorById(Long id){
+    public Optional<Lecturer>  getLecturerById(Long id){
         return lecturerRepository.findById(id);
     }
 
@@ -93,7 +93,7 @@ public class UserService {
         return clerkRepository.findAll();
     }
 
-    public Iterable<Lecturer> getProfessorList() {
+    public Iterable<Lecturer> getLecturerList() {
         return lecturerRepository.findAll();
     }
 
@@ -155,8 +155,8 @@ public class UserService {
             switch(role.getName()) {
                 case ROLE_LECTURER:
                     if(!strRoles.contains("ROLE_LECTURER")) {
-                        Optional <Lecturer> optionalProfessor = lecturerRepository.findById(user.getId());
-                        if(optionalProfessor.isPresent())
+                        Optional <Lecturer> optionalLecturer = lecturerRepository.findById(user.getId());
+                        if(optionalLecturer.isPresent())
                             lecturerRepository.deleteById(user.getId());
                     }
                     break;
@@ -181,23 +181,23 @@ public class UserService {
     }
 
     private void updateLecturer(@NotNull User user, @NotNull UpdateLecturerRequest request) {
-        Optional<Lecturer> existingProfessor = lecturerRepository.findById(user.getId());
+        Optional<Lecturer> existingLecturer = lecturerRepository.findById(user.getId());
         Lecturer lecturer;
 
-        if(existingProfessor.isEmpty()) {
+        if(existingLecturer.isEmpty()) {
             lecturer = new Lecturer(user, "PhD");
         }
         else {
-            lecturer = existingProfessor.get();
+            lecturer = existingLecturer.get();
         }
 
         lecturer.setTitle(request.getTitle());
 
-        Optional<Faculty> facultyProfessor = facultyRepository
+        Optional<Faculty> facultyLecturer = facultyRepository
                 .findById(request.getFacultyId());
 
-        if(facultyProfessor.isPresent()) {
-            lecturer.setFaculty(facultyProfessor.get());
+        if(facultyLecturer.isPresent()) {
+            lecturer.setFaculty(facultyLecturer.get());
         }
         else {
             throw new RuntimeException("Error: Faculty is not found.");

@@ -67,7 +67,7 @@ public class UserControllerTests {
         }
 
         {
-            String type = "professor";
+            String type = "lecturer";
             ResponseEntity response = controller.index(type);
             assert(response.getBody().toString().contains("pl.agh.wd.payload.response.ListResponse"));
             assert(response.getStatusCode().toString().equals("200 OK"));
@@ -126,8 +126,8 @@ public class UserControllerTests {
                 Optional<Student> optionalStudent = studentRepository.findById(userOptional.get().getId());
                 assert(optionalStudent.isEmpty());
 
-                Optional<Lecturer> optionalProfessor = lecturerRepository.findById(userOptional.get().getId());
-                assert(optionalProfessor.isEmpty());
+                Optional<Lecturer> optionalLecturer = lecturerRepository.findById(userOptional.get().getId());
+                assert(optionalLecturer.isEmpty());
 
                 Optional<Clerk> optionalClerk = clerkRepository.findById(userOptional.get().getId());
                 assert(optionalClerk.isEmpty());

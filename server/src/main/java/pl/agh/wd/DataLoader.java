@@ -112,9 +112,9 @@ public class DataLoader implements ApplicationRunner {
 
     private void createLecturer() {
         Set<Role> roles = new HashSet<>();
-        Role professorRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
+        Role lecturerRole = roleRepository.findByName(RoleEnum.ROLE_LECTURER)
                 .orElseThrow(() -> new RuntimeException("Error: Clerk Role is not found."));
-        roles.add(professorRole);
+        roles.add(lecturerRole);
         User onderkaUser = new User("onder",
                 "wirt21ualnt2@gmail.com",
                 encoder.encode("onder"),
