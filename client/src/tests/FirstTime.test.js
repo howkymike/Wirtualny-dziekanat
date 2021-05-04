@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { userContext } from '../context/userContext';
-import FirstTime from './FirstTime';
+import FirstTime from '../pages/FirstTime';
 
 let fetchApi = (address, params) => {
     return {ok: true, msg: "DD"};
