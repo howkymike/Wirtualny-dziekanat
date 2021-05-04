@@ -86,7 +86,7 @@ const EditUserModal = props => {
         });
 
         dispatch({ type: "tabs", data: tabs });
-    }, [state.user.roles, state.isLoading]);
+    }, [state.user, state.user.roles, state.isLoading]);
 
 
     const onUserUpdate = async () => {
@@ -167,6 +167,7 @@ const EditUserModal = props => {
                         >
                             {tab}
                         </NavLink>
+
                     </NavItem>)
                     )}
 
@@ -207,7 +208,7 @@ const EditUserModal = props => {
                 <Container>
                     <Row>
                         <Col sm="12" md={{ size: 6, offset: 3 }}>
-                            <StyledButton color="danger" onClick={() => props.onClose()}>Cancel</StyledButton>
+                            <StyledButton color="danger" onClick={() => props.onClose()}>Close</StyledButton>
                             <StyledButton color="primary" onClick={() => onUserUpdate()}>Save</StyledButton>
                         </Col>
                     </Row>
