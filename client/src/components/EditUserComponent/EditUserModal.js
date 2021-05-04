@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback, useReducer } from 'react'
 
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,105 +20,133 @@ import {
 const StyledTabContent = styled(TabContent)`
     margin: 20px 10px 20px 10px;
 `
+
 const StyledButton = styled(Button)`
     margin: 5px 10px 15px 10px;
 `
+
+const initialState = {
+    user: {}, tabs: ["User"], activeTab: "User",
+    allRoles: [], isLoading: true, message: []
+};
+
+const reducer = (state, { type, data }) => {
+    switch (type) {
+        case "user":
+        case "allRoles":
+        case "activeTab":
+        case "isLoading":
+            return { ...state, [type]: data };
+        case "lecturer":
+        case "student":
+        case "clerk":
+        case "roles":
+            return { ...state, user: { ...state.user, [type]: data } };
+        case "tabs":
+            return { ...state, tabs: ["User", ...data] };
+        case "message":
+            return { ...state, message: data };
+        default:
+            return state;
+    }
+}
 
 const EditUserModal = props => {
 
     const { userId } = props;
     const { fetchApi } = useContext(userContext);
 
-    const [roles, setRoles] = useState([]);
-    const [newUserData, setNewUserData] = useState({ roles: [] });
-
-    const [activeTab, setActiveTab] = useState("User");
-    const [roleTabs, setRoleTabs] = useState(["User"]);
     const [addRoleDropdownOpen, setAddRoleDropdownOpen] = useState(false);
-
-    const [message, setMessage] = useState("");
-    const [messageType, setMessageType] = useState("");
-
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
         fetchApi("/roles")
             .then(res => {
                 if (res[0].roles) {
-                    setRoles(res[0].roles);
+                    dispatch({ type: "allRoles", data: res[0].roles });
                 }
             });
 
         fetchApi(`/users/user/${userId}`)
             .then((res) => {
                 if (res[1]) {
-                    setNewUserData(res[0]);
+                    dispatch({ type: 'user', data: res[0] });
+                    dispatch({ type: 'isLoading', data: false });
                 }
             });
     }, [userId, fetchApi]);
 
     useEffect(() => {
-        let tabs = roleTabs.slice();
+        if (state.isLoading) return;
 
-        newUserData.roles.forEach((role) => {
+        let tabs = [];
+        state.user.roles.forEach((role) => {
             let newTab = role[5].toUpperCase() + role.substring(6).toLowerCase();
-
-            if (!tabs.find(tab => tab === newTab)) {
-                tabs.push(newTab);
-            }
+            tabs.push(newTab);
         });
-        setRoleTabs(tabs);
-    }, [newUserData, roles]);
+
+        dispatch({ type: "tabs", data: tabs });
+    }, [state.user.roles, state.isLoading]);
 
 
     const onUserUpdate = async () => {
-
-        const [res, isOk] = await fetchApi(`/users/${newUserData.id}`, {
+        const [res, isOk] = await fetchApi(`/users/${state.user.id}`, {
             method: "PUT",
-            body: JSON.stringify(newUserData)
+            body: JSON.stringify(state.user)
         })
 
         if (isOk) {
-            setMessageType("success");
+            dispatch({ type: "message", data: ["success", res.message] });
         } else {
-            setMessageType("danger");
+            dispatch({ type: "message", data: ["danger", res.message] });
         }
-
-        setMessage(res.message);
-
-        console.log(res);
     };
 
     const addNewRole = (role) => {
-        let roles = newUserData.roles.slice();
+        let roles = state.user.roles.slice();
         roles.push(role);
 
-        let newRole;
-
         switch (role) {
-            case "ROLE_ADMIN":  break;
-            case "ROLE_STUDENT": newRole = { student: {} }; break;
-            case "ROLE_LECTURER": newRole = { lecturer: {} }; break;
-            case "ROLE_CLERK": newRole = { clerk: {} }; break;
+            case "ROLE_ADMIN": break;
+            case "ROLE_STUDENT": dispatch({ type: 'student', data: {} }); break;
+            case "ROLE_LECTURER": dispatch({ type: 'lecturer', data: {} }); break;
+            case "ROLE_CLERK": dispatch({ type: 'clerk', data: {} }); break;
             default: return;
         }
 
-        setNewUserData({ ...newUserData, ...newRole, roles: roles });
+        dispatch({ type: "roles", data: roles });
     }
+
+    const updateUser = useCallback((user) => {
+        dispatch({ type: "user", data: user });
+    }, []);
+
+    const updateLecturer = useCallback((lecturer) => {
+        dispatch({ type: "lecturer", data: lecturer });
+    }, []);
+
+    const updateStudent = useCallback((student) => {
+        dispatch({ type: "student", data: student });
+    }, []);
 
     const renderTab = tab => {
         switch (tab) {
             case "User":
-                return <UserTab user={newUserData} onUserChange={user => setNewUserData(user)} />
+                return <UserTab user={state.user} onUserChange={updateUser} />
             case "Student":
-                return <StudentTab user={newUserData} onUserChange={user => setNewUserData(user)} />
+                return <StudentTab user={state.user} onUserChange={updateStudent} />
             case "Lecturer":
-                return <LecturerTab user={newUserData} onUserChange={user => setNewUserData(user)} />
+                return <LecturerTab user={state.user} onUserChange={updateLecturer} />
             case "Clerk":
                 return "Not implemented"
             case "Admin":
                 return "Not implemented"
             default: return "";
         }
+    }
+
+    if (state.isLoading) {
+        return null;
     }
 
     return (
@@ -131,11 +159,11 @@ const EditUserModal = props => {
                 {/* Tab navigation */}
                 <Nav tabs>
                     {/* Render tabs */}
-                    {roleTabs.map((tab, key) =>
+                    {state.tabs.map((tab, key) =>
                     (<NavItem key={key}>
                         <NavLink
-                            className={classnames({ active: activeTab === tab })}
-                            onClick={() => setActiveTab(tab)}
+                            className={classnames({ active: state.activeTab === tab })}
+                            onClick={() => dispatch({ type: "activeTab", data: tab })}
                         >
                             {tab}
                         </NavLink>
@@ -143,7 +171,7 @@ const EditUserModal = props => {
                     )}
 
                     {/* Add role button */}
-                    {(newUserData.roles.length < roles.length) &&
+                    {(state.user.roles.length < state.allRoles.length) &&
                         <NavItem>
                             <ButtonDropdown
                                 isOpen={addRoleDropdownOpen}
@@ -154,8 +182,8 @@ const EditUserModal = props => {
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem header>Add new role</DropdownItem>
-                                    {roles.map((role, key) => (
-                                        !newUserData.roles.includes(role) &&
+                                    {state.allRoles.map((role, key) => (
+                                        !state.user.roles.includes(role) &&
                                         <DropdownItem key={key} onClick={() => addNewRole(role)}>
                                             {role[5] + role.substring(6).toLowerCase()}
                                         </DropdownItem>
@@ -166,8 +194,8 @@ const EditUserModal = props => {
                 </Nav>
 
                 {/* Tabs contents */}
-                <StyledTabContent activeTab={activeTab}>
-                    {roleTabs.map((tab, key) => (
+                <StyledTabContent activeTab={state.activeTab}>
+                    {state.tabs.map((tab, key) => (
                         <TabPane key={key} tabId={tab}>
                             {renderTab(tab)}
                         </TabPane>
@@ -185,7 +213,13 @@ const EditUserModal = props => {
                     </Row>
                     <Row>
                         <Col>
-                            <Alert isOpen={message !== ""} color={messageType} toggle={() => setMessage("")}>{message}</Alert>
+                            <Alert 
+                                isOpen={state.message[1] !== undefined} 
+                                color={state.message[0]} 
+                                toggle={() => dispatch({type: "message", data: []})}
+                            >
+                                {state.message[1]}
+                            </Alert>
                         </Col>
                     </Row>
                 </Container>

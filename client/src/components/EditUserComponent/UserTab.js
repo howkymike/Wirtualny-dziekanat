@@ -5,11 +5,15 @@ import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 const UserTab = props => {
 
     const { onUserChange, user } = props;
-    const [newUserData, setNewUserData] = useState({});
+    const [newUserData, setNewUserData] = useState(user);
+
+    useEffect(()=>{
+        setNewUserData(user);
+    },[user])
 
     useEffect(() => {
-        onUserChange({ ...user, ...newUserData });
-    }, [newUserData]);
+        onUserChange(newUserData);
+    }, [newUserData, onUserChange]);
 
     return (
         <Form>
@@ -20,8 +24,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Name"
-                            value={props.user.name}
-                            onChange={(e) => setNewUserData({ name: e.target.value })}
+                            value={newUserData.name}
+                            onChange={(e) => setNewUserData({ ...newUserData, name: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -31,8 +35,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Surname"
-                            value={props.user.surname}
-                            onChange={(e) => setNewUserData({ surname: e.target.value })}
+                            value={newUserData.surname}
+                            onChange={(e) => setNewUserData({ ...newUserData, surname: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -44,8 +48,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Email"
-                            value={props.user.email}
-                            onChange={(e) => setNewUserData({ email: e.target.value })}
+                            value={newUserData.email}
+                            onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -55,8 +59,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Phone number"
-                            value={props.user.telephone}
-                            onChange={(e) => setNewUserData({ telephone: e.target.value })}
+                            value={newUserData.telephone}
+                            onChange={(e) => setNewUserData({ ...newUserData, telephone: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -68,8 +72,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Country"
-                            value={props.user.country}
-                            onChange={(e) => setNewUserData({ country: e.target.value })}
+                            value={newUserData.country}
+                            onChange={(e) => setNewUserData({ ...newUserData, country: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -79,8 +83,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="City"
-                            value={props.user.city}
-                            onChange={(e) => setNewUserData({ city: e.target.value })}
+                            value={newUserData.city}
+                            onChange={(e) => setNewUserData({ ...newUserData, city: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -90,8 +94,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="City"
-                            value={props.user.postalCode}
-                            onChange={(e) => setNewUserData({ postalCode: e.target.value })}
+                            value={newUserData.postalCode}
+                            onChange={(e) => setNewUserData({ ...newUserData, postalCode: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -101,8 +105,8 @@ const UserTab = props => {
                 <Input
                     type="text"
                     placeholder="Address"
-                    value={props.user.address}
-                    onChange={(e) => setNewUserData({ address: e.target.value })}
+                    value={newUserData.address}
+                    onChange={(e) => setNewUserData({ ...newUserData, address: e.target.value })}
                 />
             </FormGroup>
         </Form>

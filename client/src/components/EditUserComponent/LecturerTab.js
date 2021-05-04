@@ -8,13 +8,12 @@ const LecturerTab = props => {
     const { fetchApi } = useContext(userContext);
     const { onUserChange, user } = props;
 
-    const [newLecturer, setNewLecturer] = useState(user.lecturer);
+    const [lecturer, setLecturer] = useState(user.lecturer);
     const [faculties, setFaculties] = useState([]);
 
-
     useEffect(() => {
-        onUserChange({ ...user, lecturer: { ...newLecturer } });
-    }, [newLecturer]);
+        onUserChange( lecturer );
+    }, [lecturer, onUserChange]);
 
     useEffect(() => {
         fetchApi("/faculties").then((res) => {
@@ -25,7 +24,7 @@ const LecturerTab = props => {
 
     const setFaculty = (facultyId) => {
         if (facultyId) {
-            setNewLecturer({ ...newLecturer, facultyId });
+            setLecturer({ ...lecturer, facultyId });
         }
     }
 
@@ -38,8 +37,8 @@ const LecturerTab = props => {
                         <Input
                             type="text"
                             placeholder="Title"
-                            value={newLecturer.title}
-                            onChange={(e) => setNewLecturer({ ...newLecturer, title: e.target.value })}
+                            value={lecturer.title}
+                            onChange={(e) => setLecturer({ ...lecturer, title: e.target.value })}
                         />
                     </FormGroup>
 
@@ -47,12 +46,11 @@ const LecturerTab = props => {
                         <Label>Faculty:</Label>
                         <Input
                             type="select"
-                            value={newLecturer.facultyId}
+                            value={lecturer.facultyId}
                             onChange={(e) => setFaculty(e.target.value)}
                         >
-                            <option value="">"Select value</option>
                             {faculties.map((faculty, key) => (
-                                <option value={faculty.faculty_id} key={key}>{faculty.name}</option>
+                                <option value={faculty.id} key={key}>{faculty.name}</option>
                             ))}
                         </Input>
                     </FormGroup>
