@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router';
 import PageNotFound from '../pages/PageNotFound';
 import ChangeActualPassword from '../pages/ChangeActualPassword';
 import Summary from '../pages/Summary';
+import StudentCourse from "../pages/StudentCourse";
 
 
 const StudentPanelRoutes = props => {
@@ -21,6 +22,9 @@ const StudentPanelRoutes = props => {
                 <ChangeActualPassword />
             </Route>
 
+            <Route exact path={`${path}/course`}>
+                <StudentCourse />
+            </Route>
 
             { /* Page not found */ }
             <Route path="*">

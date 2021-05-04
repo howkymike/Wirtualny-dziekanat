@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,11 +13,13 @@ import pl.agh.wd.model.CourseStudent;
 import pl.agh.wd.model.Lecturer;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.repository.*;
+import pl.agh.wd.service.UserDetailsImpl;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -46,15 +49,22 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public Course getCourses(@PathVariable("id") Long id){
+    public Course getCourse(@PathVariable("id") Long id){
         return courseRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(id.toString()));
+    }
+
+    @GetMapping("/my")
+    public List<Course> getMyCourses(Authentication authentication){
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        return courseStudentRepository.findAllByStudentId(currentUser.getId())
+                .stream().map(CourseStudent::getCourse).collect(Collectors.toList());
     }
 
     // TODO: for now it just recreate the course, maybe it's alright maybe it's not
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
-    Course replaceEmployee(@RequestBody Course newCourse, @PathVariable Long id) {
+    Course replaceCourse(@RequestBody Course newCourse, @PathVariable Long id) {
         return courseRepository.findById(id)
                 .map(course -> {
                     course.setName(newCourse.getName());
