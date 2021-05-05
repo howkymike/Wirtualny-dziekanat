@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d652bef0-b95e-49e3-9262-670d9b10dda4",
+		"_postman_id": "4a134795-9f63-49a4-8a71-e47679d62725",
 		"name": "WirtualnyDziekanat (Updated)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -325,6 +325,47 @@
 								"api",
 								"courses",
 								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYyMDIzNjAyNCwiZXhwIjoxNjIwMzIzNjI0fQ.Ipkj1mB0qd-pcfeL9lwDXHf0T3JIsALRUkSgZ4NmIB-2unl-Ih9QLCE64Uk5BEzLJo_IX6vgwJIcz9UCynf_AQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 11,\n    \"lecture_time\": 1111,\n    \"laboratory_time\": 1111,\n    \"ects\": 3333,\n    \"exam\": false,\n    \"name\": \"Ecological space and sustainable development\",\n    \"courseStudents\": [2, 3],\n    \"courseLecturers\": [4, 1],\n    \"fieldOfStudy\": 9\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/courses/11/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"courses",
+								"11",
+								"edit"
 							]
 						}
 					},

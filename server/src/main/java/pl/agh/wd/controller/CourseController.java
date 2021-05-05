@@ -11,14 +11,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.agh.wd.model.Course;
 import pl.agh.wd.model.CourseStudent;
 import pl.agh.wd.model.Lecturer;
+import pl.agh.wd.model.User;
 import pl.agh.wd.payload.request.CourseRequest;
+import pl.agh.wd.payload.response.MessageResponse;
+import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserDetailsImpl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -128,6 +128,44 @@ public class CourseController {
         UriComponents uriComponents =  uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(savedCourse.getId());
         var location = uriComponents.toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("/{id}/edit")
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> editCourse(@RequestBody CourseRequest courseRequest) {
+        Optional<Course> course = courseRepository.findByName(courseRequest.getName());
+        if (course.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Dany kurs nie istnieje elo"));
+        }
+        course.get().setEcts(courseRequest.getEcts());
+        course.get().setLecture_time(courseRequest.getLecture_time());
+        if (courseRequest.getCourseLecturerIds() != null) {
+            Set<Lecturer> lecturers = new HashSet<>();
+            for (Long courseLecturerId : courseRequest.getCourseLecturerIds())
+                lecturerRepository.findById(courseLecturerId).ifPresent(lecturers::add);
+            course.get().setCourseLecturers(lecturers);
+        }
+
+        if (course.get().getCourseStudents() != null) {
+            for (CourseStudent courseStudent : course.get().getCourseStudents()) {
+                courseStudentRepository.deleteById(courseStudent.getId());
+            }
+        }
+
+        if (courseRequest.getCourseStudentIds() != null) {
+            for (Long courseStudentId : courseRequest.getCourseStudentIds())
+                studentRepository.findById(courseStudentId).ifPresent(s -> {
+                    CourseStudent courseStudent = new CourseStudent(course.get(), s);
+                    courseStudentRepository.save(courseStudent);
+                });
+        }
+
+        course.get().setLaboratory_time(courseRequest.getLaboratory_time());
+        course.get().setExam(courseRequest.isExam());
+        if (courseRequest.getFieldOfStudyId() != 0)
+            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(course.get()::setFieldOfStudy);
+        courseRepository.save(course.get());
+        return ResponseEntity.ok(new SuccessResponse(true, "Course changed"));
     }
 
 }
