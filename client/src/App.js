@@ -12,6 +12,7 @@ import PageNotFound from './pages/PageNotFound';
 import AdminPanelRoutes from './routes/AdminPanelRoutes';
 import AuthRoutes from './routes/AuthRoutes';
 import StudentPanelRoutes from './routes/StudentPanelRoutes';
+import ClerkPanelRoutes from './routes/ClerkPanelRoutes';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -38,7 +39,7 @@ function App() {
         <Router>
             <UserProvider>
                 <Wrapper className="App">
-                    <Route path={["/admin", "/student"]}>
+                    <Route path={["/admin", "/student", "/clerk"]}>
                         <Nav />
                     </Route>
                     <Right>
@@ -56,6 +57,10 @@ function App() {
 
                                 <Route path="/admin">
                                     <AdminPanelRoutes />
+                                </Route>
+
+                                <Route path="/clerk">
+                                    <ClerkPanelRoutes />
                                 </Route>
 
                                 <AuthRoutes />
