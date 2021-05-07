@@ -9,6 +9,7 @@ import { userContext } from '../../context/userContext'
 import UserTab from './UserTab'
 import StudentTab from './StudentTab';
 import LecturerTab from './LecturerTab';
+import ClerkTab from './ClerkTab';
 import styled from 'styled-components';
 
 import {
@@ -132,6 +133,10 @@ const EditUserModal = props => {
         dispatch({ type: "lecturer", data: lecturer });
     }, []);
 
+    const updateClerk = useCallback((clerk) => {
+        dispatch({ type: "clerk", data: clerk });
+    }, []);
+
     const updateStudent = useCallback((student) => {
         dispatch({ type: "student", data: student });
     }, []);
@@ -145,7 +150,7 @@ const EditUserModal = props => {
             case "Lecturer":
                 return <LecturerTab user={state.user} onUserChange={updateLecturer} />
             case "Clerk":
-                return "Not implemented"
+                return <ClerkTab user={state.user} onUserChange={updateClerk} />
             case "Admin":
                 return "Not implemented"
             default: return "";
