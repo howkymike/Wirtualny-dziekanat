@@ -52,6 +52,13 @@ const UserTab = props => {
         setNewUserData(newUser);
     }
 
+    const getRoleName = (role) => {
+        if (role.startsWith("ROLE_")) {
+            return role[5].toUpperCase() + role.substring(6).toLowerCase();
+        } else {
+            return "";
+        }
+    }
 
     return (
         <Form>
@@ -152,7 +159,7 @@ const UserTab = props => {
                 <div>
                     {user.roles.map((role, key) => (
                         <Role color="primary" key={key}>
-                            {role}
+                            {getRoleName(role).toUpperCase()}
                             { (user.roles.length > 1) &&
                                     <RoleButton 
                                         size="sm" icon={faTimes} 

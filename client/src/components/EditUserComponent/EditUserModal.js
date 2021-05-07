@@ -46,6 +46,8 @@ const reducer = (state, { type, data }) => {
             return { ...state, tabs: ["User", ...data] };
         case "message":
             return { ...state, message: data };
+        case "initial":
+            return initialState;
         default:
             return state;
     }
@@ -53,7 +55,7 @@ const reducer = (state, { type, data }) => {
 
 const EditUserModal = props => {
 
-    const { userId } = props;
+    const { userId, isOpen, onClose, onUserSave } = props;
     const { fetchApi } = useContext(userContext);
 
     const [addRoleDropdownOpen, setAddRoleDropdownOpen] = useState(false);
@@ -74,6 +76,7 @@ const EditUserModal = props => {
                     dispatch({ type: 'isLoading', data: false });
                 }
             });
+
     }, [userId, fetchApi]);
 
     useEffect(() => {
@@ -97,6 +100,7 @@ const EditUserModal = props => {
 
         if (isOk) {
             dispatch({ type: "message", data: ["success", res.message] });
+            onUserSave();
         } else {
             dispatch({ type: "message", data: ["danger", res.message] });
         }
@@ -114,7 +118,10 @@ const EditUserModal = props => {
             default: return;
         }
 
+        let tab = role[5].toUpperCase() + role.substring(6).toLowerCase()
+
         dispatch({ type: "roles", data: roles });
+        dispatch({ type: "activeTab", data: tab });
     }
 
     const updateUser = useCallback((user) => {
@@ -145,7 +152,7 @@ const EditUserModal = props => {
         }
     }
 
-    if (state.isLoading) {
+    if (state.isLoading || !isOpen) {
         return null;
     }
 
@@ -208,16 +215,16 @@ const EditUserModal = props => {
                 <Container>
                     <Row>
                         <Col sm="12" md={{ size: 6, offset: 3 }}>
-                            <StyledButton color="danger" onClick={() => props.onClose()}>Close</StyledButton>
+                            <StyledButton color="danger" onClick={() => { dispatch({ type: "initial" }); onClose(); }}>Close</StyledButton>
                             <StyledButton color="primary" onClick={() => onUserUpdate()}>Save</StyledButton>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Alert 
-                                isOpen={state.message[1] !== undefined} 
-                                color={state.message[0]} 
-                                toggle={() => dispatch({type: "message", data: []})}
+                            <Alert
+                                isOpen={state.message[1] !== undefined}
+                                color={state.message[0]}
+                                toggle={() => dispatch({ type: "message", data: [] })}
                             >
                                 {state.message[1]}
                             </Alert>
