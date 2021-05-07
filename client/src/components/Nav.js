@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { userContext } from '../context/userContext';
 import AdminNav from './AdminNav';
 import StudentNav from './StudentNav';
+import ClerkNav from './ClerkNav';
 import Link from './Link';
 
 const NavPanel = styled.nav` 
@@ -46,6 +47,9 @@ const Nav = () => {
                 }
                 {   
                     roles[0] && roles[0] === "ROLE_STUDENT" && <StudentNav />
+                }
+                                {   
+                    roles[0] && roles[0] === "ROLE_CLERK" && <ClerkNav />
                 }
                 <Link to="/" onClick={ () => logout() }>
                     Wyloguj
