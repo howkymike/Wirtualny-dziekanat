@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{type}")
     public ResponseEntity<?> index(@PathVariable("type") String type) {
 

@@ -87,6 +87,20 @@ public class DataLoader implements ApplicationRunner {
         user.setRoles(roles);
         user.setIsNew(false);
         studentRepository.save(new Student(user, 123456));
+
+        User user2 = new User("meqeq",
+        "wirtawdawdualnt@gmail.com",
+        encoder.encode("meqeq"));
+        user2.setName("Meqeq");
+        user2.setSurname("Peqeq");
+        user2.setCountry("Polska");
+        user2.setCity("Podlasie");
+        user2.setAddress("ul. Szkolna");
+        user2.setPostalCode("31-445");
+        user2.setTelephone("691169696");
+        user2.setRoles(roles);
+        user2.setIsNew(false);
+        studentRepository.save(new Student(user2, 456789));
     }
 
 
