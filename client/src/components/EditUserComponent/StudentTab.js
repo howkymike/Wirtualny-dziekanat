@@ -3,11 +3,11 @@ import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 
 const StudentTab = props => {
     const { onUserChange, user } = props;
-    const [newUserData, setNewUserData] = useState(props.user);
+    const [student, setStudent] = useState(user.student);
 
     useEffect(() => {
-        onUserChange({ ...user, ...newUserData });
-    }, [newUserData]);
+        onUserChange(student);
+    }, [student, onUserChange]);
 
     return (
         <Form>
@@ -18,8 +18,8 @@ const StudentTab = props => {
                         <Input
                             type="text"
                             placeholder="Indeks"
-                            value={newUserData.student.index}
-                            onChange={(e) => setNewUserData({ student: { index: e.target.value } })}
+                            value={student.index}
+                            onChange={(e) => setStudent({...student, index: e.target.value})}
                         />
                     </FormGroup>
                 </Col>

@@ -121,7 +121,12 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("420420420");
         user.setRoles(roles);
         user.setIsNew(false);
-        clerkRepository.save(new Clerk(user));
+
+        Optional<Faculty> faculty = facultyRepository.findByName("IET");
+        Clerk baba = new Clerk(user);
+        faculty.ifPresent(baba::setFaculty);
+
+        clerkRepository.save(baba);
     }
 
     private void createLecturer() {
@@ -141,7 +146,11 @@ public class DataLoader implements ApplicationRunner {
                 "696969696",
                 roles,
                 false);
-        lecturerRepository.save(new Lecturer(onderkaUser, "***PhD"));
+        Optional<Faculty> faculty = facultyRepository.findByName("GGIOS");
+        Lecturer zonder = new Lecturer(onderkaUser, "***PhD");
+        faculty.ifPresent(zonder::setFaculty);
+
+        lecturerRepository.save(zonder);
     }
 
     private void createFaculties() {
@@ -182,12 +191,13 @@ public class DataLoader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args) {
+        createFaculties();
+
         createAdmin();
         createStudent();
         createClerk();
         createLecturer();
 
-        createFaculties();
         createFieldOfStudy();
         createCourses();
     }

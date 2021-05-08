@@ -39,8 +39,10 @@ const StudentList = () => {
     let [loading, setLoading] = useState(true);
     let [list, setList] = useState([]);
     const [deleteMsg, setDeleteMsg] = useState(false);
-    const [editUser, setEditUser] = useState(null);
+    const [editUserId, setEditUserId] = useState(-1);
     const [userToDelete, setUserToDelete] = useState(null);
+    const [isOpenEditModal, toggleEditModal] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     const { fetchApi } = useContext(userContext);
 
@@ -53,7 +55,7 @@ const StudentList = () => {
             }
         });
 
-    }, [listType, fetchApi]);
+    }, [refresh, listType, fetchApi]);
 
     const onUserDelete = (key) => {
         setUserToDelete(key);
@@ -74,6 +76,13 @@ const StudentList = () => {
         setDeleteMsg(false)
     };
 
+    const getRoleName = (role) => {
+        if (role.startsWith("ROLE_")) {
+            return role[5].toUpperCase() + role.substring(6).toLowerCase();
+        } else {
+            return "";
+        }
+    }
 
     return (
         <Wrapper>
@@ -85,7 +94,7 @@ const StudentList = () => {
                 <option value="lecturer">Wykładowcy</option>
             </Input>
             <hr />
-            <Table>
+            <Table striped borderless hover responsive>
                 <thead>
                     <tr>
                         <th>Lp.</th>
@@ -93,13 +102,13 @@ const StudentList = () => {
                         <th>Nazwisko</th>
                         <th>Email</th>
                         <th>Role</th>
-
                         {listType === "student" &&
                             <th>Indeks</th>
                         }
                         {listType === "lecturer" &&
                             <th>Tytuł</th>
                         }
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -117,7 +126,7 @@ const StudentList = () => {
                             <td>
                                 <RoleContainer>
                                     {user.user.roles.map((role, key) => (
-                                        <Role key={key} color="primary">{role.name}</Role>
+                                        <Role key={key} color="primary">{getRoleName(role.name).toUpperCase()}</Role>
                                     ))}
                                 </RoleContainer>
                             </td>
@@ -128,7 +137,11 @@ const StudentList = () => {
                                 <td>{user.title}</td>
                             }
                             <td>
-                                <StyledButton color="primary" onClick={() => setEditUser(user)}>
+                                <StyledButton color="primary"
+                                    onClick={() => {
+                                        setEditUserId(user.id);
+                                        toggleEditModal(true);
+                                    }}>
                                     <FontAwesomeIcon icon={faUserEdit} />
                                 </StyledButton>
                                 <StyledButton color="danger" onClick={() => onUserDelete(key)}>
@@ -150,13 +163,16 @@ const StudentList = () => {
                     {"Czy napewno chcesz usunąć tego użytkownika?"}
                 </MessageBox>
             }
-            {
-                editUser ?
-                    <EditUserModal userId={editUser.user.id} isOpen={true} onClose={() => setEditUser(null)} /> : ""
-            }
 
-
-
+            <EditUserModal
+                isOpen={isOpenEditModal}
+                userId={editUserId}
+                onClose={() => {
+                    setEditUserId(-1);
+                    toggleEditModal(false);
+                }}
+                onUserSave={() => {setRefresh(!refresh)}}
+            />
         </Wrapper>
     );
 }
