@@ -97,6 +97,8 @@ public class CourseController {
                 courseRequest.getLaboratory_time(),
                 courseRequest.getEcts(),
                 courseRequest.isExam());
+        if(courseRequest.getFieldOfStudyId() != 0)
+            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(newCourse::setFieldOfStudy);
         Course savedCourse =  courseRepository.save(newCourse);
 
         if(courseRequest.getCourseStudentIds() != null) {
@@ -114,8 +116,6 @@ public class CourseController {
             savedCourse.setCourseLecturers(lecturers);
         }
 
-        if(courseRequest.getFieldOfStudyId() != 0)
-            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(savedCourse::setFieldOfStudy);
 
         if(courseRequest.getCourseStudentIds() != null) {
             for(Long courseStudentId : courseRequest.getCourseStudentIds())
