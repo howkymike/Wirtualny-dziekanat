@@ -11,8 +11,9 @@ const Courses = () => {
     const { fetchApi } = useContext(userContext);
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
-    const [modal, setModal] = useState([false, 0]);
+    const [modal, setModal] = useState([false, 0, "edit"]);
     const [error, setError] = useState([false, ""]);
+
 
     useEffect(() => {
         const getCourses = async () => {
@@ -36,6 +37,7 @@ const Courses = () => {
             <Table hover striped>
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Kurs</th><th>Prowadzący</th><th>Kierunek</th>
                         <th>Wydział</th><th>Uczestnicy</th><th>Akcje</th>
                     </tr>
@@ -66,7 +68,7 @@ const Courses = () => {
                                 }
                                 <td>{ value.courseStudents.length }</td>
                                 <td>
-                                    <Button color="primary" onClick={ () => setModal([!modal[0], value.id]) }>
+                                    <Button color="primary" onClick={ () => setModal([!modal[0], value.id, "edit"]) }>
                                         <FontAwesomeIcon icon={ faEdit } />
                                     </Button>
                                 </td>
@@ -75,13 +77,16 @@ const Courses = () => {
                         </>
                     }
                 </tbody>
+
             </Table>
+            <Button color="success" size="lg" onClick={ () => setModal([!modal[0], null, "create"]) }> New course </Button>
+
             { modal[0] &&
-                <CourseModal 
-                    isOpen={ modal[0] } 
-                    id={ modal[1] } 
-                    toggle={ () => setModal([!modal[0], modal[1]]) }
-                    type="edit"
+                <CourseModal
+                    isOpen={ modal[0] }
+                    id={ modal[1] }
+                    toggle={ () => setModal([!modal[0], modal[1], modal[2]]) }
+                    type={modal[2]}
                 />
             }
             { error[0] &&

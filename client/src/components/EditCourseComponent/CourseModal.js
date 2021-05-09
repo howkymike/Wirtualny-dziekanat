@@ -10,6 +10,7 @@ import { userContext } from '../../context/userContext';
 import CourseStudentsPanel from './CourseStudentsPanel';
 import CoursePanel from './CoursePanel';
 import CourseFacultyPanel from './CourseFacultyPanel';
+import CourseLecturersPanel from "./CourseLecturersPanel";
 
 const Wrapper = styled.div`
     padding: 0.5em;
@@ -22,7 +23,7 @@ const BiggerModal = styled(Modal)`
 const initialState = {
     name: "", lecture_time: 0, laboratory_time: 0, id: 0, exam: false, ects: 0, 
     courseLecturers: [], courseStudents: [], loading: true,
-    studentList: [], activeTab: 0, fieldOfStudy: 0, faculties: [], fields: []
+    studentList: [], activeTab: 0, fieldOfStudy: 0, faculties: [], fields: [], lecturerList: []
 };
 
 const reducer = (state, {type, payload}) => {
@@ -47,6 +48,10 @@ const reducer = (state, {type, payload}) => {
             return {
                 ...state, activeTab: 3, studentList: payload
             }
+        case "lecturerList":
+            return {
+                ...state, activeTab: 2, lecturerList: payload
+            }
         case "addStudent":
             return {
                 ...state, courseStudents: [...state.courseStudents, payload]
@@ -54,6 +59,14 @@ const reducer = (state, {type, payload}) => {
         case "deleteStudent":
             return {
                 ...state, courseStudents: state.courseStudents.filter(value => value !== payload)
+            }
+        case "addLecturer":
+            return {
+                ...state, courseLecturers: [...state.courseLecturers, payload]
+            }
+        case "deleteLecturer":
+            return {
+                ...state, courseLecturers: state.courseLecturers.filter(value => value !== payload)
             }
         case "faculties":
             return {
@@ -87,6 +100,7 @@ const CourseModal = props => {
             else
                 getStudentList();
         } else if(tab === 1) {
+
             const getFieldsOfStudy = async () => {
                 const [res, isOk] = await fetchApi(`/fieldofstudy`);
 
@@ -109,6 +123,21 @@ const CourseModal = props => {
                 });
             else
                 dispatch({ type: "tab", payload: tab });
+        } else if ( tab === 2) {
+
+            const getLecturerList = async () => {
+                const [res, isOk] = await fetchApi(`/users/lecturer`, {
+                    method: "GET"
+                });
+                if(isOk)
+                    dispatch({ type: "lecturerList", payload: res.list });
+            }
+            if(state.lecturerList.length)
+                dispatch({ type: "tab", payload: tab });
+            else
+                getLecturerList();
+
+            dispatch({ type: "tab", payload: tab });
         } else {
             dispatch({ type: "tab", payload: tab });
         }
@@ -131,6 +160,18 @@ const CourseModal = props => {
             getCourse();
 
     }, [fetchApi, isOpen, id, type]);
+
+    useEffect( () => {
+
+        if(state.lecture_time < 0)
+            dispatch({type: "lecture_time", payload: 0});
+
+        if(state.laboratory_time < 0)
+            dispatch({type: "laboratory_time", payload: 0});
+
+        if(state.ects < 0)
+            dispatch({type: "ects", payload: 0});
+    }, [state.lecture_time, state.laboratory_time, state.ects ] )
 
     const updateCourse = async () => {
         let path = `/courses/${id}/edit`;
@@ -172,9 +213,10 @@ const CourseModal = props => {
                 <Wrapper>
                     <TabContent activeTab={ state.activeTab }>
                         <CoursePanel state={ state } dispatch={ dispatch } />
+                        <CourseLecturersPanel state={ state } dispatch={ dispatch } lecturerList={ state.lecturerList } />
                         <CourseStudentsPanel state={ state } dispatch={ dispatch } list={ state.studentList } />
-                        <CourseFacultyPanel 
-                            state={ state } dispatch={ dispatch } 
+                        <CourseFacultyPanel
+                            state={ state } dispatch={ dispatch }
                             faculties={ state.faculties } fields={ state.fields }
                         />
                     </TabContent>
