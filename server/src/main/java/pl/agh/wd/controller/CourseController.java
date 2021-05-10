@@ -134,23 +134,20 @@ public class CourseController {
     @PostMapping("/{id}/edit")
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> editCourse(@RequestBody CourseRequest courseRequest, @PathVariable Long id) {
-        Optional<Course> course = courseRepository.findById(id);
-        if (course.isEmpty()) {
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+        if (optionalCourse.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Dany kurs nie istnieje elo"));
         }
 
-        course.get().setName(courseRequest.getName());
-        course.get().setEcts(courseRequest.getEcts());
-        course.get().setLecture_time(courseRequest.getLecture_time());
-        if (courseRequest.getCourseLecturerIds() != null) {
-            Set<Lecturer> lecturers = new HashSet<>();
-            for (Long courseLecturerId : courseRequest.getCourseLecturerIds())
-                lecturerRepository.findById(courseLecturerId).ifPresent(lecturers::add);
-            course.get().setCourseLecturers(lecturers);
-        }
+        Course course = optionalCourse.get();
 
-        if (course.get().getCourseStudents() != null) {
-            for (CourseStudent courseStudent : course.get().getCourseStudents()) {
+        course.setName(courseRequest.getName());
+        course.setEcts(courseRequest.getEcts());
+        course.setLecture_time(courseRequest.getLecture_time());
+        editLecturers(courseRequest, course);
+
+        if (course.getCourseStudents() != null) {
+            for (CourseStudent courseStudent : course.getCourseStudents()) {
                 courseStudentRepository.deleteById(courseStudent.getId());
             }
         }
@@ -158,17 +155,26 @@ public class CourseController {
         if (courseRequest.getCourseStudentIds() != null) {
             for (Long courseStudentId : courseRequest.getCourseStudentIds())
                 studentRepository.findById(courseStudentId).ifPresent(s -> {
-                    CourseStudent courseStudent = new CourseStudent(course.get(), s);
+                    CourseStudent courseStudent = new CourseStudent(course, s);
                     courseStudentRepository.save(courseStudent);
                 });
         }
 
-        course.get().setLaboratory_time(courseRequest.getLaboratory_time());
-        course.get().setExam(courseRequest.isExam());
+        course.setLaboratory_time(courseRequest.getLaboratory_time());
+        course.setExam(courseRequest.isExam());
         if (courseRequest.getFieldOfStudyId() != 0)
-            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(course.get()::setFieldOfStudy);
-        courseRepository.save(course.get());
+            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(course::setFieldOfStudy);
+        courseRepository.save(course);
         return ResponseEntity.ok(new SuccessResponse(true, "Course changed"));
+    }
+
+    void editLecturers(CourseRequest request, Course course) {
+        if (request.getCourseLecturerIds() != null) {
+            Set<Lecturer> lecturers = new HashSet<>();
+            for (Long courseLecturerId : request.getCourseLecturerIds())
+                lecturerRepository.findById(courseLecturerId).ifPresent(lecturers::add);
+            course.setCourseLecturers(lecturers);
+        }
     }
 
 }
