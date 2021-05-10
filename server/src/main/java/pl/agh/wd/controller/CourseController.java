@@ -144,21 +144,9 @@ public class CourseController {
         course.setName(courseRequest.getName());
         course.setEcts(courseRequest.getEcts());
         course.setLecture_time(courseRequest.getLecture_time());
+
         editLecturers(courseRequest, course);
-
-        if (course.getCourseStudents() != null) {
-            for (CourseStudent courseStudent : course.getCourseStudents()) {
-                courseStudentRepository.deleteById(courseStudent.getId());
-            }
-        }
-
-        if (courseRequest.getCourseStudentIds() != null) {
-            for (Long courseStudentId : courseRequest.getCourseStudentIds())
-                studentRepository.findById(courseStudentId).ifPresent(s -> {
-                    CourseStudent courseStudent = new CourseStudent(course, s);
-                    courseStudentRepository.save(courseStudent);
-                });
-        }
+        editCourseStudents(courseRequest, course);
 
         course.setLaboratory_time(courseRequest.getLaboratory_time());
         course.setExam(courseRequest.isExam());
@@ -174,6 +162,22 @@ public class CourseController {
             for (Long courseLecturerId : request.getCourseLecturerIds())
                 lecturerRepository.findById(courseLecturerId).ifPresent(lecturers::add);
             course.setCourseLecturers(lecturers);
+        }
+    }
+
+    void editCourseStudents(CourseRequest request, Course course) {
+        if (course.getCourseStudents() != null) {
+            for (CourseStudent courseStudent : course.getCourseStudents()) {
+                courseStudentRepository.deleteById(courseStudent.getId());
+            }
+        }
+
+        if (request.getCourseStudentIds() != null) {
+            for (Long courseStudentId : request.getCourseStudentIds())
+                studentRepository.findById(courseStudentId).ifPresent(s -> {
+                    CourseStudent courseStudent = new CourseStudent(course, s);
+                    courseStudentRepository.save(courseStudent);
+                });
         }
     }
 
