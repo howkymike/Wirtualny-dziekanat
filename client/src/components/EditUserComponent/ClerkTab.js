@@ -3,17 +3,17 @@ import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 
 import { userContext } from '../../context/userContext'
 
-const LecturerTab = props => {
+const ClerkTab = props => {
 
     const { fetchApi } = useContext(userContext);
     const { onUserChange, user } = props;
 
-    const [lecturer, setLecturer] = useState(user.lecturer);
+    const [clerk, setClerk] = useState(user.clerk);
     const [faculties, setFaculties] = useState([]);
 
     useEffect(() => {
-        onUserChange( lecturer );
-    }, [lecturer, onUserChange]);
+        onUserChange( clerk );
+    }, [clerk, onUserChange]);
 
     useEffect(() => {
         fetchApi("/faculties").then((res) => {
@@ -24,7 +24,7 @@ const LecturerTab = props => {
 
     const setFaculty = (facultyId) => {
         if (facultyId) {
-            setLecturer({ ...lecturer, facultyId });
+            setClerk({ ...clerk, facultyId });
         }
     }
 
@@ -33,20 +33,10 @@ const LecturerTab = props => {
             <Row form>
                 <Col>
                     <FormGroup>
-                        <Label>Title:</Label>
-                        <Input
-                            type="text"
-                            placeholder="Title"
-                            value={lecturer.title}
-                            onChange={(e) => setLecturer({ ...lecturer, title: e.target.value })}
-                        />
-                    </FormGroup>
-
-                    <FormGroup>
                         <Label>Faculty:</Label>
                         <Input
                             type="select"
-                            value={lecturer.facultyId}
+                            value={clerk.facultyId}
                             onChange={(e) => setFaculty(e.target.value)}
                         >
                             {faculties.map((faculty, key) => (
@@ -60,4 +50,4 @@ const LecturerTab = props => {
     );
 }
 
-export default LecturerTab;
+export default ClerkTab;

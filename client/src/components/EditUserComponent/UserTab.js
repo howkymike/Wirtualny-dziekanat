@@ -1,15 +1,64 @@
 import { useState, useEffect } from 'react';
-import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import styled from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { Col, Form, FormGroup, Input, Label, Row, Badge, Button } from 'reactstrap';
 
+const Role = styled(Badge)`
+    margin: 2px;
+`
+
+const RoleButton = styled(FontAwesomeIcon)`
+    margin: 0 2px 0 10px;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+    }
+`
 
 const UserTab = props => {
 
     const { onUserChange, user } = props;
-    const [newUserData, setNewUserData] = useState({});
+    const [newUserData, setNewUserData] = useState(user);
 
     useEffect(() => {
-        onUserChange({ ...user, ...newUserData });
-    }, [newUserData]);
+        setNewUserData(user);
+    }, [user])
+
+    useEffect(() => {
+        onUserChange(newUserData);
+    }, [newUserData, onUserChange]);
+
+    const deleteRole = (key) => {
+        const role = newUserData.roles[key];
+        let newUser = { ...newUserData };
+
+        switch (role) {
+            case "ROLE_ADMIN": break;
+            case "ROLE_STUDENT":
+                newUser.student = null;
+                break;
+            case "ROLE_LECTURER":
+                newUser.lecturer = null;
+                break;
+            case "ROLE_CLERK":
+                newUser.clerk = null;
+                break;
+            default: return;
+        }
+
+        newUser.roles.splice(key, 1);
+        setNewUserData(newUser);
+    }
+
+    const getRoleName = (role) => {
+        if (role.startsWith("ROLE_")) {
+            return role[5].toUpperCase() + role.substring(6).toLowerCase();
+        } else {
+            return "";
+        }
+    }
 
     return (
         <Form>
@@ -20,8 +69,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Name"
-                            value={props.user.name}
-                            onChange={(e) => setNewUserData({ name: e.target.value })}
+                            value={newUserData.name}
+                            onChange={(e) => setNewUserData({ ...newUserData, name: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -31,8 +80,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Surname"
-                            value={props.user.surname}
-                            onChange={(e) => setNewUserData({ surname: e.target.value })}
+                            value={newUserData.surname}
+                            onChange={(e) => setNewUserData({ ...newUserData, surname: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -44,8 +93,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Email"
-                            value={props.user.email}
-                            onChange={(e) => setNewUserData({ email: e.target.value })}
+                            value={newUserData.email}
+                            onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -55,8 +104,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Phone number"
-                            value={props.user.telephone}
-                            onChange={(e) => setNewUserData({ telephone: e.target.value })}
+                            value={newUserData.telephone}
+                            onChange={(e) => setNewUserData({ ...newUserData, telephone: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -68,8 +117,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Country"
-                            value={props.user.country}
-                            onChange={(e) => setNewUserData({ country: e.target.value })}
+                            value={newUserData.country}
+                            onChange={(e) => setNewUserData({ ...newUserData, country: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -79,8 +128,8 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="City"
-                            value={props.user.city}
-                            onChange={(e) => setNewUserData({ city: e.target.value })}
+                            value={newUserData.city}
+                            onChange={(e) => setNewUserData({ ...newUserData, city: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
@@ -90,20 +139,35 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="City"
-                            value={props.user.postalCode}
-                            onChange={(e) => setNewUserData({ postalCode: e.target.value })}
+                            value={newUserData.postalCode}
+                            onChange={(e) => setNewUserData({ ...newUserData, postalCode: e.target.value })}
                         />
                     </FormGroup>
                 </Col>
             </Row>
             <FormGroup>
-                <Label>Address</Label>
+                <Label>Address:</Label>
                 <Input
                     type="text"
                     placeholder="Address"
-                    value={props.user.address}
-                    onChange={(e) => setNewUserData({ address: e.target.value })}
+                    value={newUserData.address}
+                    onChange={(e) => setNewUserData({ ...newUserData, address: e.target.value })}
                 />
+            </FormGroup>
+            <FormGroup>
+                <Label>Roles:</Label>
+                <div>
+                    {user.roles.map((role, key) => (
+                        <Role color="primary" key={key}>
+                            {getRoleName(role).toUpperCase()}
+                            { (user.roles.length > 1) &&
+                                    <RoleButton 
+                                        size="sm" icon={faTimes} 
+                                        onClick={() => { deleteRole(key)}}/>
+                            }
+                        </Role>
+                    ))}
+                </div>
             </FormGroup>
         </Form>
     );

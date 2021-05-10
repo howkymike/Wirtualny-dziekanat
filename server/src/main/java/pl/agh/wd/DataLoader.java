@@ -87,6 +87,20 @@ public class DataLoader implements ApplicationRunner {
         user.setRoles(roles);
         user.setIsNew(false);
         studentRepository.save(new Student(user, 123456));
+
+        User user2 = new User("meqeq",
+        "wirtawdawdualnt@gmail.com",
+        encoder.encode("meqeq"));
+        user2.setName("Meqeq");
+        user2.setSurname("Peqeq");
+        user2.setCountry("Polska");
+        user2.setCity("Podlasie");
+        user2.setAddress("ul. Szkolna");
+        user2.setPostalCode("31-445");
+        user2.setTelephone("691169696");
+        user2.setRoles(roles);
+        user2.setIsNew(false);
+        studentRepository.save(new Student(user2, 456789));
     }
 
 
@@ -107,7 +121,12 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("420420420");
         user.setRoles(roles);
         user.setIsNew(false);
-        clerkRepository.save(new Clerk(user));
+
+        Optional<Faculty> faculty = facultyRepository.findByName("IET");
+        Clerk baba = new Clerk(user);
+        faculty.ifPresent(baba::setFaculty);
+
+        clerkRepository.save(baba);
     }
 
     private void createLecturer() {
@@ -127,7 +146,11 @@ public class DataLoader implements ApplicationRunner {
                 "696969696",
                 roles,
                 false);
-        lecturerRepository.save(new Lecturer(onderkaUser, "***PhD"));
+        Optional<Faculty> faculty = facultyRepository.findByName("GGIOS");
+        Lecturer zonder = new Lecturer(onderkaUser, "***PhD");
+        faculty.ifPresent(zonder::setFaculty);
+
+        lecturerRepository.save(zonder);
     }
 
     private void createFaculties() {
@@ -168,12 +191,13 @@ public class DataLoader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args) {
+        createFaculties();
+
         createAdmin();
         createStudent();
         createClerk();
         createLecturer();
 
-        createFaculties();
         createFieldOfStudy();
         createCourses();
     }

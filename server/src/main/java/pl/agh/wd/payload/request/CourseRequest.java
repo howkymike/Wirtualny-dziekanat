@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class CourseRequest {
-
+    
 
     @NotBlank
     String name;

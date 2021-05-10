@@ -69,6 +69,7 @@ public class CourseController {
                 .map(course -> {
                     course.setName(newCourse.getName());
                     course.setCourseLecturers(newCourse.getCourseLecturers());
+                    course.setCourseStudents(newCourse.getCourseStudents());
                     course.setEcts(newCourse.getEcts());
                     course.setExam(newCourse.isExam());
                     course.setLaboratory_time(newCourse.getLaboratory_time());
@@ -96,6 +97,8 @@ public class CourseController {
                 courseRequest.getLaboratory_time(),
                 courseRequest.getEcts(),
                 courseRequest.isExam());
+        if(courseRequest.getFieldOfStudyId() != 0)
+            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(newCourse::setFieldOfStudy);
         Course savedCourse =  courseRepository.save(newCourse);
 
         if(courseRequest.getCourseStudentIds() != null) {
@@ -113,8 +116,6 @@ public class CourseController {
             savedCourse.setCourseLecturers(lecturers);
         }
 
-        if(courseRequest.getFieldOfStudyId() != 0)
-            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(savedCourse::setFieldOfStudy);
 
         if(courseRequest.getCourseStudentIds() != null) {
             for(Long courseStudentId : courseRequest.getCourseStudentIds())
@@ -124,19 +125,21 @@ public class CourseController {
                 });
         }
 
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(host);
-        UriComponents uriComponents =  uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(savedCourse.getId());
-        var location = uriComponents.toUri();
-        return ResponseEntity.created(location).build();
+        //UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(host);
+        //UriComponents uriComponents =  uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(savedCourse.getId());
+        //var location = uriComponents.toUri();
+        return ResponseEntity.ok(new SuccessResponse(true, "Course created"));
     }
 
     @PostMapping("/{id}/edit")
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> editCourse(@RequestBody CourseRequest courseRequest) {
-        Optional<Course> course = courseRepository.findByName(courseRequest.getName());
+    public ResponseEntity<?> editCourse(@RequestBody CourseRequest courseRequest, @PathVariable Long id) {
+        Optional<Course> course = courseRepository.findById(id);
         if (course.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Dany kurs nie istnieje elo"));
         }
+
+        course.get().setName(courseRequest.getName());
         course.get().setEcts(courseRequest.getEcts());
         course.get().setLecture_time(courseRequest.getLecture_time());
         if (courseRequest.getCourseLecturerIds() != null) {
