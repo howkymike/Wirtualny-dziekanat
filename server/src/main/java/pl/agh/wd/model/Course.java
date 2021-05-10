@@ -3,6 +3,8 @@ package pl.agh.wd.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -36,6 +38,7 @@ public class Course {
     private String name;
 
     @OneToMany(mappedBy = "course")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<CourseStudent> courseStudents;
 
     @ManyToMany
