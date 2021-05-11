@@ -1,11 +1,13 @@
 package pl.agh.wd.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,9 +36,14 @@ public class CourseStudent {
     @JoinColumn(name = "student_id")
     Student student;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "courseStudent")
+    private List<GradeReport> report;
+
     boolean hasPassed;
 
     private double finalGrade;
+    private boolean gradeAccepted;
 
     public CourseStudent(Course course, Student student) {
         this.id = new CourseStudentKey(course.getId(), student.getId());
