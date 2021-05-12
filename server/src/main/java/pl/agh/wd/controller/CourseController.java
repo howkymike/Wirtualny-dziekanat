@@ -84,8 +84,10 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    void deleteCourse(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteCourse(@PathVariable("id") Long id) {
         courseRepository.deleteById(id);
+
+        return ResponseEntity.ok(new SuccessResponse(true, "Course deleted"));
     }
 
 

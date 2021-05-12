@@ -37,6 +37,9 @@ public class Course {
     @Column(name="name")
     private String name;
 
+    @Column(name="semester")
+    private int semester;
+
     @OneToMany(mappedBy = "course")
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<CourseStudent> courseStudents;

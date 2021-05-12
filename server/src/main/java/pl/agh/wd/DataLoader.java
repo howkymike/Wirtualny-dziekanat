@@ -101,6 +101,21 @@ public class DataLoader implements ApplicationRunner {
         user2.setRoles(roles);
         user2.setIsNew(false);
         studentRepository.save(new Student(user2, 456789));
+
+        User user3 = new User("michal",
+        "wir2312t@gmail.com",
+        encoder.encode("michal"));
+        user3.setName("Michał");
+        user3.setSurname("Jaszczombski");
+        user3.setCountry("Polska");
+        user3.setCity("Kraków");
+        user3.setAddress("Ten z wiet'u");
+        user3.setPostalCode("31-445");
+        user3.setTelephone("696339696");
+        user3.setRoles(roles);
+        user3.setIsNew(false);
+        studentRepository.save(new Student(user3, 123456));
+
     }
 
 
@@ -176,9 +191,67 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void createCourses() {
-        Course ecoCourse = new Course("Ecological space and sustainable development",
+        Optional<Student> us = studentRepository.findByUserUsername("kamil");
+        Optional<Student> us2 = studentRepository.findByUserUsername("michal");
+        Optional<FieldOfStudy> fos = fieldOfStudyRepository.findByName("Wildlife");
+        Optional<FieldOfStudy> fos2 = fieldOfStudyRepository.findByName("Computer Science");
+        if(!us.isPresent() || !fos.isPresent() || !us2.isPresent() || !fos2.isPresent())
+                return;
+
+        Student kamil = us.get();
+        FieldOfStudy wild = fos.get();
+        Student michal = us2.get();
+        FieldOfStudy cs = fos2.get();
+
+        Course c1 = new Course("Aspekty ekonomiczno-prawne w informatyce", 30, 0, 2, false);
+        c1.setSemester(2);
+        c1.setFieldOfStudy(wild);
+
+        courseRepository.save(c1);
+        courseStudentRepository.save(new CourseStudent(c1, kamil));
+
+        Course c2 = new Course("Geologia podstawowa", 30, 30, 3, false);
+        c2.setSemester(1);
+        c2.setFieldOfStudy(wild);
+
+        courseRepository.save(c2);
+        courseStudentRepository.save(new CourseStudent(c2, kamil));
+
+        Course c3 = new Course("Programowanie proceduralne", 30, 30, 3, false);
+        c3.setSemester(3);
+        c3.setFieldOfStudy(wild);
+
+        courseRepository.save(c3);
+        courseStudentRepository.save(new CourseStudent(c3, kamil));
+
+
+        Course c4 = new Course("Blockchain", 150, 0, 2, false);
+        c4.setSemester(2);
+        c4.setFieldOfStudy(cs);
+
+        courseRepository.save(c4);
+        courseStudentRepository.save(new CourseStudent(c4, michal));
+
+        Course c5 = new Course("Co on na tym może mieć", 150, 0, 2, false);
+        c5.setSemester(2);
+        c5.setFieldOfStudy(cs);
+
+        courseRepository.save(c5);
+        courseStudentRepository.save(new CourseStudent(c5, michal));
+
+        Course c6 = new Course("Podstawy lakierowania amelinium", 150, 0, 2, false);
+        c6.setSemester(2);
+        c6.setFieldOfStudy(cs);
+
+        courseRepository.save(c6);
+        courseStudentRepository.save(new CourseStudent(c6, michal));
+
+
+        /*Course ecoCourse = new Course("Ecological space and sustainable development",
                 30,15,3,false);
+
         fieldOfStudyRepository.findByName("Wildlife").ifPresent(ecoCourse::setFieldOfStudy);
+
         lecturerRepository.findByUserUsername("onder").ifPresent(l -> ecoCourse.setCourseLecturers(new HashSet<>(Collections.singletonList(l))));
         //studentRepository.findByUserUsername("kamil").ifPresent(s -> ecoCourse.setCourseStudents(new HashSet<>(Collections.singletonList(new CourseStudent(ecoCourse, s)))));
         courseRepository.save(ecoCourse);
@@ -186,8 +259,19 @@ public class DataLoader implements ApplicationRunner {
 
         Course blockChainCourse = new Course("Blockchain",
                 15,15,3,true);
+
+
         fieldOfStudyRepository.findByName("Computer Science").ifPresent(blockChainCourse::setFieldOfStudy);
         courseRepository.save(blockChainCourse);
+
+        Course c1 = new Course("Aspekty ekonomiczno-prawne w informatyce", 30, 0, 2, false);
+        c1.setSemester(2);
+
+        courseRepository.save(c1);
+
+
+        .ifPresent(k -> courseStudentRepository.save(new CourseStudent(c1, k)));*/
+
     }
 
     public void run(ApplicationArguments args) {

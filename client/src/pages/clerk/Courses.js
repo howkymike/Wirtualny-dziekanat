@@ -44,7 +44,7 @@ const Courses = () => {
                 </thead>
                 <tbody>
                     {   loading ?
-                        <tr><td colSpan="6">Ładowanie</td></tr>
+                        <tr><td colSpan="7">Ładowanie</td></tr>
                         :
                         <>
                         { courses.map( (value, key) => (

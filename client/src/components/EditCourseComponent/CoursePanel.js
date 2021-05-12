@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { 
     FormGroup, Label, Input, InputGroupText, InputGroupAddon, 
-    InputGroup, Row, Col, TabPane
+    InputGroup, Row, Col, TabPane, Button
 } from 'reactstrap';
+import { userContext } from '../../context/userContext';
 
 const CoursePanel = props => {
 
-    const { state, dispatch } = props;
+    const { state, dispatch, edit, toggle } = props;
+    const { fetchApi } = useContext(userContext);
+
+    const deleteCourse = async () => {
+        const [res, isOk] = await fetchApi("/courses/" + state.id, {
+            method: "DELETE"
+        });
+
+        toggle();
+    }
 
     return(
         <TabPane tabId={ 0 }>
@@ -81,6 +91,13 @@ const CoursePanel = props => {
                     </FormGroup>
                 </Col>
             </Row>
+            { edit &&
+                <Row form>
+                    <Col>
+                        <Button color="danger" block onClick={ () => deleteCourse() }>Usuń kurs</Button>
+                    </Col>
+                </Row>
+            }
         </TabPane>
     );
 }

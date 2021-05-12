@@ -43,6 +43,10 @@ public class CourseStudent {
     boolean hasPassed;
 
     private double finalGrade;
+    
+    private double examGrade;
+    private double laboratoryGrade;
+
     private boolean gradeAccepted;
 
     public CourseStudent(Course course, Student student) {

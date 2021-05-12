@@ -212,7 +212,7 @@ const CourseModal = props => {
 
                 <Wrapper>
                     <TabContent activeTab={ state.activeTab }>
-                        <CoursePanel state={ state } dispatch={ dispatch } />
+                        <CoursePanel state={ state } dispatch={ dispatch } edit={ type === "edit" } toggle={ toggle }/>
                         <CourseLecturersPanel state={ state } dispatch={ dispatch } lecturerList={ state.lecturerList } />
                         <CourseStudentsPanel state={ state } dispatch={ dispatch } list={ state.studentList } />
                         <CourseFacultyPanel
