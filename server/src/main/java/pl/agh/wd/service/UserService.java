@@ -232,7 +232,7 @@ public class UserService {
         Optional<Student> existingStudent = studentRepository.findById(user.getId());
         Student student;
         if(existingStudent.isEmpty()) {
-            student = new Student(user, (int)request.getIndex());
+            student = new Student(user, (int)request.getIndex(), "inżynierskie");
         }
         else {
             student = existingStudent.get();
