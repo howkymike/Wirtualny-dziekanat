@@ -2,23 +2,19 @@ package pl.agh.wd.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.agh.wd.model.FieldOfStudy;
+import pl.agh.wd.model.Student;
+import pl.agh.wd.model.User;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 public class CourseOfStudiesResponse {
-    /*
-    - id    v
-    - imie  v
-    - nazwisko  v
-    - nr albumu v
-    - wydział/y
-    - kierunek/ki
-    - poziom studiów ?      add to model
-    - data rozpoczęcia studiów      add to model
-     */
 
     @NotBlank
     private long id;
@@ -32,12 +28,51 @@ public class CourseOfStudiesResponse {
     @NotBlank
     private int index;
 
-    private Set<String> faculties;
-
-    private Set<String> fieldsOfStudies;
-
+    @NotBlank
     private String levelOfStudies;
+
+    private Set<FieldOfStudiesResponse> fieldsOfStudies;
 
     private String commencmentOfStudies;
 
+    public CourseOfStudiesResponse(User user, Student student) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.index = student.getIndex();
+
+        this.fieldsOfStudies = new HashSet<>();
+        for(FieldOfStudy field : student.getFieldsOfStudy()) {
+
+            this.fieldsOfStudies.add(new FieldOfStudiesResponse(field));
+        }
+
+        this.levelOfStudies = student.getLevelOfStudies();
+        this.commencmentOfStudies = getStrDate(student.getCommencmentOfStudies());
+    }
+
+    String getStrDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        String year = "" + calendar.get(Calendar.YEAR);
+
+        int monthNum= calendar.get(Calendar.MONTH) + 1;
+        String month;
+        if(monthNum < 10) {
+            month = "0" + monthNum;
+        } else {
+            month = "" + monthNum;
+        }
+
+        int dayNum = calendar.get(Calendar.DAY_OF_MONTH);
+        String day;
+        if(dayNum < 10) {
+            day = "0" + dayNum;
+        } else {
+            day = "" + dayNum;
+        }
+
+        return year + "-" + month + "-" + day;
+    }
 }
