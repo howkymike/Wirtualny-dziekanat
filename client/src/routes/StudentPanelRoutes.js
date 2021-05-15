@@ -4,7 +4,7 @@ import PageNotFound from '../pages/PageNotFound';
 import ChangeActualPassword from '../pages/ChangeActualPassword';
 import Summary from '../pages/Summary';
 import StudentCourse from "../pages/StudentCourse";
-
+import CourseOfStudies from "../pages/CourseOfStudies";
 
 const StudentPanelRoutes = props => {
 
@@ -20,6 +20,10 @@ const StudentPanelRoutes = props => {
 
             <Route exact path={`${path}/changeactualpassword`}>
                 <ChangeActualPassword />
+            </Route>
+
+            <Route exact path={`${path}/course-of-studies`}>
+                <CourseOfStudies />
             </Route>
 
             <Route exact path={`${path}/course`}>

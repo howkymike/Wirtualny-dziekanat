@@ -3,6 +3,7 @@ package pl.agh.wd.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import pl.agh.wd.payload.response.CourseOfStudiesResponse;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.repository.StudentRepository;
 import pl.agh.wd.repository.UserRepository;
+import pl.agh.wd.service.UserDetailsImpl;
 
 import java.util.Optional;
 
@@ -27,8 +29,11 @@ public class StudentController {
     StudentRepository studentRepository;
 
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}/course-of-studies")
-    public ResponseEntity<?> getCourseOfStudies(@PathVariable("id") Long id) {
+    @GetMapping("/course-of-studies")
+    public ResponseEntity<?> getCourseOfStudies(Authentication authentication) {
+
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        long id = currentUser.getId();
 
         Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isEmpty()) {
@@ -44,6 +49,6 @@ public class StudentController {
 
         Student student = optionalStudent.get();
 
-        return ResponseEntity.badRequest().body(new CourseOfStudiesResponse(user, student));
+        return ResponseEntity.ok(new CourseOfStudiesResponse(user, student));
     }
 }
