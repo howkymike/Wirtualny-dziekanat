@@ -6,12 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-import pl.agh.wd.model.Course;
-import pl.agh.wd.model.CourseStudent;
-import pl.agh.wd.model.Lecturer;
-import pl.agh.wd.model.User;
+import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
@@ -118,18 +113,6 @@ public class CourseController {
             savedCourse.setCourseLecturers(lecturers);
         }
 
-
-        if(courseRequest.getCourseStudentIds() != null) {
-            for(Long courseStudentId : courseRequest.getCourseStudentIds())
-                studentRepository.findById(courseStudentId).ifPresent(s -> {
-                    CourseStudent courseStudent = new CourseStudent(savedCourse, s);
-                    courseStudentRepository.save(courseStudent);
-                });
-        }
-
-        //UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(host);
-        //UriComponents uriComponents =  uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(savedCourse.getId());
-        //var location = uriComponents.toUri();
         return ResponseEntity.ok(new SuccessResponse(true, "Course created"));
     }
 
@@ -158,7 +141,30 @@ public class CourseController {
         return ResponseEntity.ok(new SuccessResponse(true, "Course changed"));
     }
 
-    void editLecturers(CourseRequest request, Course course) {
+    @PostMapping("/{courseId}/{studentId}/confirmGrade")
+    public ResponseEntity<?> confirmGrade(@PathVariable Long courseId, @PathVariable Long studentId){
+
+        CourseStudentKey key = new CourseStudentKey(courseId, studentId);
+        Optional<CourseStudent> course = courseStudentRepository.findById(key);
+
+        if(course.isEmpty()) {
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Course not found."));
+        }
+
+        CourseStudent courseStudent = course.get();
+
+        if(courseStudent.getFinalGrade() > 0){
+            if(!courseStudent.isGradeAccepted()){
+                courseStudent.setGradeAccepted(true);
+                courseStudentRepository.save(courseStudent);
+            }
+            return ResponseEntity.ok(new SuccessResponse(true,"Grade accepted."));
+        }else{
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Cannot accept grade."));
+        }
+    }
+
+    private void editLecturers(CourseRequest request, Course course) {
         if (request.getCourseLecturerIds() != null) {
             Set<Lecturer> lecturers = new HashSet<>();
             for (Long courseLecturerId : request.getCourseLecturerIds())
@@ -167,7 +173,7 @@ public class CourseController {
         }
     }
 
-    void editCourseStudents(CourseRequest request, Course course) {
+    private void editCourseStudents(CourseRequest request, Course course) {
         if (course.getCourseStudents() != null) {
             for (CourseStudent courseStudent : course.getCourseStudents()) {
                 courseStudentRepository.deleteById(courseStudent.getId());
