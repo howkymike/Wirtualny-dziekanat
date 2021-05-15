@@ -71,4 +71,30 @@ public class CourseControllerTests {
         course = courseRepository.findByName("Sven and Dawid");
         assert(course.isEmpty());
     }
+
+    @Test
+    @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
+    void testEditCourse() {
+        createCourse();
+        Optional<Course> course = courseRepository.findByName("Sven and Dawid");
+        assert(course.isPresent());
+        CourseRequest courseRequest = new CourseRequest();
+        courseRequest.setName("Sven and Dawid part 2");
+        courseRequest.setEcts(7);
+        courseRequest.setFieldOfStudyId(11);
+        courseRequest.setExam(false);
+        courseRequest.setLaboratory_time(12);
+        courseRequest.setLecture_time(13);
+        Set<Long> lecturers = new HashSet<>();
+        lecturers.add(5L);
+        lecturers.add(9L);
+        Set<Long> students = new HashSet<>();
+        students.add(3L);
+        courseRequest.setCourseStudentIds(students);
+        courseRequest.setCourseLecturerIds(lecturers);
+        ResponseEntity response = controller.editCourse(courseRequest, course.get().getId());
+        assert(response.getStatusCode().toString().equals("200 OK"));
+        course = courseRepository.findByName("Sven and Dawid part 2");
+        assert(course.isPresent());
+    }
 }
