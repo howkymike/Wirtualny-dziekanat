@@ -16,6 +16,8 @@ public class GradeReport {
 
     private String message;
 
+    private Long lecturerId;
+
     @JsonBackReference
     @ManyToOne
     private CourseStudent courseStudent;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Table, Collapse, Button, Alert } from 'reactstrap';
 
 import MessageBox from '../components/MessageBox';
+import ReportGradeModal from '../components/ReportGradeModal'
 
 import { userContext } from '../context/userContext';
 
@@ -52,6 +53,8 @@ const StudentCourse = () => {
     const [alert, showAlert] = useState(-1);
     const [alertType, setAlertType] = useState("");
     const [alertMessage, setAlertMessage] = useState("");
+    const [reportGrade, setReportGrade] = useState(-1);
+
 
     const { fetchApi, userId } = useContext(userContext);
 
@@ -159,19 +162,28 @@ const StudentCourse = () => {
                                         {course.courseStudents.find((c => parseInt(userId, 10) === c.id.studentId)).gradeAccepted ?
                                             <h6>Oceny zostaly zatwierdzone.</h6>
                                             :
-                                            <StyledButton
-                                                color="primary"
-                                                disabled={getGrade(key, 'final') === '-'}
-                                                onClick={() => { toggleMessage(key) }}
-                                            >
-                                                Potwierdz oceny
-                                        </StyledButton>
+                                            <>
+                                                <StyledButton
+                                                    color="primary"
+                                                    disabled={getGrade(key, 'final') === '-'}
+                                                    onClick={() => { toggleMessage(key) }}
+                                                >
+                                                    Potwierdz oceny
+                                                </StyledButton>
+                                                <StyledButton
+                                                    color="danger"
+                                                    disabled={getGrade(key, 'final') === '-'}
+                                                    onClick={() => { setReportGrade(key) }}
+                                                >
+                                                    Zglos problem
+                                                </StyledButton>
+                                            </>
                                         }
 
                                         <Alert
                                             color={alertType}
                                             isOpen={alert === key}
-                                            toggle={()=>showAlert(-1)}
+                                            toggle={() => showAlert(-1)}
                                         >
                                             {alertMessage}
                                         </Alert>
@@ -193,6 +205,11 @@ const StudentCourse = () => {
                         ]))}
                 </tbody>
             </Table>
+
+            <ReportGradeModal
+                isOpen={reportGrade > -1}
+                toggle={() => setReportGrade(-1)}
+                course={list[reportGrade]} />
         </Wrapper>
     );
 }
