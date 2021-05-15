@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import pl.agh.wd.model.*;
 import pl.agh.wd.repository.*;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Component
@@ -249,6 +251,7 @@ public class DataLoader implements ApplicationRunner {
         courseStudent.setExamGrade(2.0);
         courseStudent.setLaboratoryGrade(3.0);
         courseStudent.setFinalGrade(2.5);
+        courseStudent.setFinalGradeDate(Date.from(ZonedDateTime.now().minusMonths(1).toInstant()));
 
         courseStudentRepository.save(courseStudent);
 
