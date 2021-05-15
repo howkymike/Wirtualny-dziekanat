@@ -244,7 +244,13 @@ public class DataLoader implements ApplicationRunner {
         c6.setFieldOfStudy(cs);
 
         courseRepository.save(c6);
-        courseStudentRepository.save(new CourseStudent(c6, michal));
+        CourseStudent courseStudent = new CourseStudent(c6, michal);
+
+        courseStudent.setExamGrade(2.0);
+        courseStudent.setLaboratoryGrade(3.0);
+        courseStudent.setFinalGrade(2.5);
+
+        courseStudentRepository.save(courseStudent);
 
 
         /*Course ecoCourse = new Course("Ecological space and sustainable development",
