@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 import pl.agh.wd.controller.UserController;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.UpdateClerkRequest;
@@ -114,6 +115,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @Transactional
     @WithMockUser(username = "admin", roles={"ADMIN"})
     void updateUserRoleTest() {
         {
@@ -123,13 +125,13 @@ public class UserControllerTests {
                 Optional<User> userOptional = userRepository.findByUsername("bogdanobanani");
                 assert(userOptional.isPresent());
 
-                Optional<Student> optionalStudent = studentRepository.findById(userOptional.get().getId());
+                Optional<Student> optionalStudent = studentRepository.findByUserUsername(userOptional.get().getUsername());
                 assert(optionalStudent.isEmpty());
 
-                Optional<Lecturer> optionalLecturer = lecturerRepository.findById(userOptional.get().getId());
+                Optional<Lecturer> optionalLecturer = lecturerRepository.findByUserUsername(userOptional.get().getUsername());
                 assert(optionalLecturer.isEmpty());
 
-                Optional<Clerk> optionalClerk = clerkRepository.findById(userOptional.get().getId());
+                Optional<Clerk> optionalClerk = clerkRepository.findByUserUsername(userOptional.get().getUsername());
                 assert(optionalClerk.isEmpty());
 
                 String telephone = userOptional.get().getTelephone();
@@ -161,10 +163,9 @@ public class UserControllerTests {
                 UpdateStudentRequest studentRequest = new UpdateStudentRequest();
                 studentRequest.setIndex(304294);
                 updateRequest.setStudent(studentRequest);
-                /*ResponseEntity<?> responseStudent = controller.updateUser(updateRequest, 99999L);
+                ResponseEntity responseStudent = controller.updateUser(updateRequest, 0L);
                 assert(Objects.requireNonNull(responseStudent.getBody()).toString().contains("pl.agh.wd.payload.response.MessageResponse"));
                 assert(responseStudent.getStatusCode().toString().equals("200 OK"));
-
                 Optional<User> userOptionalAfter = userRepository.findByUsername("bogdanobananideluxe");
                 assert(userOptionalAfter.isPresent());
                 assert(userOptionalAfter.get().getTelephone().equals("123"));
@@ -220,7 +221,7 @@ public class UserControllerTests {
                 assert(optionalLecturerAfter.isPresent());
                 assert(optionalLecturerAfter.get().getFaculty().getId() == 1L);
                 assert(optionalLecturerAfter.get().getTitle().equals("***pHD"));
-*/
+
             }
         }
     }
