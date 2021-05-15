@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.agh.wd.controller.CourseController;
+import pl.agh.wd.model.Course;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.repository.*;
 
@@ -32,9 +33,7 @@ public class CourseControllerTests {
     @Autowired
     LecturerRepository lecturerRepository;
 
-    @Test
-    @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
-    void testCreateCourseSuccess() {
+    void createCourse() {
         CourseRequest courseRequest = new CourseRequest();
         courseRequest.setName("Sven and Dawid");
         courseRequest.setEcts(5);
@@ -53,4 +52,23 @@ public class CourseControllerTests {
         assert(response.getStatusCode().toString().equals("200 OK"));
     }
 
+    @Test
+    @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
+    void testCreateCourse() {
+        createCourse();
+        Optional<Course> course = courseRepository.findByName("Sven and Dawid");
+        assert(course.isPresent());
+    }
+
+    @Test
+    @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
+    void testDeleteCourse() {
+        createCourse();
+        Optional<Course> course = courseRepository.findByName("Sven and Dawid");
+        assert(course.isPresent());
+        ResponseEntity response = controller.deleteCourse(course.get().getId());
+        assert(response.getStatusCode().toString().equals("200 OK"));
+        course = courseRepository.findByName("Sven and Dawid");
+        assert(course.isEmpty());
+    }
 }
