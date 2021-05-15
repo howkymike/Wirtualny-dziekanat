@@ -45,8 +45,8 @@ public class Student {
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private Set<CourseStudent> courseStudents = new HashSet<>();
 
-    @ManyToMany(mappedBy = "currentStudents")
-    Set<FieldOfStudy> fieldsOfStudy;
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    Set<FieldOfStudyStudent> fieldsOfStudyStudents = new HashSet<>();
 
     public Student(User user, int index, String levelOfStudies) {
         this.user = user;

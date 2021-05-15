@@ -5,18 +5,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.agh.wd.model.FieldOfStudy;
+import pl.agh.wd.model.FieldOfStudyStudent;
 import pl.agh.wd.model.Student;
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.response.CourseOfStudiesResponse;
 import pl.agh.wd.payload.response.MessageResponse;
+import pl.agh.wd.repository.FieldOfStudyRepository;
+import pl.agh.wd.repository.FieldOfStudyStudentRepository;
 import pl.agh.wd.repository.StudentRepository;
 import pl.agh.wd.repository.UserRepository;
 import pl.agh.wd.service.UserDetailsImpl;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/student")
@@ -27,6 +33,12 @@ public class StudentController {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    FieldOfStudyStudentRepository fieldOfStudyStudentRepository;
+
+    @Autowired
+    FieldOfStudyRepository fieldOfStudyRepository;
 
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN')")
     @GetMapping("/course-of-studies")
@@ -49,6 +61,14 @@ public class StudentController {
 
         Student student = optionalStudent.get();
 
-        return ResponseEntity.ok(new CourseOfStudiesResponse(user, student));
+        List<FieldOfStudyStudent> fieldStudentList = fieldOfStudyStudentRepository.findAllByStudentId(id);
+        Set<FieldOfStudy>  fieldOfStudies = new HashSet<>();
+
+        for(FieldOfStudyStudent fieldStudent : fieldStudentList) {
+            Optional<FieldOfStudy> fieldOfStudy = fieldOfStudyRepository.findById(fieldStudent.getFieldOfStudy().getId());
+            fieldOfStudy.ifPresent(fieldOfStudies::add);
+        }
+
+        return ResponseEntity.ok(new CourseOfStudiesResponse(user, student, fieldOfStudies));
     }
 }

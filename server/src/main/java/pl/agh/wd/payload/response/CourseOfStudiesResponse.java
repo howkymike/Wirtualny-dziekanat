@@ -31,20 +31,20 @@ public class CourseOfStudiesResponse {
     @NotBlank
     private String levelOfStudies;
 
-    private Set<FieldOfStudiesResponse> fieldsOfStudies;
+    private Set<FieldOfStudyResponse> fieldsOfStudies;
 
     private String commencmentOfStudies;
 
-    public CourseOfStudiesResponse(User user, Student student) {
+    public CourseOfStudiesResponse(User user, Student student, Set<FieldOfStudy> fieldOfStudies) {
         this.id = user.getId();
         this.name = user.getName();
         this.surname = user.getSurname();
         this.index = student.getIndex();
 
         this.fieldsOfStudies = new HashSet<>();
-        for(FieldOfStudy field : student.getFieldsOfStudy()) {
+        for(FieldOfStudy field : fieldOfStudies) {
 
-            this.fieldsOfStudies.add(new FieldOfStudiesResponse(field));
+            this.fieldsOfStudies.add(new FieldOfStudyResponse(field));
         }
 
         this.levelOfStudies = student.getLevelOfStudies();

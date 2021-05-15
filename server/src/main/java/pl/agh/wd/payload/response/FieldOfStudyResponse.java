@@ -9,14 +9,14 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class FieldOfStudiesResponse {
+public class FieldOfStudyResponse {
     @NotBlank
     private String faculty;
 
     @NotBlank
     private String fieldOfStudy;
 
-    public FieldOfStudiesResponse(FieldOfStudy fieldOfStudy) {
+    public FieldOfStudyResponse(FieldOfStudy fieldOfStudy) {
         this.faculty = fieldOfStudy.getFaculty().getName();
         this.fieldOfStudy = fieldOfStudy.getName();
     }

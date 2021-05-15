@@ -31,6 +31,9 @@ public class DataLoader implements ApplicationRunner {
     private CourseStudentRepository courseStudentRepository;
 
     @Autowired
+    FieldOfStudyStudentRepository fieldOfStudyStudentRepository;
+
+    @Autowired
     private FieldOfStudyRepository fieldOfStudyRepository;
 
     @Autowired
@@ -209,6 +212,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c1);
         courseStudentRepository.save(new CourseStudent(c1, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
         Course c2 = new Course("Geologia podstawowa", 30, 30, 3, false);
         c2.setSemester(1);
@@ -216,6 +220,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c2);
         courseStudentRepository.save(new CourseStudent(c2, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
         Course c3 = new Course("Programowanie proceduralne", 30, 30, 3, false);
         c3.setSemester(3);
@@ -223,6 +228,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c3);
         courseStudentRepository.save(new CourseStudent(c3, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
 
         Course c4 = new Course("Blockchain", 150, 0, 2, false);
@@ -231,6 +237,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c4);
         courseStudentRepository.save(new CourseStudent(c4, michal));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
         Course c5 = new Course("Co on na tym może mieć", 150, 0, 2, false);
         c5.setSemester(2);
@@ -238,6 +245,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c5);
         courseStudentRepository.save(new CourseStudent(c5, michal));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
         Course c6 = new Course("Podstawy lakierowania amelinium", 150, 0, 2, false);
         c6.setSemester(2);
@@ -245,6 +253,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c6);
         courseStudentRepository.save(new CourseStudent(c6, michal));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
 
         /*Course ecoCourse = new Course("Ecological space and sustainable development",
