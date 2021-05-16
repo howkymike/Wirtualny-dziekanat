@@ -33,6 +33,9 @@ public class DataLoader implements ApplicationRunner {
     private CourseStudentRepository courseStudentRepository;
 
     @Autowired
+    FieldOfStudyStudentRepository fieldOfStudyStudentRepository;
+
+    @Autowired
     private FieldOfStudyRepository fieldOfStudyRepository;
 
     @Autowired
@@ -88,7 +91,7 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
-        studentRepository.save(new Student(user, 123456));
+        studentRepository.save(new Student(user, 123456, "inżynierskie", 2018, 9, 1));
 
         User user2 = new User("meqeq",
         "wirtawdawdualnt@gmail.com",
@@ -102,7 +105,7 @@ public class DataLoader implements ApplicationRunner {
         user2.setTelephone("691169696");
         user2.setRoles(roles);
         user2.setIsNew(false);
-        studentRepository.save(new Student(user2, 456789));
+        studentRepository.save(new Student(user2, 456789, "inżynierskie", 2019, 9, 1));
 
         User user3 = new User("michal",
         "wir2312t@gmail.com",
@@ -116,7 +119,7 @@ public class DataLoader implements ApplicationRunner {
         user3.setTelephone("696339696");
         user3.setRoles(roles);
         user3.setIsNew(false);
-        studentRepository.save(new Student(user3, 123456));
+        studentRepository.save(new Student(user3, 123456, "inżynierskie", 2020, 9, 1));
 
     }
 
@@ -237,6 +240,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c1);
         courseStudentRepository.save(new CourseStudent(c1, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
         Course c2 = new Course("Geologia podstawowa", 30, 30, 3, false);
         c2.setSemester(1);
@@ -244,14 +248,15 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c2);
         courseStudentRepository.save(new CourseStudent(c2, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
         Course c3 = new Course("Programowanie proceduralne", 30, 30, 3, false);
         c3.setSemester(3);
         c3.setFieldOfStudy(wild);
-        c3.setCourseLecturers(lecturers);
 
         courseRepository.save(c3);
         courseStudentRepository.save(new CourseStudent(c3, kamil));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
 
         Course c4 = new Course("Blockchain", 150, 0, 2, false);
@@ -260,6 +265,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c4);
         courseStudentRepository.save(new CourseStudent(c4, michal));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
         Course c5 = new Course("Co on na tym może mieć", 150, 0, 2, false);
         c5.setSemester(2);
@@ -267,6 +273,7 @@ public class DataLoader implements ApplicationRunner {
 
         courseRepository.save(c5);
         courseStudentRepository.save(new CourseStudent(c5, michal));
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
         Course c6 = new Course("Podstawy lakierowania amelinium", 150, 0, 2, false);
         c6.setSemester(2);
@@ -284,6 +291,7 @@ public class DataLoader implements ApplicationRunner {
         courseStudent.setFinalGradeDate(Date.from(ZonedDateTime.now().minusMonths(1).toInstant()));
 
         courseStudentRepository.save(courseStudent);
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
 
         /*Course ecoCourse = new Course("Ecological space and sustainable development",

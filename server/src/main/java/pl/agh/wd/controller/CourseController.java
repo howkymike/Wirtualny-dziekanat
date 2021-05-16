@@ -33,6 +33,9 @@ public class CourseController {
     CourseStudentRepository courseStudentRepository;
 
     @Autowired
+    FieldOfStudyStudentRepository fieldOfStudyStudentRepository;
+
+    @Autowired
     LecturerRepository lecturerRepository;
 
     @Value("dziekanat.app.frontendUrl")
@@ -103,6 +106,12 @@ public class CourseController {
                 studentRepository.findById(courseStudentId).ifPresent(s -> {
                     CourseStudent courseStudent = new CourseStudent(savedCourse, s);
                     courseStudentRepository.save(courseStudent);
+
+                    Optional<FieldOfStudy> fieldOfStudy = fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId());
+                    if(fieldOfStudy.isPresent()) {
+                        FieldOfStudyStudent fieldOfStudyStudent = new FieldOfStudyStudent(fieldOfStudy.get(), s);
+                        fieldOfStudyStudentRepository.save(fieldOfStudyStudent);
+                    }
                 });
         }
 
@@ -185,6 +194,12 @@ public class CourseController {
                 studentRepository.findById(courseStudentId).ifPresent(s -> {
                     CourseStudent courseStudent = new CourseStudent(course, s);
                     courseStudentRepository.save(courseStudent);
+
+                    Optional<FieldOfStudy> fieldOfStudy = fieldOfStudyRepository.findById(request.getFieldOfStudyId());
+                    if(fieldOfStudy.isPresent()) {
+                        FieldOfStudyStudent fieldOfStudyStudent = new FieldOfStudyStudent(fieldOfStudy.get(), s);
+                        fieldOfStudyStudentRepository.save(fieldOfStudyStudent);
+                    }
                 });
         }
     }

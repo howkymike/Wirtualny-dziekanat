@@ -8,6 +8,7 @@ const AdminNav = () => {
             <Link to="/student">
                 Podsumowanie
             </Link>
+            <Link to="/student/course-of-studies">Przebieg Studiów</Link>
             <Link to="/student/course">Kursy</Link>
             <Link to="/student/changeactualpassword">Zmien haslo</Link>
         </>

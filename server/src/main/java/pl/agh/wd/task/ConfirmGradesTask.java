@@ -5,13 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.agh.wd.repository.CourseStudentRepository;
-import pl.agh.wd.repository.PasswordResetTokenRepository;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Date;
 
 @Service
