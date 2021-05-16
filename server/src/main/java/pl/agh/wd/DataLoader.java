@@ -89,7 +89,7 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
-        studentRepository.save(new Student(user, 123456, "inżynierskie"));
+        studentRepository.save(new Student(user, 123456, "inżynierskie", 2018, 9, 1));
 
         User user2 = new User("meqeq",
         "wirtawdawdualnt@gmail.com",
@@ -103,7 +103,7 @@ public class DataLoader implements ApplicationRunner {
         user2.setTelephone("691169696");
         user2.setRoles(roles);
         user2.setIsNew(false);
-        studentRepository.save(new Student(user2, 456789, "inżynierskie"));
+        studentRepository.save(new Student(user2, 456789, "inżynierskie", 2019, 9, 1));
 
         User user3 = new User("michal",
         "wir2312t@gmail.com",
@@ -117,7 +117,7 @@ public class DataLoader implements ApplicationRunner {
         user3.setTelephone("696339696");
         user3.setRoles(roles);
         user3.setIsNew(false);
-        studentRepository.save(new Student(user3, 123456, "inżynierskie"));
+        studentRepository.save(new Student(user3, 123456, "inżynierskie", 2020, 9, 1));
 
     }
 

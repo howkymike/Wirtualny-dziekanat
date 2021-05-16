@@ -48,11 +48,19 @@ public class Student {
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     Set<FieldOfStudyStudent> fieldsOfStudyStudents = new HashSet<>();
 
-    public Student(User user, int index, String levelOfStudies) {
+    public Student(User user, int index, String levelOfStudies, int commencmentYear, int commencmentMonth, int commencmentDay) {
         this.user = user;
         this.index = index;
         this.levelOfStudies = levelOfStudies;
-        // For now student is created on his commencment date. Change may be necessary depending on needs.
-        this.commencmentOfStudies = new Date(System.currentTimeMillis());
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, commencmentYear);
+        cal.set(Calendar.MONTH, commencmentMonth);
+        cal.set(Calendar.DAY_OF_MONTH, commencmentDay);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        this.commencmentOfStudies = cal.getTime();
     }
 }
