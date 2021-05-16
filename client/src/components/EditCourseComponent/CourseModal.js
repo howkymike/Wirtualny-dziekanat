@@ -22,7 +22,7 @@ const BiggerModal = styled(Modal)`
 
 const initialState = {
     name: "", lecture_time: 0, laboratory_time: 0, id: 0, exam: false, ects: 0, 
-    courseLecturers: [], courseStudents: [], loading: true,
+    courseLecturers: [], courseStudents: [], loading: true, semester: 0,
     studentList: [], activeTab: 0, fieldOfStudy: 0, faculties: [], fields: [], lecturerList: []
 };
 
@@ -33,10 +33,10 @@ const reducer = (state, {type, payload}) => {
                 ...state, ...payload, loading: false,
                 courseLecturers: payload.courseLecturers.map(value => value.id),
                 courseStudents: payload.courseStudents.map(value => value.id.studentId),
-                fieldOfStudy: payload.fieldOfStudy.id
+                fieldOfStudy: payload.fieldOfStudy.id, semester: payload.semester
             }
         case "name": case "lecture_time": case "laboratory_time": case "exam": 
-        case "ects": case "fieldOfStudy":
+        case "ects": case "fieldOfStudy": case "semester":
             return {
                 ...state, [type]: payload
             }
@@ -181,7 +181,7 @@ const CourseModal = props => {
             body: JSON.stringify({
                 id, lecture_time: state.lecture_time, laboratory_time: state.laboratory_time,
                 ects: state.ects, exam: state.exam, name: state.name, courseStudentIds: state.courseStudents,
-                courseLecturerIds: state.courseLecturers, fieldOfStudyId: state.fieldOfStudy
+                courseLecturerIds: state.courseLecturers, fieldOfStudyId: state.fieldOfStudy, semester: state.semester
             })
         });
 

@@ -26,6 +26,9 @@ public class CourseRequest {
     @NotBlank
     boolean exam;
 
+    @NotBlank
+    int semester;
+
     Set<Long> courseStudentIds;
 
     Set<Long> courseLecturerIds;

@@ -28,6 +28,8 @@ public class CourseOfStudiesResponse {
     @NotBlank
     private int index;
 
+    private int semester;
+
     @NotBlank
     private String levelOfStudies;
 
@@ -40,6 +42,7 @@ public class CourseOfStudiesResponse {
         this.name = user.getName();
         this.surname = user.getSurname();
         this.index = student.getIndex();
+        this.semester = student.getSemester();
 
         this.fieldsOfStudies = new HashSet<>();
         for(FieldOfStudy field : fieldOfStudies) {

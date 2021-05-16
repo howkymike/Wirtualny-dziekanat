@@ -41,6 +41,9 @@ public class Student {
     @Column(name="commencment_of_studies")
     private Date commencmentOfStudies;
 
+    @Column(name="semester")
+    private int semester;
+
     // This should get us a many-to-many through a Student weak entity that has a User PKEY id as user_id.
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private Set<CourseStudent> courseStudents = new HashSet<>();

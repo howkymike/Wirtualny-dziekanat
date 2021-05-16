@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Table, Collapse, Button, Alert } from 'reactstrap';
+import { Table, Collapse, Button, Alert, Badge } from 'reactstrap';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 import MessageBox from '../components/MessageBox';
 import ReportGradeModal from '../components/ReportGradeModal'
@@ -42,7 +44,23 @@ const Tr = styled.tr`
 &:hover{
     cursor: pointer;
 }
-`
+`;
+
+const Selector = styled.div` 
+    & > * {
+        display: inline-block;
+        margin: 0 1em;
+        user-select: none;
+    }
+`;
+
+const FaArrow = styled(Fa)`
+    color: ${props => props.active ? "#000" : "#e2e2e2" };
+`;
+
+const SelBadge = styled(Badge)`
+    width: 10em;
+`;
 
 const StudentCourse = () => {
     let [loading, setLoading] = useState(true);
@@ -54,18 +72,32 @@ const StudentCourse = () => {
     const [alertType, setAlertType] = useState("");
     const [alertMessage, setAlertMessage] = useState("");
     const [reportGrade, setReportGrade] = useState(-1);
+    const [semester, setSemester] = useState(0);
+    const [selectedSemester, setSelectedSemester] = useState(0);
 
 
     const { fetchApi, userId } = useContext(userContext);
 
     useEffect(() => {
+        const getData = async () => {
+            const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my")]);
 
-        fetchApi("/courses/my").then(res => {
-            if (res[1]) {
-                setList(res[0]);
-                setLoading(false);
+            const [student, courses] = data;
+
+            if(courses[1]) {
+                setList(courses[0]);
+                console.log(courses[0]);
             }
-        });
+
+            if(student[1]) {
+                setSemester(student[0].semester);
+                setSelectedSemester(student[0].semester);
+            }
+
+            setLoading(false);
+        }
+
+        getData();
 
     }, [fetchApi]);
 
@@ -92,31 +124,34 @@ const StudentCourse = () => {
         });
     };
 
-    const getGrade = (courseKey, type) => {
-        const course = list[courseKey].courseStudents.find(c => parseInt(userId, 10) === c.id.studentId);
-        let grade = 0;
+    const changeSemester = (dir) => {
+        const newSemester = selectedSemester + dir;
 
-        switch (type) {
-            case 'final':
-                grade = course.finalGrade;
-                break;
-            case 'exam':
-                grade = course.examGrade;
-                break;
-            case 'lab':
-                grade = course.laboratoryGrade;
-                break;
-            default:
-                return "-";
+        if(newSemester > 0 && newSemester <= semester) {
+            setSelectedSemester(newSemester);
         }
-
-        return (grade > 0) ? grade : '-';
-    };
+    }
 
     return (
         <Wrapper>
             <h4>Moje Kursy</h4>
             <hr />
+            <Selector>
+                <FaArrow icon={faArrowLeft} 
+                    active={ selectedSemester > 1 ? "true" : undefined }
+                    onClick={ () => changeSemester(-1) }
+                ></FaArrow>
+                <SelBadge>
+                    { semester === selectedSemester ?
+                        "Obecny semestr" :
+                        "Semestr " + selectedSemester
+                    }
+                </SelBadge>
+                <FaArrow 
+                    icon={faArrowRight} active={ selectedSemester < semester ? "true" : undefined }
+                    onClick={ () => changeSemester(1) }
+                ></FaArrow>
+            </Selector>
             <Table striped borderless>
                 <thead>
                     <tr>
@@ -129,10 +164,10 @@ const StudentCourse = () => {
                 <tbody>
                     {loading ?
                         <tr>
-                            <td colSpan="3">Ładowanie</td>
+                            <td colSpan="4">Ładowanie</td>
                         </tr>
                         :
-                        list.map((course, key) => ([
+                        list.filter( value => value.semester === selectedSemester ).map((course, key) => ([
                             <Tr key={key} onClick={() => setSelectedCourse((selectedCourse === key) ? -1 : key)}>
                                 <td>{key + 1}</td>
                                 <td>{course.name}</td>
@@ -146,16 +181,18 @@ const StudentCourse = () => {
                                     >
                                         <GradeContainer>
                                             <Grade>
-                                                <h6>Cwiczenia: </h6>
-                                                {getGrade(key, 'lab')}
+                                                <h6>Ćwiczenia: </h6>
+                                                { course.courseStudents[0].laboratoryGrade ? course.courseStudents[0].laboratoryGrade : "-" }
                                             </Grade>
+                                            { course.exam &&
                                             <Grade>
                                                 <h6>Egzamin: </h6>
-                                                {getGrade(key, 'exam')}
+                                                { course.courseStudents[0].examGrade ? course.courseStudents[0].examGrade : "-" }
                                             </Grade>
+                                            }
                                             <Grade>
                                                 <h6>Koncowa: </h6>
-                                                {getGrade(key, 'final')}
+                                                { course.courseStudents[0].finalGrade ? course.courseStudents[0].finalGrade : "-" }
                                             </Grade>
                                         </GradeContainer>
 
@@ -165,14 +202,14 @@ const StudentCourse = () => {
                                             <>
                                                 <StyledButton
                                                     color="primary"
-                                                    disabled={getGrade(key, 'final') === '-'}
+                                                    disabled={!course.courseStudents[0].finalGrade}
                                                     onClick={() => { toggleMessage(key) }}
                                                 >
                                                     Potwierdz oceny
                                                 </StyledButton>
                                                 <StyledButton
                                                     color="danger"
-                                                    disabled={getGrade(key, 'final') === '-'}
+                                                    disabled={!course.courseStudents[0].finalGrade}
                                                     onClick={() => { setReportGrade(key) }}
                                                 >
                                                     Zglos problem

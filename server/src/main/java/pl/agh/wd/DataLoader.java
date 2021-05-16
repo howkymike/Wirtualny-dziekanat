@@ -91,7 +91,9 @@ public class DataLoader implements ApplicationRunner {
         user.setTelephone("696969696");
         user.setRoles(roles);
         user.setIsNew(false);
-        studentRepository.save(new Student(user, 123456, "inżynierskie", 2018, 9, 1));
+        Student s1 = new Student(user, 123456, "inżynierskie", 2018, 9, 1);
+        s1.setSemester(6);
+        studentRepository.save(s1);
 
         User user2 = new User("meqeq",
         "wirtawdawdualnt@gmail.com",
@@ -105,7 +107,9 @@ public class DataLoader implements ApplicationRunner {
         user2.setTelephone("691169696");
         user2.setRoles(roles);
         user2.setIsNew(false);
-        studentRepository.save(new Student(user2, 456789, "inżynierskie", 2019, 9, 1));
+        Student s2 = new Student(user2, 456789, "inżynierskie", 2019, 9, 1);
+        s2.setSemester(2);
+        studentRepository.save(s2);
 
         User user3 = new User("michal",
         "wir2312t@gmail.com",
@@ -119,8 +123,9 @@ public class DataLoader implements ApplicationRunner {
         user3.setTelephone("696339696");
         user3.setRoles(roles);
         user3.setIsNew(false);
-        studentRepository.save(new Student(user3, 123456, "inżynierskie", 2020, 9, 1));
-
+        Student s3 = new Student(user3, 123456, "inżynierskie", 2020, 9, 1);
+        s3.setSemester(2);
+        studentRepository.save(s3);
     }
 
 
@@ -258,6 +263,26 @@ public class DataLoader implements ApplicationRunner {
         courseStudentRepository.save(new CourseStudent(c3, kamil));
         fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
 
+
+        Course c10 = new Course("Programowanie obiektowe w systemie windows", 30, 30, 3, false);
+        c10.setSemester(6);
+        c10.setFieldOfStudy(wild);
+        courseRepository.save(c10);
+
+        CourseStudent cs1 = new CourseStudent(c10, kamil);
+        cs1.setLaboratoryGrade(4.5);
+        courseStudentRepository.save(cs1);
+        fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(wild, kamil));
+
+        Course c11 = new Course("Analiza i przetwarzanie obrazów cyfrowych", 30, 30, 3, true);
+        c11.setSemester(6);
+        c11.setFieldOfStudy(wild);
+        courseRepository.save(c11);
+
+        CourseStudent cs2 = new CourseStudent(c11, kamil);
+        cs2.setLaboratoryGrade(2.0);
+        cs2.setExamGrade(2.0);
+        courseStudentRepository.save(cs2);
 
         Course c4 = new Course("Blockchain", 150, 0, 2, false);
         c4.setSemester(2);

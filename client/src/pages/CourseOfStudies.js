@@ -60,6 +60,7 @@ const CourseOfStudies = ({ type }) => {
             if(isOk) {
                 dispatch({ type: "course-of-studies", payload: result });
                 setList(result.fieldsOfStudies);
+                console.log(result);
             } else
                 dispatch({ type: "error", payload: result });
         }
@@ -133,7 +134,7 @@ const CourseOfStudies = ({ type }) => {
                 ))) :
                     (
                         <tr>
-                            <td colspan="2">Brak kierunków do wyświetlenia</td>
+                            <td colSpan="2">Brak kierunków do wyświetlenia</td>
                         </tr>
                     )
                 }

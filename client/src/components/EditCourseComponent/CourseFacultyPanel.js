@@ -61,6 +61,19 @@ const CourseFacultyPanel = props => {
                     </FormGroup>
                 </Col>
             </Row>
+            <Row form>
+                <Col>
+                    <FormGroup>
+                        <Label for="semester">Semestr</Label>
+                        <Input 
+                            type="number" id="semester"
+                            value={ state.semester }
+                            onChange={ e => dispatch({ type: "semester", payload: Number(e.target.value) })}
+                        >
+                        </Input>
+                    </FormGroup>
+                </Col>
+            </Row>
         </TabPane>
     );
 }

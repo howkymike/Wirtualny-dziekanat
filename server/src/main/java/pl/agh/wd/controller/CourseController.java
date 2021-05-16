@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.val;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.payload.response.MessageResponse;
@@ -55,8 +57,19 @@ public class CourseController {
     @GetMapping("/my")
     public List<Course> getMyCourses(Authentication authentication){
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        return courseStudentRepository.findAllByStudentId(currentUser.getId())
-                .stream().map(CourseStudent::getCourse).collect(Collectors.toList());
+
+        List<Course> list = courseStudentRepository.findAllByStudentId(currentUser.getId())
+        .stream().map(CourseStudent::getCourse).collect(Collectors.toList());
+
+        list.forEach(value -> {
+            Set<CourseStudent> cs = value.getCourseStudents();
+
+            cs.removeIf(val -> val.getStudent().getId() != currentUser.getId());
+
+            value.setCourseStudents(cs);
+        });
+
+        return list;
     }
 
     // TODO: for now it just recreate the course, maybe it's alright maybe it's not
@@ -72,6 +85,7 @@ public class CourseController {
                     course.setExam(newCourse.isExam());
                     course.setLaboratory_time(newCourse.getLaboratory_time());
                     course.setLecture_time(newCourse.getLecture_time());
+                    course.setSemester(newCourse.getSemester());
                     //course.setFieldOfStudy(newCourse.getFieldOfStudy());
                     return courseRepository.save(course);
                 })
@@ -97,6 +111,9 @@ public class CourseController {
                 courseRequest.getLaboratory_time(),
                 courseRequest.getEcts(),
                 courseRequest.isExam());
+            
+            newCourse.setSemester(courseRequest.getSemester());
+            
         if(courseRequest.getFieldOfStudyId() != 0)
             fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(newCourse::setFieldOfStudy);
         Course savedCourse =  courseRepository.save(newCourse);
@@ -122,6 +139,8 @@ public class CourseController {
             savedCourse.setCourseLecturers(lecturers);
         }
 
+        editLecturers(courseRequest, newCourse);
+
         return ResponseEntity.ok(new SuccessResponse(true, "Course created"));
     }
 
@@ -138,6 +157,7 @@ public class CourseController {
         course.setName(courseRequest.getName());
         course.setEcts(courseRequest.getEcts());
         course.setLecture_time(courseRequest.getLecture_time());
+        course.setSemester(courseRequest.getSemester());
 
         editLecturers(courseRequest, course);
         editCourseStudents(courseRequest, course);
