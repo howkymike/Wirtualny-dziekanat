@@ -11,7 +11,7 @@ const CoursePanel = props => {
     const { fetchApi } = useContext(userContext);
 
     const deleteCourse = async () => {
-        const [res, isOk] = await fetchApi("/courses/" + state.id, {
+        await fetchApi("/courses/" + state.id, {
             method: "DELETE"
         });
 

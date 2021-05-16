@@ -9,15 +9,17 @@ const UserProvider = ({children}) => {
     let [username, setUsername] = useState(localStorage.getItem("username") || "");
     let [token, setToken] = useState(localStorage.getItem("token"));
     let [roles, setRoles] = useState(JSON.parse(localStorage.getItem("roles") || "[]"));
+    let [userId, setUserId] = useState(localStorage.getItem('userId') || -1);
     let [logged, setLogged] = useState(!!username.length);
     
     const [attemptsRemaining, setAttemptsRemaining] = useState(3);
 
     const history = useHistory();
 
-    const setLogin = ({token, username, roles}) => {
+    const setLogin = ({token, username, roles, id}) => {
         setToken(token);
         setUsername(username);
+        setUserId(id)
         setRoles(roles);
         setLogged(true);
     }
@@ -67,6 +69,7 @@ const UserProvider = ({children}) => {
         localStorage.setItem("token", json.token);
         localStorage.setItem("username", json.username);
         localStorage.setItem("roles", JSON.stringify(json.roles));
+        localStorage.setItem('userId', json.id);
 
         return true;
     }
@@ -93,6 +96,7 @@ const UserProvider = ({children}) => {
 
         localStorage.removeItem("token");
         localStorage.removeItem("username");
+        localStorage.removeItem("userId");
         localStorage.removeItem("roles");
 
         history.push("/");
@@ -104,7 +108,7 @@ const UserProvider = ({children}) => {
 
     return(
         <userContext.Provider value={{
-            logged, username, roles,
+            logged, username, roles, userId,
             login, logout, fetchApi
         }}>
             { children }

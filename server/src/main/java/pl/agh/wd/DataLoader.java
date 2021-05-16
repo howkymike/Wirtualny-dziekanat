@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import pl.agh.wd.model.*;
 import pl.agh.wd.repository.*;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Component
@@ -169,6 +171,23 @@ public class DataLoader implements ApplicationRunner {
         faculty.ifPresent(zonder::setFaculty);
 
         lecturerRepository.save(zonder);
+
+        User dulinUser = new User("dulin",
+                "dulinek@gmail.com",
+                encoder.encode("dulin"),
+                "Marek",
+                "Dulinski",
+                "Polska",
+                "Kraków",
+                "D-10",
+                "31-445",
+                "696969696",
+                roles,
+                false);
+        Lecturer dulin = new Lecturer(dulinUser, "Prof.");
+        faculty.ifPresent(dulin::setFaculty);
+
+        lecturerRepository.save(dulin);
     }
 
     private void createFaculties() {
@@ -196,15 +215,24 @@ public class DataLoader implements ApplicationRunner {
     private void createCourses() {
         Optional<Student> us = studentRepository.findByUserUsername("kamil");
         Optional<Student> us2 = studentRepository.findByUserUsername("michal");
+        Optional<Lecturer> lect1 = lecturerRepository.findByUserUsername("onder");
+        Optional<Lecturer> lect2 = lecturerRepository.findByUserUsername("dulin");
         Optional<FieldOfStudy> fos = fieldOfStudyRepository.findByName("Wildlife");
         Optional<FieldOfStudy> fos2 = fieldOfStudyRepository.findByName("Computer Science");
-        if(!us.isPresent() || !fos.isPresent() || !us2.isPresent() || !fos2.isPresent())
+        if(!us.isPresent() || !fos.isPresent() ||
+                !us2.isPresent() || !fos2.isPresent()||
+                !lect1.isPresent() || !lect2.isPresent())
                 return;
 
         Student kamil = us.get();
         FieldOfStudy wild = fos.get();
         Student michal = us2.get();
         FieldOfStudy cs = fos2.get();
+        Lecturer onder = lect1.get();
+        Lecturer dulinek = lect2.get();
+
+        Set<Lecturer> lecturers = new HashSet<>();
+        lecturers.add(onder);
 
         Course c1 = new Course("Aspekty ekonomiczno-prawne w informatyce", 30, 0, 2, false);
         c1.setSemester(2);
@@ -251,8 +279,18 @@ public class DataLoader implements ApplicationRunner {
         c6.setSemester(2);
         c6.setFieldOfStudy(cs);
 
+        lecturers.add(dulinek);
+        c6.setCourseLecturers(lecturers);
+
         courseRepository.save(c6);
-        courseStudentRepository.save(new CourseStudent(c6, michal));
+        CourseStudent courseStudent = new CourseStudent(c6, michal);
+
+        courseStudent.setExamGrade(2.0);
+        courseStudent.setLaboratoryGrade(3.0);
+        courseStudent.setFinalGrade(2.5);
+        courseStudent.setFinalGradeDate(Date.from(ZonedDateTime.now().minusMonths(1).toInstant()));
+
+        courseStudentRepository.save(courseStudent);
         fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(cs, michal));
 
 
