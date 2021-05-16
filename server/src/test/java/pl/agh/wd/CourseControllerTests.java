@@ -79,22 +79,23 @@ public class CourseControllerTests {
         Optional<Course> course = courseRepository.findByName("Sven and Dawid");
         assert(course.isPresent());
         CourseRequest courseRequest = new CourseRequest();
-        courseRequest.setName("Sven and Dawid part 2");
-        courseRequest.setEcts(7);
-        courseRequest.setFieldOfStudyId(11);
+        courseRequest.setName("Sven and Bartosh");
+        courseRequest.setEcts(5);
+        courseRequest.setFieldOfStudyId(10);
         courseRequest.setExam(false);
-        courseRequest.setLaboratory_time(12);
-        courseRequest.setLecture_time(13);
+        courseRequest.setLaboratory_time(11);
+        courseRequest.setLecture_time(12);
         Set<Long> lecturers = new HashSet<>();
-        lecturers.add(5L);
-        lecturers.add(9L);
+        lecturers.add(4L);
+        lecturers.add(7L);
         Set<Long> students = new HashSet<>();
+        students.add(2L);
         students.add(3L);
         courseRequest.setCourseStudentIds(students);
         courseRequest.setCourseLecturerIds(lecturers);
         ResponseEntity response = controller.editCourse(courseRequest, course.get().getId());
         assert(response.getStatusCode().toString().equals("200 OK"));
-        course = courseRepository.findByName("Sven and Dawid part 2");
+        course = courseRepository.findByName("Sven and Bartosh");
         assert(course.isPresent());
     }
 }

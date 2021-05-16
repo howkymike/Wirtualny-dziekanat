@@ -40,7 +40,7 @@ public class Course {
     @Column(name="semester")
     private int semester;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<CourseStudent> courseStudents;
 
