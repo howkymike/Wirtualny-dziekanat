@@ -1,18 +1,13 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import { Table, Alert } from 'reactstrap';
 import styled from 'styled-components';
-import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { userContext } from '../context/userContext';
 import { Wrapper } from './StudentList';
 
-import GradientButton from '../components/GradientButton';
-import Editable from '../components/Editable';
-
 const initialState = {
     user: {}, loading: true, error: [false, ""], name: "",
-    surname: "", index: "", levelOfStudies: "", commencmentOfStudies: "", fieldsOfStudies: ""
+    surname: "", index: "", levelOfStudies: "", commencmentOfStudies: "", fieldsOfStudies: [{faculty: "", fieldOfStudy: ""}]
 }
 
 const reducer = (state, {type, payload}) => {
@@ -22,7 +17,7 @@ const reducer = (state, {type, payload}) => {
                 ...state,
                 user: payload, loading: false, name: payload.name,
                 surname: payload.surname, index: payload.index, levelOfStudies: payload.levelOfStudies,
-                commencmentOfStudies: payload.commencmentOfStudies, fieldsOfStudies: ""//payload.telephone
+                commencmentOfStudies: payload.commencmentOfStudies, fieldsOfStudies: payload.fieldsOfStudies
             }
         case "error":
             if(typeof payload == "object")
@@ -50,17 +45,12 @@ const Thead = styled.th`
     position: relative;
 `;
 
-const FaEdit = styled(Fa)`
-    position: absolute;
-    right: 1em;
-    top: 0.5em;
-    cursor: pointer;
-`;
-
 const CourseOfStudies = ({ type }) => {
 
     const { fetchApi } = useContext(userContext);
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    let [list, setList] = useState([]);
 
     useEffect(() => {
 
@@ -69,6 +59,7 @@ const CourseOfStudies = ({ type }) => {
 
             if(isOk) {
                 dispatch({ type: "course-of-studies", payload: result });
+                setList(result.fieldsOfStudies);
             } else
                 dispatch({ type: "error", payload: result });
         }
@@ -123,14 +114,36 @@ const CourseOfStudies = ({ type }) => {
                         <span>Kierunki studiów</span>
                     </Thead>
                 </tr>
+                <tr>
+                    <Thead colSpan="1">
+                        <span>Kierunek</span>
+                    </Thead>
+                    <Thead colSpan="1">
+                        <span>Wydział</span>
+                    </Thead>
+                </tr>
                 </thead>
+                <tbody>
+                {list.length ?
+                    (list.map((field, key) => (
+                    <tr key={key}>
+                        <td>{field.fieldOfStudy}</td>
+                        <td>{field.faculty}</td>
+                    </tr>
+                ))) :
+                    (
+                        <tr>
+                            <td colspan="2">Brak kierunków do wyświetlenia</td>
+                        </tr>
+                    )
+                }
+                </tbody>
             </Table>
             {
                 state.error[0] && <Alert color={"danger"}>{state.error[1]}</Alert>
             }
-
         </Wrapper>
     );
 }
 
-export default CourseOfStudies; // CourseOfStudies
+export default CourseOfStudies;
