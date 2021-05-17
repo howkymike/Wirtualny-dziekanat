@@ -55,13 +55,13 @@ jobs:
         with:
           node-version: 12
 
-      # 2: Go to client directory
-      - name: Client directory
-        run: cd ${{ github.workspace }}/client
-
-      # 3: Checkout repository in the CWD
+      # 2: Checkout repository in the CWD
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      # 3: Go to client directory
+      - name: Client directory
+        run: cd ${{ github.workspace }}/client
 
       # 4: install NPM dependencies
       - name: Install dependencies
