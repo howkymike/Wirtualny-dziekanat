@@ -35,7 +35,7 @@ public class Lecturer {
     @Column(name="title")
     private String title;
 
-    @ManyToMany(mappedBy = "courseLecturers")  // This should get us a many-to-many through a Lecturer weak entity that has a User PKEY id as user_id.
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "courseLecturers")  // This should get us a many-to-many through a Lecturer weak entity that has a User PKEY id as user_id.
     private List<Course> courses;
 
     @ManyToOne

@@ -44,7 +44,7 @@ public class Course {
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<CourseStudent> courseStudents;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "course_lecturer",
             joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "user_id"))
