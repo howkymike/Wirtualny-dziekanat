@@ -57,7 +57,7 @@ jobs:
 
       # 2: Go to client directory
       - name: Client directory
-        run: cd client/
+        run: /home/runner/work/Wirtualny-dziekanat/Wirtualny-dziekanat/client
 
       # 3: Checkout repository in the CWD
       - name: Checkout repository
