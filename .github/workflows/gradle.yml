@@ -59,14 +59,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 3: Go to client directory
-      - name: Client directory
-        run: cd ${{ github.workspace }}/client
-
-      # 4: install NPM dependencies
+      # 3: install NPM dependencies
       - name: Install dependencies
         run: cd ${{ github.workspace }}/client && npm install
       
-      # 5: run test command
+      # 4: run test command
       - name: Run test command
-        run: npm run test
+        run: cd ${{ github.workspace }}/client && npm run test
