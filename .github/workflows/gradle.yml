@@ -42,3 +42,31 @@ jobs:
     - name: Build with Gradle
       working-directory: ./server
       run: ./gradlew build
+      
+  buildfront:
+          
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1: setup node
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      # 2: Go to client directory
+      - name: Client directory
+        run: cd client/
+
+      # 3: Checkout repository in the CWD
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 4: install NPM dependencies
+      - name: Install dependencies
+        run: npm install
+      
+      # 5: run test command
+      - name: Run test command
+        run: npm run test
