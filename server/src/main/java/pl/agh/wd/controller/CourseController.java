@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.val;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
+import pl.agh.wd.payload.request.SetGradeRequest;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.*;
@@ -206,6 +207,43 @@ public class CourseController {
         }else{
             return ResponseEntity.badRequest().body(new SuccessResponse(false, "Cannot accept grade."));
         }
+    }
+
+    @PutMapping("/grade")
+    public ResponseEntity<?> setGrade(@RequestBody SetGradeRequest request) {
+
+        
+
+        CourseStudentKey key = new CourseStudentKey(request.getCourseId(), request.getCourseId());
+        Optional<CourseStudent> courseStudentOptional = courseStudentRepository.findById(key);
+
+        if(courseStudentOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Course not found."));
+        }
+
+        CourseStudent courseStudent = courseStudentOptional.get();
+        Course course = courseStudent.getCourse();
+
+        switch(request.getType()) {
+            case "final":
+                courseStudent.setFinalGrade(request.getGrade());
+                break;
+            case "exam":
+                if(!course.isExam()) 
+                    courseStudent.setExamGrade(request.getGrade());
+                else
+                    return ResponseEntity.badRequest().body(new SuccessResponse(false, "Could not set exam grade"));
+                break;
+            case "laboratory":
+                courseStudent.setLaboratoryGrade(request.getGrade());
+                break;
+            default:
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Wrong type"));
+        }
+
+        courseStudentRepository.save(courseStudent);
+
+        return ResponseEntity.ok(new SuccessResponse(true, "Grade set"));
     }
 
     private void editLecturers(CourseRequest request, Course course) {
