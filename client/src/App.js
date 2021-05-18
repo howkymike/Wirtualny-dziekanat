@@ -13,6 +13,7 @@ import AdminPanelRoutes from './routes/AdminPanelRoutes';
 import AuthRoutes from './routes/AuthRoutes';
 import StudentPanelRoutes from './routes/StudentPanelRoutes';
 import ClerkPanelRoutes from './routes/ClerkPanelRoutes';
+import LecturerPanelRoutes from './routes/LecturerPanelRoutes';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -39,7 +40,7 @@ function App() {
         <Router>
             <UserProvider>
                 <Wrapper className="App">
-                    <Route path={["/admin", "/student", "/clerk"]}>
+                    <Route path={["/admin", "/student", "/clerk", "/lecturer"]}>
                         <Nav />
                     </Route>
                     <Right>
@@ -61,6 +62,10 @@ function App() {
 
                                 <Route path="/clerk">
                                     <ClerkPanelRoutes />
+                                </Route>
+
+                                <Route path="/lecturer">
+                                    <LecturerPanelRoutes />
                                 </Route>
 
                                 <AuthRoutes />
