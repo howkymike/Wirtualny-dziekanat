@@ -242,6 +242,7 @@ public class CourseController {
         }
 
         courseStudentRepository.save(courseStudent);
+        
 
         return ResponseEntity.ok(new SuccessResponse(true, "Grade set"));
     }
