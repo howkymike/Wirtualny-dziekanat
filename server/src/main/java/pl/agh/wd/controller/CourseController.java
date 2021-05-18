@@ -116,12 +116,12 @@ public class CourseController {
             
         if(courseRequest.getFieldOfStudyId() != 0)
             fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(newCourse::setFieldOfStudy);
-        Course savedCourse =  courseRepository.save(newCourse);
+        
 
         if(courseRequest.getCourseStudentIds() != null) {
             for(Long courseStudentId : courseRequest.getCourseStudentIds())
                 studentRepository.findById(courseStudentId).ifPresent(s -> {
-                    CourseStudent courseStudent = new CourseStudent(savedCourse, s);
+                    CourseStudent courseStudent = new CourseStudent(newCourse, s);
                     courseStudentRepository.save(courseStudent);
 
                     Optional<FieldOfStudy> fieldOfStudy = fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId());
@@ -136,10 +136,12 @@ public class CourseController {
             Set<Lecturer> lecturers = new HashSet<>();
             for(Long courseLecturerId : courseRequest.getCourseLecturerIds())
                 lecturerRepository.findById(courseLecturerId).ifPresent(lecturers::add);
-            savedCourse.setCourseLecturers(lecturers);
+            newCourse.setCourseLecturers(lecturers);
         }
 
         editLecturers(courseRequest, newCourse);
+
+        Course savedCourse =  courseRepository.save(newCourse);
 
         return ResponseEntity.ok(new SuccessResponse(true, "Course created"));
     }
