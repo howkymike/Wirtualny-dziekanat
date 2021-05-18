@@ -35,6 +35,7 @@ const Login = () => {
             case "ROLE_ADMIN": return "/admin";
             case "ROLE_STUDENT": return "/student";
             case "ROLE_CLERK": return "/clerk";
+            case "ROLE_LECTURER": return "/lecturer";
             default: return "";
         }
     }

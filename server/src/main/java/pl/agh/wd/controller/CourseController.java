@@ -97,8 +97,13 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable("id") Long id) {
-        courseRepository.deleteById(id);
-
+        courseRepository.findById(id).ifPresent(course -> {
+            course.getCourseLecturers().forEach(lecturer -> {
+                lecturer.getCourses().remove(course);
+                lecturerRepository.save(lecturer);
+            });
+            courseRepository.deleteById(id);
+        });
         return ResponseEntity.ok(new SuccessResponse(true, "Course deleted"));
     }
 
@@ -111,26 +116,7 @@ public class CourseController {
                 courseRequest.getLaboratory_time(),
                 courseRequest.getEcts(),
                 courseRequest.isExam());
-            
-            newCourse.setSemester(courseRequest.getSemester());
-            
-        if(courseRequest.getFieldOfStudyId() != 0)
-            fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(newCourse::setFieldOfStudy);
-        
-
-        if(courseRequest.getCourseStudentIds() != null) {
-            for(Long courseStudentId : courseRequest.getCourseStudentIds())
-                studentRepository.findById(courseStudentId).ifPresent(s -> {
-                    CourseStudent courseStudent = new CourseStudent(newCourse, s);
-                    courseStudentRepository.save(courseStudent);
-
-                    Optional<FieldOfStudy> fieldOfStudy = fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId());
-                    if(fieldOfStudy.isPresent()) {
-                        FieldOfStudyStudent fieldOfStudyStudent = new FieldOfStudyStudent(fieldOfStudy.get(), s);
-                        fieldOfStudyStudentRepository.save(fieldOfStudyStudent);
-                    }
-                });
-        }
+        newCourse.setSemester(courseRequest.getSemester());
 
         if(courseRequest.getCourseLecturerIds() != null) {
             Set<Lecturer> lecturers = new HashSet<>();
@@ -139,11 +125,38 @@ public class CourseController {
             newCourse.setCourseLecturers(lecturers);
         }
 
-        editLecturers(courseRequest, newCourse);
+        if(courseRequest.getFieldOfStudyId() != 0) {
+            Optional<FieldOfStudy> optionalFieldOfStudy = fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId());
+            if(optionalFieldOfStudy.isPresent())
+                newCourse.setFieldOfStudy(optionalFieldOfStudy.get());
+            else
+                return ResponseEntity.ok(new SuccessResponse(false, "Field of study not found!"));
+        }
 
         Course savedCourse =  courseRepository.save(newCourse);
 
-        return ResponseEntity.ok(new SuccessResponse(true, "Course created"));
+        if(courseRequest.getCourseStudentIds() != null) {
+            Set<Student> courseStudents = new HashSet<>();
+            for(Long courseStudentId : courseRequest.getCourseStudentIds()) {
+                studentRepository.findById(courseStudentId).ifPresent(s -> {
+                    CourseStudent courseStudent = new CourseStudent(newCourse, s);
+                    courseStudentRepository.save(courseStudent);
+                    courseStudents.add(s);
+                });
+            }
+
+            // implicitly assign students to fieldOfStudy only if there are not already signed (why?)
+            if(courseRequest.getFieldOfStudyId() != 0) {
+                fieldOfStudyRepository.findById(courseRequest.getFieldOfStudyId()).ifPresent(fieldOfStudy -> {
+                    courseStudents.forEach(student -> {
+                        if(fieldOfStudyStudentRepository.findById(new FieldOfStudyStudentKey(fieldOfStudy.getId(), student.getId())).isEmpty())
+                            fieldOfStudyStudentRepository.save(new FieldOfStudyStudent(fieldOfStudy, student));
+                    });
+                });
+            }
+        }
+
+        return ResponseEntity.ok(new SuccessResponse(true, "Course created (" + savedCourse.getId() + ")"));
     }
 
     @PostMapping("/{id}/edit")

@@ -37,13 +37,6 @@ public class FieldOfStudy {
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<FieldOfStudyStudent> courseStudents = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "fieldOfStudy_students",
-            joinColumns = @JoinColumn(name = "fieldOfStudy_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<Course> currentStudents;
-
     public FieldOfStudy(String name) {
         this.name = name;
     }
