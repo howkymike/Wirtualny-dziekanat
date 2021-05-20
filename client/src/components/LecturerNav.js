@@ -9,6 +9,7 @@ const LecturerNav = () => {
                 Podsumowanie
             </Link>
 
+            <Link to="/lecturer/course">Kursy</Link>
             <Link to="/lecturer/changeactualpassword">Zmien haslo</Link>
         </>
     )
