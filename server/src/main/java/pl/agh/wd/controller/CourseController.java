@@ -86,6 +86,12 @@ public class CourseController {
         return list;
     }
 
+    @GetMapping("/{id}/students")
+    public List<Student> getMyCourses(@PathVariable("id") Long id){
+        return courseStudentRepository.findAllByCourseId(id)
+                .stream().map(CourseStudent::getStudent).collect(Collectors.toList());
+    }
+
     // TODO: for now it just recreate the course, maybe it's alright maybe it's not
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
