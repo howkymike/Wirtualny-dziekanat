@@ -80,7 +80,7 @@ const StudentCourse = () => {
 
     useEffect(() => {
         const getData = async () => {
-            const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my")]);
+            const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my/student")]);
 
             const [student, courses] = data;
 
