@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 public class CourseController {
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     CourseRepository courseRepository;
 
     @Autowired
@@ -55,20 +58,30 @@ public class CourseController {
                 .orElseThrow(() -> new NoSuchElementException(id.toString()));
     }
 
-    @GetMapping("/my")
-    public List<Course> getMyCourses(Authentication authentication){
+    @GetMapping("/my/{type}")
+    public List<Course> getMyCourses(Authentication authentication, @PathVariable("type") String type){
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<Course> list = courseStudentRepository.findAllByStudentId(currentUser.getId())
-        .stream().map(CourseStudent::getCourse).collect(Collectors.toList());
+        List<Course> list = Collections.<Course>emptyList();
 
-        list.forEach(value -> {
-            Set<CourseStudent> cs = value.getCourseStudents();
+        if(type.equals("student")) {
+            list = courseStudentRepository.findAllByStudentId(currentUser.getId())
+                    .stream().map(CourseStudent::getCourse).collect(Collectors.toList());
 
-            cs.removeIf(val -> val.getStudent().getId() != currentUser.getId());
+            list.forEach(value -> {
+                Set<CourseStudent> cs = value.getCourseStudents();
 
-            value.setCourseStudents(cs);
-        });
+                cs.removeIf(val -> val.getStudent().getId() != currentUser.getId());
+
+                value.setCourseStudents(cs);
+            });
+        }
+        else if(type.equals("lecturer")) {
+            Optional<Lecturer> lecturer = lecturerRepository.findById(currentUser.getId());
+            if(lecturer.isPresent()) {
+                list = lecturer.get().getCourses();
+            }
+        }
 
         return list;
     }

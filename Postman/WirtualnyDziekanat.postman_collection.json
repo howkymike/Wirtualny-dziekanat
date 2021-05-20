@@ -315,7 +315,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/courses/my",
+							"raw": "http://localhost:8080/api/courses/my/student",
 							"protocol": "http",
 							"host": [
 								"localhost"
