@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.val;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.payload.request.SetGradeRequest;
@@ -62,7 +61,7 @@ public class CourseController {
     public List<Course> getMyCourses(Authentication authentication, @PathVariable("type") String type){
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<Course> list = Collections.<Course>emptyList();
+        List<Course> list = Collections.emptyList();
 
         if(type.equals("student")) {
             list = courseStudentRepository.findAllByStudentId(currentUser.getId())
@@ -71,7 +70,7 @@ public class CourseController {
             list.forEach(value -> {
                 Set<CourseStudent> cs = value.getCourseStudents();
 
-                cs.removeIf(val -> val.getStudent().getId() != currentUser.getId());
+                cs.removeIf(val -> !val.getStudent().getId().equals(currentUser.getId()));
 
                 value.setCourseStudents(cs);
             });

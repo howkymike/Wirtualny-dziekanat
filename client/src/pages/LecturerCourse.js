@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
 
-import { Table } from 'reactstrap';
+import {Alert, Table} from 'reactstrap';
 import { Wrapper } from './StudentCourse';
 
 import { userContext } from '../context/userContext'
 import ImprovedGradientButton from '../components/ImprovedGradientButton';
+
+import CourseDetailsModal from '../components/CourseDetailsComponent/CourseDetailsModal';
 
 const LecturerCourse = props => {
     const { fetchApi } = useContext(userContext)
 
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
+    const [modal, setModal] = useState([false, 0, "edit"]);
 
     useEffect(() => {
         fetchApi("/courses/my/lecturer").then(res => {
@@ -43,12 +46,24 @@ const LecturerCourse = props => {
                                 <td>{course.fieldOfStudy.name}</td>
                                 <td>{course.fieldOfStudy.faculty.name}</td>
                                 <td>{course.courseStudents.length}</td>
-                                <td><ImprovedGradientButton>Szczegóły</ImprovedGradientButton></td>
+                                <td>
+                                    <ImprovedGradientButton onClick={ () => setModal([!modal[0], course.id, "edit"]) }>
+                                        Szczegóły
+                                    </ImprovedGradientButton>
+                                </td>
                             </tr>
                         )}
                 </tbody>
             </Table>
 
+            {modal[0] &&
+            <CourseDetailsModal
+                isOpen={ modal[0] }
+                id={ modal[1] }
+                toggle={ () => setModal([!modal[0], modal[1], modal[2]]) }
+                type={modal[2]}
+            />
+            }
 
         </Wrapper>
 
