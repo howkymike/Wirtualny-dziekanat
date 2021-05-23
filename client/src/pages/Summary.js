@@ -9,6 +9,7 @@ import { Wrapper } from './StudentList';
 
 import GradientButton from '../components/GradientButton';
 import Editable from '../components/Editable';
+import ErrorBox from '../components/Error';
 
 const initialState = {
     user: {}, loading: true, error: [false, ""], edit: false, email: "",
@@ -21,7 +22,7 @@ const reducer = (state, {type, payload}) => {
         case "postalCode": case "telephone": case "email":
             return { ...state, [type]: payload }
         case "edit":
-            return { ...state, edit: !state.edit}
+            return { ...state, edit: !state.loading && !state.edit}
         case "user":
             return {
                 ...state,
@@ -80,12 +81,17 @@ const Summary = ({ type }) => {
     useEffect(() => {
 
         const getUser = async () => {
-            const [result, isOk] = await fetchApi(`/users/${type}/me`);
+            try {
+                const [result, isOk] = await fetchApi(`/users/${type}/me`);
 
-            if(isOk) {
-                dispatch({ type: "user", payload: result });
-            } else
-                dispatch({ type: "error", payload: result });
+                if(isOk) {
+                    dispatch({ type: "user", payload: result });
+                } else
+                    dispatch({ type: "error", payload: "Wystąpił błąd, spróbuj ponownie" });
+            } catch(e) {
+                //console.log(e);
+                dispatch({ type: "error", payload: "Wystąpił błąd, spróbuj ponownie" });
+            }
         }
 
         getUser();
@@ -93,21 +99,26 @@ const Summary = ({ type }) => {
     }, [fetchApi, type]);
 
     const updateData = async () => {
-        if(state.error[0])
-            return;
-        const { email, country, city, address, postalCode, telephone } = state;
+        try {
+            if(state.error[0])
+                return;
+            const { email, country, city, address, postalCode, telephone } = state;
 
-        const [result, isOk] = await fetchApi("/users/update", {
-            method: "PATCH",
-            body: JSON.stringify({
-                email, country, city, address, postalCode, telephone
-            })
-        });
+            const [result, isOk] = await fetchApi("/users/update", {
+                method: "PATCH",
+                body: JSON.stringify({
+                    email, country, city, address, postalCode, telephone
+                })
+            });
 
-        if(isOk) {
-            dispatch({ type: "update" });
-        } else
-            dispatch({ type: "error", payload: result });
+            if(isOk) {
+                dispatch({ type: "update" });
+            } else
+                dispatch({ type: "error", payload: "Wystąpił błąd przy aktualizacji danych" });
+        } catch(e) {
+            //console.log(e);
+            dispatch({ type: "error", payload: "Wystąpił błąd przy aktualizacji danych" });
+        }
     }
 
     useEffect(() => {
@@ -164,10 +175,7 @@ const Summary = ({ type }) => {
             {
                 state.edit && <GradientButton onClick={updateData}>Zaaktualizuj dane</GradientButton>
             }
-            {
-                state.error[0] && <Alert color={"danger"}>{state.error[1]}</Alert>
-            }
-            
+            <ErrorBox error={ state.error } />            
         </Wrapper>
     );
 }

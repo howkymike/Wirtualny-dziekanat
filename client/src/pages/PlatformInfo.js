@@ -1,5 +1,6 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useCallback, useContext, useEffect, useState } from 'react';
 import {userContext} from "../context/userContext";
+import ErrorBox from '../components/Error';
 import { Container, Table} from 'reactstrap';
 import {CanvasJSChart} from 'canvasjs-react-charts'
 
@@ -45,6 +46,7 @@ const PlatformInfo = () => {
     let xVal = 1;
     const UPDATE_INTERVAL = 3000;
     const {fetchApi} = useContext(userContext);
+    const [error, setError] = useState([false, ""]);
 
     const [fetchResponse, setFetchResponse] = React.useState({
         memoryOptions: {},
@@ -57,24 +59,28 @@ const PlatformInfo = () => {
     const {memoryOptions, os, memoryInit, memoryMax, threadsData} = fetchResponse;
 
     const fetchNewData = useCallback(async () => {
-        const [result, isOk] = await fetchApi("/admin/platforminfo", {
-            method: 'GET'
-        })
-        if(isOk) {
-            memoryUsageData.push({x: xVal,y:result["memoryMap"]["used"]});
-            memoryCommittedData.push({x: xVal,y:result["memoryMap"]["committed"]});
-            xVal++;
-            if (memoryUsageData.length >  10 ) {
-                memoryUsageData.shift();
-                memoryCommittedData.shift();
+        try {
+            const [result, isOk] = await fetchApi("/admin/platforminfo", {
+                method: 'GET'
+            })
+            if(isOk) {
+                memoryUsageData.push({x: xVal,y:result["memoryMap"]["used"]});
+                memoryCommittedData.push({x: xVal,y:result["memoryMap"]["committed"]});
+                xVal++;
+                if (memoryUsageData.length >  10 ) {
+                    memoryUsageData.shift();
+                    memoryCommittedData.shift();
+                }
+                setFetchResponse({
+                    memoryOptions: genUsageData(),
+                    os: result["os"],
+                    memoryInit: result["memoryMap"]["init"],
+                    memoryMax: result["memoryMap"]["max"],
+                    threadsData: result["threadList"]
+                });
             }
-            setFetchResponse({
-                memoryOptions: genUsageData(),
-                os: result["os"],
-                memoryInit: result["memoryMap"]["init"],
-                memoryMax: result["memoryMap"]["max"],
-                threadsData: result["threadList"]
-            });
+        } catch(e) {
+            setError([true, "Wystąpił problem"]);
         }
     }, [fetchApi, xVal]);
 
@@ -90,6 +96,7 @@ const PlatformInfo = () => {
 
     return (
     <Container style={{color: "black",fontSize: 20}}>
+        <ErrorBox error={error} />
         <div className='card'>
             <h3 className='m-2'>System: {os}</h3>
         </div>
@@ -128,6 +135,7 @@ const PlatformInfo = () => {
                 </tbody>
             </Table>
         </div>
+
     </Container>
     );
 }

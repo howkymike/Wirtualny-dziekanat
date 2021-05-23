@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { userContext } from '../context/userContext';
 import { Wrapper } from './StudentList';
+import ErrorBox from '../components/Error';
 
 const initialState = {
     user: {}, loading: true, error: [false, ""], name: "",
@@ -55,14 +56,18 @@ const CourseOfStudies = ({ type }) => {
     useEffect(() => {
 
         const getCourseOfStudies = async () => {
-            const [result, isOk] = await fetchApi(`/student/course-of-studies`);
+            try {
+                const [result, isOk] = await fetchApi(`/student/course-of-studies`);
 
-            if(isOk) {
-                dispatch({ type: "course-of-studies", payload: result });
-                setList(result.fieldsOfStudies);
-                console.log(result);
-            } else
-                dispatch({ type: "error", payload: result });
+                if(isOk) {
+                    dispatch({ type: "course-of-studies", payload: result });
+                    setList(result.fieldsOfStudies);
+                    console.log(result);
+                } else
+                    throw new Error();
+            } catch(e) {
+                dispatch({ type: "error", payload: "Wystąpił błąd przy pobieraniu przebiegu studiów" });
+            }
         }
 
         getCourseOfStudies();
@@ -140,9 +145,7 @@ const CourseOfStudies = ({ type }) => {
                 }
                 </tbody>
             </Table>
-            {
-                state.error[0] && <Alert color={"danger"}>{state.error[1]}</Alert>
-            }
+            <ErrorBox error={state.error} />
         </Wrapper>
     );
 }

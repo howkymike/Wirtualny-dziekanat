@@ -6,18 +6,22 @@ import { Wrapper } from './StudentCourse';
 import { userContext } from '../context/userContext'
 import ImprovedGradientButton from '../components/ImprovedGradientButton';
 import CourseModal from "../components/EditCourseComponent/CourseModal";
+import ErrorBox from '../components/Error';
 
 const LecturerCourse = props => {
     const { fetchApi } = useContext(userContext)
     const [modal, setModal] = useState([false, 0, "edit"]);
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
+    const [error, setError] = useState([false, ""]);
 
     useEffect(() => {
         fetchApi("/courses/my/lecturer").then(res => {
             setLoading(false);
             setList(res[0]);
-        });
+        }).catch(e => {
+            setError(true, "Wystąpił błąd przy pobieraniu listy kursów");
+        })
     }, [fetchApi]);
 
     return (
@@ -59,7 +63,7 @@ const LecturerCourse = props => {
                 type={modal[2]}
             />
             }
-
+            <ErrorBox error={ error } />
         </Wrapper>
 
     )
