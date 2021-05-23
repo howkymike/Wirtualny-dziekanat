@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useReducer, useState} from 'react';
-import { Table, Alert } from 'reactstrap';
+import { Table } from 'reactstrap';
 import styled from 'styled-components';
 
 import { userContext } from '../context/userContext';
