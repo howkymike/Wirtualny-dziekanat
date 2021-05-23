@@ -61,7 +61,7 @@ public class RegisterApplicationTests {
         signUpRequest.setPassword("admin");
         signUpRequest.setEmail("wirtualnt@gmail.com");
         seciurityMock();
-        ResponseEntity response = controller.registerUser(signUpRequest);
+        ResponseEntity<?> response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
@@ -73,7 +73,7 @@ public class RegisterApplicationTests {
         signUpRequest.setUsername("kamil");
         signUpRequest.setPassword("admin");
         signUpRequest.setEmail("wirtualnt123@gmail.com");
-        ResponseEntity response = controller.registerUser(signUpRequest);
+        ResponseEntity<?> response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
@@ -85,7 +85,7 @@ public class RegisterApplicationTests {
         signUpRequest.setUsername("Sven");
         signUpRequest.setPassword("Raucha-Dawidela");
         signUpRequest.setEmail("wirtualnt@gmail.com");
-        ResponseEntity response = controller.registerUser(signUpRequest);
+        ResponseEntity<?> response = controller.registerUser(signUpRequest);
         System.out.println(response.getStatusCode());
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
     }
@@ -97,7 +97,7 @@ public class RegisterApplicationTests {
         signUpRequest.setUsername("Svenik");
         signUpRequest.setPassword("Raucha-Dawidela");
         signUpRequest.setEmail("wdoope@motzno.com");
-        ResponseEntity response = controller.registerUser(signUpRequest);
+        ResponseEntity<?> response = controller.registerUser(signUpRequest);
         assert(response.getStatusCode().toString().equals("200 OK"));
     }
 }

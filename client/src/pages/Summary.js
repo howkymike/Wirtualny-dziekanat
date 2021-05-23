@@ -104,7 +104,7 @@ const Summary = ({ type }) => {
                 return;
             const { email, country, city, address, postalCode, telephone } = state;
 
-            const [result, isOk] = await fetchApi("/users/update", {
+            const [, isOk] = await fetchApi("/users/update", {
                 method: "PATCH",
                 body: JSON.stringify({
                     email, country, city, address, postalCode, telephone

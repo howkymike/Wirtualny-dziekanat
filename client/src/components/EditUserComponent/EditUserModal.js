@@ -85,6 +85,8 @@ const EditUserModal = props => {
 
         let tabs = [];
         state.user.roles.forEach((role) => {
+            if(role === "ROLE_ADMIN") 
+                return;
             let newTab = role[5].toUpperCase() + role.substring(6).toLowerCase();
             tabs.push(newTab);
         });
@@ -122,7 +124,9 @@ const EditUserModal = props => {
         let tab = role[5].toUpperCase() + role.substring(6).toLowerCase()
 
         dispatch({ type: "roles", data: roles });
-        dispatch({ type: "activeTab", data: tab });
+
+        if(role !== "ROLE_ADMIN")
+            dispatch({ type: "activeTab", data: tab });
     }
 
     const updateUser = useCallback((user) => {
@@ -151,8 +155,6 @@ const EditUserModal = props => {
                 return <LecturerTab user={state.user} onUserChange={updateLecturer} />
             case "Clerk":
                 return <ClerkTab user={state.user} onUserChange={updateClerk} />
-            case "Admin":
-                return "Not implemented"
             default: return "";
         }
     }
