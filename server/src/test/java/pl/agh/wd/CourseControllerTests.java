@@ -164,9 +164,9 @@ public class CourseControllerTests {
         Optional<Lecturer> lecturer = lecturerRepository.findById(lecturerId);
         Optional<Course> course = courseRepository.findByName("Sven and Dawid");
         assert(course.isPresent());
-        List<Course> list= new ArrayList<>();
-        list.add(course.get());
-        lecturer.get().setCourses(list);
+        Set<Course> set= new HashSet<>();
+        set.add(course.get());
+        lecturer.get().setCourses(set);
     }
 
     @Test
