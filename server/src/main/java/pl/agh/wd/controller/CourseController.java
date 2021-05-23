@@ -86,9 +86,20 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/students")
-    public List<Student> getMyCourses(@PathVariable("id") Long id){
+    public List<Student> getCourseStudents(@PathVariable("id") Long id){
         return courseStudentRepository.findAllByCourseId(id)
                 .stream().map(CourseStudent::getStudent).collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}/lecturers")
+    public Set<Lecturer> getCourseLecturers(@PathVariable("id") Long id){
+        Set<Lecturer> lecturers = new HashSet<>();
+        Optional<Course> course = courseRepository.findById(id);
+        if(course.isPresent()) {
+            lecturers = course.get().getCourseLecturers();
+        }
+
+        return lecturers;
     }
 
     // TODO: for now it just recreate the course, maybe it's alright maybe it's not

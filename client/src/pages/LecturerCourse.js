@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 
-import {Alert, Table} from 'reactstrap';
+import { Table } from 'reactstrap';
 import { Wrapper } from './StudentCourse';
 
 import { userContext } from '../context/userContext'
@@ -13,7 +13,7 @@ const LecturerCourse = props => {
 
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
-    const [modal, setModal] = useState([false, 0, "edit"]);
+    const [modal, setModal] = useState([false, 0, "details"]);
 
     useEffect(() => {
         fetchApi("/courses/my/lecturer").then(res => {
@@ -47,7 +47,7 @@ const LecturerCourse = props => {
                                 <td>{course.fieldOfStudy.faculty.name}</td>
                                 <td>{course.courseStudents.length}</td>
                                 <td>
-                                    <ImprovedGradientButton onClick={ () => setModal([!modal[0], course.id, "edit"]) }>
+                                    <ImprovedGradientButton onClick={ () => setModal([!modal[0], course.id, "details"]) }>
                                         Szczegóły
                                     </ImprovedGradientButton>
                                 </td>

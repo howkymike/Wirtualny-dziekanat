@@ -10,7 +10,7 @@ import { userContext } from '../../context/userContext';
 import CourseDetailsStudentsPanel from './CourseDetailsStudentsPanel';
 import CourseDetailsPanel from './CourseDetailsPanel';
 import CourseDetailsFacultyPanel from './CourseDetailsFacultyPanel';
-import CourseLecturersPanel from "../EditCourseComponent/CourseLecturersPanel";
+import CourseDetailsLecturersPanel from "./CourseDetailsLecturersPanel";
 
 const Wrapper = styled.div`
     padding: 0.5em;
@@ -32,7 +32,7 @@ const reducer = (state, {type, payload}) => {
             return {
                 ...state, ...payload, loading: false,
                 courseLecturers: payload.courseLecturers.map(value => value.id),
-                courseStudents: payload.courseStudents.map(value => value.id.studentId),
+                courseStudents: payload.courseStudents.map(value => value.id),
                 fieldOfStudy: payload.fieldOfStudy.id, semester: payload.semester
             }
         case "name": case "lecture_time": case "laboratory_time": case "exam":
@@ -51,22 +51,6 @@ const reducer = (state, {type, payload}) => {
         case "lecturerList":
             return {
                 ...state, activeTab: 2, lecturerList: payload
-            }
-        case "addStudent":
-            return {
-                ...state, courseStudents: [...state.courseStudents, payload]
-            }
-        case "deleteStudent":
-            return {
-                ...state, courseStudents: state.courseStudents.filter(value => value !== payload)
-            }
-        case "addLecturer":
-            return {
-                ...state, courseLecturers: [...state.courseLecturers, payload]
-            }
-        case "deleteLecturer":
-            return {
-                ...state, courseLecturers: state.courseLecturers.filter(value => value !== payload)
             }
         case "faculties":
             return {
@@ -88,12 +72,12 @@ const CourseDetailsModal = props => {
 
         if(tab === 3) {
             const getStudentList = async () => {
-                const [res, isOk] = await fetchApi(`/users/student`, {
+                const [res, isOk] = await fetchApi(`/courses/${id}/students`, {
                     method: "GET"
                 });
 
                 if(isOk)
-                    dispatch({ type: "studentList", payload: res.list });
+                    dispatch({ type: "studentList", payload: res });
             }
             if(state.studentList.length)
                 dispatch({ type: "tab", payload: tab });
@@ -126,11 +110,11 @@ const CourseDetailsModal = props => {
         } else if ( tab === 2) {
 
             const getLecturerList = async () => {
-                const [res, isOk] = await fetchApi(`/users/lecturer`, {
+                const [res, isOk] = await fetchApi(`/courses/${id}/lecturers`, {
                     method: "GET"
                 });
                 if(isOk)
-                    dispatch({ type: "lecturerList", payload: res.list });
+                    dispatch({ type: "lecturerList", payload: res });
             }
             if(state.lecturerList.length)
                 dispatch({ type: "tab", payload: tab });
@@ -156,7 +140,7 @@ const CourseDetailsModal = props => {
             }
         }
 
-        if(type === "edit")
+        if(type === "details")
             getCourse();
 
     }, [fetchApi, isOpen, id, type]);
@@ -173,28 +157,10 @@ const CourseDetailsModal = props => {
             dispatch({type: "ects", payload: 0});
     }, [state.lecture_time, state.laboratory_time, state.ects ] )
 
-    const updateCourse = async () => {
-        let path = `/courses/${id}/edit`;
-        if(type === "create") path = `/courses`;
-        const [res, isOk] = await fetchApi(path, {
-            method: "POST",
-            body: JSON.stringify({
-                id, lecture_time: state.lecture_time, laboratory_time: state.laboratory_time,
-                ects: state.ects, exam: state.exam, name: state.name, courseStudentIds: state.courseStudents,
-                courseLecturerIds: state.courseLecturers, fieldOfStudyId: state.fieldOfStudy, semester: state.semester
-            })
-        });
-
-        if(isOk)
-            toggle();
-        else
-            console.log(res);
-    }
-
     return (
-        <BiggerModal isOpen={ (type === "create" && isOpen) || (isOpen && !state.loading) } toggle={ toggle }>
+        <BiggerModal isOpen={ isOpen && !state.loading } toggle={ toggle }>
             <ModalHeader>
-                { type === "edit" ? "Szczegóły kursu" : "Tworzenie kursu" }
+                "Szczegóły kursu"
             </ModalHeader>
             <ModalBody>
                 <Nav tabs>
@@ -212,8 +178,8 @@ const CourseDetailsModal = props => {
 
                 <Wrapper>
                     <TabContent activeTab={ state.activeTab }>
-                        <CourseDetailsPanel state={ state } dispatch={ dispatch } edit={ type === "edit" } toggle={ toggle }/>
-                        <CourseLecturersPanel state={ state } dispatch={ dispatch } lecturerList={ state.lecturerList } />
+                        <CourseDetailsPanel state={ state } dispatch={ dispatch } edit={ type === "details" } toggle={ toggle }/>
+                        <CourseDetailsLecturersPanel state={ state } dispatch={ dispatch } lecturerList={ state.lecturerList } />
                         <CourseDetailsStudentsPanel state={ state } dispatch={ dispatch } list={ state.studentList } />
                         <CourseDetailsFacultyPanel
                             state={ state } dispatch={ dispatch }

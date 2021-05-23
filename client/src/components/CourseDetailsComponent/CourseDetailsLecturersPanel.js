@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { 
+import {
     Row, Col, TabPane, Table
 } from 'reactstrap';
 
@@ -12,27 +12,27 @@ const Box = styled.div`
     background-color: #f5f5f5;
 `;
 
-const CourseDetailsStudentsPanel = props => {
+const CourseDetailsLecturersPanel = props => {
 
-    const { list } = props;
+    const { lecturerList } = props;
 
     return(
-        <TabPane tabId={ 3 }>
+        <TabPane tabId={ 2 }>
             <Wrapper>
                 <Row>
                     <Col>
-                        <h6>Zapisani</h6>
+                        <h6>Przypisani</h6>
                         <hr />
                         <Box>
                             <Table hover striped>
                                 <thead>
-                                    <tr><th>Index</th><th>Imię</th><th>Nazwisko</th></tr>
+                                <tr><th>Tytuł</th><th>Imię</th><th>Nazwisko</th></tr>
                                 </thead>
                                 <tbody>
-                                { list.map((value, key) => (
+                                { lecturerList.map((value, key) => (
                                     <tr key={key}>
                                         <td>
-                                            {value.index}
+                                            {value.title}
                                         </td>
                                         <td>
                                             {value.user.name}
@@ -43,7 +43,7 @@ const CourseDetailsStudentsPanel = props => {
                                     </tr>
                                 )) }
                                 </tbody>
-                            </Table>                            
+                            </Table>
                         </Box>
                     </Col>
                 </Row>
@@ -52,4 +52,4 @@ const CourseDetailsStudentsPanel = props => {
     );
 }
 
-export default CourseDetailsStudentsPanel;
+export default CourseDetailsLecturersPanel;
