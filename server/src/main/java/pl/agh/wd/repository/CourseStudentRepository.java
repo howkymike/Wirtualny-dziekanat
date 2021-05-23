@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface CourseStudentRepository extends JpaRepository<CourseStudent, CourseStudentKey> {
     Optional<CourseStudent> findCourseStudentByStudentUserName(String name);
     List<CourseStudent> findAllByStudentId(long studentID);
+    List<CourseStudent> findAllByCourseId(long courseID);
 
     @Modifying
     @Query("update CourseStudent c set c.gradeAccepted = true where c.finalGradeDate < ?1 and c.finalGrade > 0")
