@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Important note!
@@ -36,7 +37,7 @@ public class Lecturer {
     private String title;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "courseLecturers")  // This should get us a many-to-many through a Lecturer weak entity that has a User PKEY id as user_id.
-    private List<Course> courses;
+    private Set<Course> courses;
 
     @ManyToOne
     @JoinColumn(name="faculty_id", nullable=true)

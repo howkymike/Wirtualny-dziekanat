@@ -78,7 +78,7 @@ public class CourseController {
         else if(type.equals("lecturer")) {
             Optional<Lecturer> lecturer = lecturerRepository.findById(currentUser.getId());
             if(lecturer.isPresent()) {
-                list = lecturer.get().getCourses();
+                list = new ArrayList<>(lecturer.get().getCourses());
             }
         }
 
