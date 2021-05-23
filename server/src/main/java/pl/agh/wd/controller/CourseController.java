@@ -190,7 +190,7 @@ public class CourseController {
     }
 
     @PostMapping("/{id}/edit")
-    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_LECTURER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> editCourse(@RequestBody CourseRequest courseRequest, @PathVariable Long id) {
         Optional<Course> optionalCourse = courseRepository.findById(id);
         if (optionalCourse.isEmpty()) {

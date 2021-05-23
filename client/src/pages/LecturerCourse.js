@@ -5,21 +5,25 @@ import { Wrapper } from './StudentCourse';
 
 import { userContext } from '../context/userContext'
 import ImprovedGradientButton from '../components/ImprovedGradientButton';
+import CourseModal from "../components/EditCourseComponent/CourseModal";
+import ErrorBox from '../components/Error';
 
 import CourseDetailsModal from '../components/CourseDetailsComponent/CourseDetailsModal';
 
 const LecturerCourse = props => {
     const { fetchApi } = useContext(userContext)
-
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
     const [modal, setModal] = useState([false, 0, "details"]);
+    const [error, setError] = useState([false, ""]);
 
     useEffect(() => {
         fetchApi("/courses/my/lecturer").then(res => {
             setLoading(false);
             setList(res[0]);
-        });
+        }).catch(e => {
+            setError(true, "Wystąpił błąd przy pobieraniu listy kursów");
+        })
     }, [fetchApi]);
 
     return (
@@ -65,6 +69,15 @@ const LecturerCourse = props => {
             />
             }
 
+            { modal[0] &&
+            <CourseModal
+                isOpen={ modal[0] }
+                id={ modal[1] }
+                toggle={ () => setModal([!modal[0], modal[1], modal[2]]) }
+                type={modal[2]}
+            />
+            }
+            <ErrorBox error={ error } />
         </Wrapper>
 
     )

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Input, Table, Button, Badge } from 'reactstrap';
+import { Input, Table, Button, Badge, Alert } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTimes, faUserEdit } from '@fortawesome/free-solid-svg-icons'
@@ -20,8 +20,6 @@ export const Wrapper = styled.div`
 
 const StyledButton = styled(Button)`
     margin: 5px;
-
-
 `
 const RoleContainer = styled.div`
     display: flex;
@@ -30,7 +28,6 @@ const RoleContainer = styled.div`
 
 const Role = styled(Badge)`
     margin: 2px 0 2px 0;
-
 `
 
 const StudentList = () => {
@@ -43,18 +40,27 @@ const StudentList = () => {
     const [userToDelete, setUserToDelete] = useState(null);
     const [isOpenEditModal, toggleEditModal] = useState(false);
     const [refresh, setRefresh] = useState(false);
+    const [error, setError] = useState([false, ""]);
 
     const { fetchApi } = useContext(userContext);
 
     useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const [result, isOk] = await fetchApi("/users/" + listType + "/");
 
-        fetchApi("/users/" + listType + "/").then(res => {
-            if (res[1]) {
-                setList(res[0].list);
-                setLoading(false);
+                if(isOk) {
+                    setList(result.list);
+                    setLoading(false);
+                } else
+                    setError([true, "Wystąpił błąd przy pobieraniu listy"]);
+            } catch(e) {
+                //console.log(e);
+                setError([true, "Wystąpił błąd przy pobieraniu listy"]);
             }
-        });
+        } 
 
+        fetchUsers();
     }, [refresh, listType, fetchApi]);
 
     const onUserDelete = (key) => {
@@ -63,17 +69,23 @@ const StudentList = () => {
     };
 
     const onAcceptUserDelete = async () => {
-        const user = list[userToDelete].user;
+        try {
+            const user = list[userToDelete].user;
 
-        const [, isOk] = await fetchApi("/users/" + user.id, {
-            method: "DELETE",
-        });
-
-        if (isOk) {
-            setList(list.filter(usr => usr.user.id !== user.id));
+            const [, isOk] = await fetchApi("/users/" + user.id, {
+                method: "DELETE",
+            });
+    
+            if (isOk) {
+                setList(list.filter(usr => usr.user.id !== user.id));
+            } else {
+                setError([true, "Wystapił błąd przy usuwaniu użytkownika"]);
+            }
+    
+            setDeleteMsg(false)
+        } catch(e) {
+            setError([true, "Wystapił błąd przy usuwaniu użytkownika"]);
         }
-
-        setDeleteMsg(false)
     };
 
     const getRoleName = (role) => {
@@ -114,7 +126,7 @@ const StudentList = () => {
                 <tbody>
                     {loading &&
                         <tr>
-                            <td colSpan="3">Ładowanie</td>
+                            <td colSpan="7">Ładowanie</td>
                         </tr>
                     }
                     {list.map((user, key) => (
@@ -152,6 +164,10 @@ const StudentList = () => {
                     ))}
                 </tbody>
             </Table>
+
+            {
+                error[0] && <Alert color={"danger"}>{ error[1] }</Alert>
+            }
 
             {   deleteMsg &&
                 <MessageBox

@@ -6,6 +6,7 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 import MessageBox from '../components/MessageBox';
 import ReportGradeModal from '../components/ReportGradeModal'
+import ErrorBox from '../components/Error';
 
 import { userContext } from '../context/userContext';
 
@@ -74,54 +75,60 @@ const StudentCourse = () => {
     const [reportGrade, setReportGrade] = useState(-1);
     const [semester, setSemester] = useState(0);
     const [selectedSemester, setSelectedSemester] = useState(0);
+    const [error, setError] = useState([false, ""]);
 
 
     const { fetchApi, userId } = useContext(userContext);
 
     useEffect(() => {
         const getData = async () => {
-            const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my/student")]);
+            try {
+                const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my/student")]);
 
-            const [student, courses] = data;
+                const [student, courses] = data;
 
-            if(courses[1]) {
+                if(!student[1] || !courses[1])
+                    throw new Error();
+    
                 setList(courses[0]);
-                console.log(courses[0]);
-            }
-
-            if(student[1]) {
                 setSemester(student[0].semester);
                 setSelectedSemester(student[0].semester);
-            }
+                setLoading(false);
 
-            setLoading(false);
+            } catch(e) {
+                setError([true, "Wystąpił błąd przy pobieraniu ocen"]);
+            }
         }
 
         getData();
 
     }, [fetchApi]);
 
-    const confirmGrades = (courseKey) => {
-        let course = list[courseKey];
+    const confirmGrades = async (courseKey) => {
+        try {
+            let course = list[courseKey];
 
-        fetchApi(`/courses/${course.id}/${userId}/confirmGrade`, {
-            method: 'POST',
-        }).then(res => {
-            if (res[0].ok) {
-                setAlertType("success");
+            const [res, isOk] = await fetchApi(`/courses/${course.id}/${userId}/confirmGrade`, {
+                method: 'POST',
+            });
 
-                let newList = list.splice(0);
-                course.courseStudents.find(c => parseInt(userId, 10) === c.id.studentId).gradeAccepted = true;
-                newList[courseKey] = course;
-                setList(newList);
-            } else {
-                setAlertType("danger");
-            }
-            console.log(res);
-            setAlertMessage(res[0].msg);
+            if(!isOk)
+                throw new Error();
+
+            setAlertType("success");
+
+            let newList = list.splice(0);
+            course.courseStudents.find(c => parseInt(userId, 10) === c.id.studentId).gradeAccepted = true;
+            newList[courseKey] = course;
+            setList(newList);
+
+            setAlertMessage(res.msg);
             showAlert(courseKey);
             toggleMessage(-1);
-        });
+        } catch(e) {
+            //console.log(e);
+            setError([true, "Wystąpił błąd przy potwierdzaniu ocen"]);
+        }
     };
 
     const changeSemester = (dir) => {
@@ -242,6 +249,8 @@ const StudentCourse = () => {
                         ]))}
                 </tbody>
             </Table>
+            
+            <ErrorBox error={ error } />
 
             <ReportGradeModal
                 isOpen={reportGrade > -1}

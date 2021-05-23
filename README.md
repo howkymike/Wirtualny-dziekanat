@@ -6,6 +6,11 @@ Uruchomienie wszystkiego:
 ````
     docker-compose up
 ````
+Gdyby wystąpiły problemy z React to trzeba wejśc do "client" i wykonać komendę `npm install`
+
+Warto testować w trybie **Incognito**
+
+
 Zrzut bazy danych:
 ````
     ./dump.sh

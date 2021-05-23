@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 
 import { userContext } from '../context/userContext';
+import ErrorBox from '../components/Error';
 
 const LoginBox = styled.div` 
     width: 30em;
@@ -28,7 +29,7 @@ const Login = () => {
 
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
-    let [error, setError] = useState("");
+    let [error, setError] = useState([false, ""]);
 
     const getHomeAddress = (role) => {
         switch (role) {
@@ -45,10 +46,13 @@ const Login = () => {
             if (await login(username, password))
                 history.push(getHomeAddress(roles[0]));
         } catch (e) {
-            console.log("Error", e);
-            setError(e.message);
+            setError([true, e.message]);
         }
     }
+
+    useEffect(() => {
+        setError([false, ""]);
+    }, [username, password]);
 
     useEffect(() => {
         if (logged)
@@ -73,11 +77,7 @@ const Login = () => {
                     <Button block color="primary">Zaloguj</Button>
                 </FormGroup>
                 <FormGroup>
-                    {error !== "" &&
-                        <Alert color="danger" fade={false}>
-                            {error}
-                        </Alert>
-                    }
+                    <ErrorBox error={ error } />
                 </FormGroup>
             </Form>
         </LoginBox>

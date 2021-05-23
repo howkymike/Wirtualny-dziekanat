@@ -7,7 +7,7 @@ import {
 } from "reactstrap";
 
 import { userContext } from '../../context/userContext';
-import CourseDetailsStudentsPanel from './CourseDetailsStudentsPanel';
+import CourseStudentsPanel from '../EditCourseComponent/CourseStudentsPanel';
 import CourseDetailsPanel from './CourseDetailsPanel';
 import CourseDetailsFacultyPanel from './CourseDetailsFacultyPanel';
 import CourseDetailsLecturersPanel from "./CourseDetailsLecturersPanel";
@@ -32,7 +32,7 @@ const reducer = (state, {type, payload}) => {
             return {
                 ...state, ...payload, loading: false,
                 courseLecturers: payload.courseLecturers.map(value => value.id),
-                courseStudents: payload.courseStudents.map(value => value.id),
+                courseStudents: payload.courseStudents.map(value => value.id.studentId),
                 fieldOfStudy: payload.fieldOfStudy.id, semester: payload.semester
             }
         case "name": case "lecture_time": case "laboratory_time": case "exam":
@@ -51,6 +51,14 @@ const reducer = (state, {type, payload}) => {
         case "lecturerList":
             return {
                 ...state, activeTab: 2, lecturerList: payload
+            }
+        case "addStudent":
+            return {
+                ...state, courseStudents: [...state.courseStudents, payload]
+            }
+        case "deleteStudent":
+            return {
+                ...state, courseStudents: state.courseStudents.filter(value => value !== payload)
             }
         case "faculties":
             return {
@@ -72,12 +80,12 @@ const CourseDetailsModal = props => {
 
         if(tab === 3) {
             const getStudentList = async () => {
-                const [res, isOk] = await fetchApi(`/courses/${id}/students`, {
+                const [res, isOk] = await fetchApi(`/users/student`, {
                     method: "GET"
                 });
 
                 if(isOk)
-                    dispatch({ type: "studentList", payload: res });
+                    dispatch({ type: "studentList", payload: res.list });
             }
             if(state.studentList.length)
                 dispatch({ type: "tab", payload: tab });
@@ -157,6 +165,24 @@ const CourseDetailsModal = props => {
             dispatch({type: "ects", payload: 0});
     }, [state.lecture_time, state.laboratory_time, state.ects ] )
 
+    const updateCourse = async () => {
+        let path = `/courses/${id}/edit`;
+        if(type === "create") path = `/courses`;
+        const [res, isOk] = await fetchApi(path, {
+            method: "POST",
+            body: JSON.stringify({
+                id, lecture_time: state.lecture_time, laboratory_time: state.laboratory_time,
+                ects: state.ects, exam: state.exam, name: state.name, courseStudentIds: state.courseStudents,
+                courseLecturerIds: state.courseLecturers, fieldOfStudyId: state.fieldOfStudy, semester: state.semester
+            })
+        });
+
+        if(isOk)
+            toggle();
+        else
+            console.log(res);
+    }
+
     return (
         <BiggerModal isOpen={ isOpen && !state.loading } toggle={ toggle }>
             <ModalHeader>
@@ -180,7 +206,7 @@ const CourseDetailsModal = props => {
                     <TabContent activeTab={ state.activeTab }>
                         <CourseDetailsPanel state={ state } dispatch={ dispatch } edit={ type === "details" } toggle={ toggle }/>
                         <CourseDetailsLecturersPanel state={ state } dispatch={ dispatch } lecturerList={ state.lecturerList } />
-                        <CourseDetailsStudentsPanel state={ state } dispatch={ dispatch } list={ state.studentList } />
+                        <CourseStudentsPanel state={ state } dispatch={ dispatch } list={ state.studentList } />
                         <CourseDetailsFacultyPanel
                             state={ state } dispatch={ dispatch }
                             faculties={ state.faculties } fields={ state.fields }
@@ -191,7 +217,13 @@ const CourseDetailsModal = props => {
             <ModalFooter>
                 <Container>
                     <Row>
-                        <Col sm="12" md={{ size: 4, offset: 4 }}>
+                        {
+                            state.activeTab === 3 &&
+                            <Col sm="12" md={{ size: 4, offset: 2 }}>
+                                <Button block color="primary" onClick={() => updateCourse() }>Zapisz</Button>
+                            </Col>
+                        }
+                        <Col sm="12" md={{ size: 4, offset: state.activeTab === 3 ? 0 : 4 }}>
                             <Button block color="danger" onClick={toggle}>Wyjdź</Button>
                         </Col>
                     </Row>
