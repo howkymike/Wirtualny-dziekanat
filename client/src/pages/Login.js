@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Input, Alert } from 'reactstrap';
+import React, { useContext, useState, useEffect, isValidElement } from 'react';
+import { Button, Form, FormGroup, Input, FormFeedback } from 'reactstrap';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 
@@ -31,6 +31,9 @@ const Login = () => {
     let [password, setPassword] = useState("");
     let [error, setError] = useState([false, ""]);
 
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const [isLoginInvalid, setIsLoginInvalid] = useState(false);
+
     const getHomeAddress = (role) => {
         switch (role) {
             case "ROLE_ADMIN": return "/admin";
@@ -41,7 +44,28 @@ const Login = () => {
         }
     }
 
+    const validate = () => {
+        let valid = true;
+
+        if (password.length === 0) {
+            valid = false;
+            setIsPasswordInvalid(true);
+        }
+
+        if (username.length === 0) {
+            valid = false;
+            setIsLoginInvalid(true);
+        }
+
+        return valid;
+    }
+
     const handleLogin = async () => {
+
+        if (!validate()) {
+            return;
+        }
+
         try {
             if (await login(username, password))
                 history.push(getHomeAddress(roles[0]));
@@ -66,10 +90,14 @@ const Login = () => {
                 <h4>Zaloguj się</h4>
                 <hr />
                 <FormGroup>
-                    <Input type="text" placeholder="Login" value={username} onChange={e => setUsername(e.target.value)} />
+                    <Input type="text" placeholder="Login" invalid={isLoginInvalid} value={username}
+                        onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} />
+                    <FormFeedback>Podaj swoj login.</FormFeedback>
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" placeholder="Hasło" value={password} onChange={e => setPassword(e.target.value)} />
+                    <Input type="password" placeholder="Hasło" invalid={isPasswordInvalid} value={password}
+                        onChange={e => { setPassword(e.target.value); setIsPasswordInvalid(e.target.value.length === 0); }} />
+                    <FormFeedback>Wpisz hasło.</FormFeedback>
                 </FormGroup>
 
                 <ForgotPassword><Link to={"forgetPassword"}>Zapomiałem hasła</Link></ForgotPassword>
@@ -77,7 +105,7 @@ const Login = () => {
                     <Button block color="primary">Zaloguj</Button>
                 </FormGroup>
                 <FormGroup>
-                    <ErrorBox error={ error } />
+                    <ErrorBox error={error} />
                 </FormGroup>
             </Form>
         </LoginBox>
