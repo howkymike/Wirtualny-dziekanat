@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.val;
 import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
+import pl.agh.wd.payload.request.GradeList;
 import pl.agh.wd.payload.request.SetGradeRequest;
 import pl.agh.wd.payload.response.MessageResponse;
 import pl.agh.wd.payload.response.SuccessResponse;
@@ -54,6 +55,18 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public Course getCourse(@PathVariable("id") Long id){
+        Optional<Course> optional = courseRepository.findById(id);
+
+        if(optional.isPresent()) {
+
+            Course course = optional.get();
+            System.out.println("DWWDDDDDDDDDDDDDDDDDDDDDDDDD");
+            System.out.println(course.getCourseStudents().size());
+
+            return course;
+        }
+
+
         return courseRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(id.toString()));
     }
@@ -225,9 +238,41 @@ public class CourseController {
     @PutMapping("/grade")
     public ResponseEntity<?> setGrade(@RequestBody SetGradeRequest request) {
 
-        
+        Optional<Course> opcourse = courseRepository.findById(request.getId());
 
-        CourseStudentKey key = new CourseStudentKey(request.getCourseId(), request.getCourseId());
+        if(!opcourse.isPresent()) 
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Course not found."));
+
+        Course course = opcourse.get();
+
+        Set<CourseStudent> students = course.getCourseStudents();
+
+        students.forEach(value -> {
+            GradeList fromRequest = new GradeList();
+
+            for(GradeList gl : request.getGrades()) {
+                if(gl.getStudentId() == value.getId().getStudentId()) 
+                    fromRequest = gl;
+            }
+
+            if(
+                !(fromRequest.getLaboratoryGrade() < 2 || fromRequest.getLaboratoryGrade() > 5 || fromRequest.getLaboratoryGrade() % 0.5 != 0) &&
+                !(fromRequest.getExamGrade() < 2 || fromRequest.getExamGrade() > 5 || fromRequest.getExamGrade() % 0.5 != 0) &&
+                !(fromRequest.getFinalGrade() < 2 || fromRequest.getFinalGrade() > 5 || fromRequest.getFinalGrade() % 0.5 != 0)
+            ) {
+                value.setLaboratoryGrade(fromRequest.getLaboratoryGrade());
+                value.setExamGrade(fromRequest.getExamGrade());
+                value.setFinalGrade(fromRequest.getFinalGrade());
+            }
+        });
+
+        course.setCourseStudents(students);
+
+        courseRepository.save(course);
+
+        return ResponseEntity.ok(new SuccessResponse(true, "Grade set"));
+
+        /*CourseStudentKey key = new CourseStudentKey(request.getCourseId(), request.getCourseId());
         Optional<CourseStudent> courseStudentOptional = courseStudentRepository.findById(key);
 
         if(courseStudentOptional.isEmpty()) {
@@ -257,7 +302,7 @@ public class CourseController {
         courseStudentRepository.save(courseStudent);
         
 
-        return ResponseEntity.ok(new SuccessResponse(true, "Grade set"));
+        return ResponseEntity.ok(new SuccessResponse(true, "Grade set"));*/
     }
 
     private void editLecturers(CourseRequest request, Course course) {

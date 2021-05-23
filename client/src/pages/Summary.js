@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer } from 'react';
-import { Table, Alert } from 'reactstrap';
+import { Table } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
