@@ -4,22 +4,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.agh.wd.controller.StudentController;
 import pl.agh.wd.jwt.JwtAuthEntryPoint;
 import pl.agh.wd.jwt.JwtUtils;
 import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserDetailsImpl;
 import pl.agh.wd.service.UserDetailsServiceImpl;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = pl.agh.wd.controller.StudentController.class)
 public class StudentControllerTests {
@@ -46,7 +50,13 @@ public class StudentControllerTests {
     private UserRepository userRepository;
 
     @MockBean
-    private StudentController studentController;
+    StudentRepository studentRepository;
+
+    @MockBean
+    FieldOfStudyStudentRepository fieldOfStudyStudentRepository;
+
+    @MockBean
+    FieldOfStudyRepository fieldOfStudyRepository;
 
     private static final UserDetailsImpl adminUser = new UserDetailsImpl(1L,"admin",
             "hey@wp.com","xxx",true,
@@ -58,21 +68,11 @@ public class StudentControllerTests {
     void getCourseOfStudiesTest() throws Exception {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        //  POWINNO DZIAŁAC A NIE DZIAŁA !!!!
-//       1a) RequestBuilder request = MockMvcRequestBuilders
-//                .get("/api/student/course-of-studies")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .with(user(adminUser));
-
-//       2) mvc.perform(get("/api/student/course-of-studies")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andDo(print());
-
-//        1b) mvc.perform(request)
-//               .andExpect(status().is(400))
-//               .andExpect(jsonPath("$.msg", is("Dany użytkownik nie istnieje")));
+        mvc.perform(get("/api/student/course-of-studies")
+                .with(user(adminUser))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Dany użytkownik nie istnieje")));
 
     }
 }
