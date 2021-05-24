@@ -11,6 +11,9 @@ const ClerkNav = () => {
             <Link to="/clerk/courses">
                 Zarządzaj kursami
             </Link>
+            <Link to="/clerk/students">
+            Studenci
+            </Link>
             <Link to="/clerk/changeactualpassword">Zmien haslo</Link>
         </>
     )
