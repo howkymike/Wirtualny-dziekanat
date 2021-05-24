@@ -81,7 +81,6 @@ const Login = () => {
     useEffect(() => {
         if (logged)
             history.push(getHomeAddress(roles[0]));
-        console.log(roles)
     }, [logged, history, roles]);
 
     return (
@@ -92,7 +91,7 @@ const Login = () => {
                 <FormGroup>
                     <Input type="text" placeholder="Login" invalid={isLoginInvalid} value={username}
                         onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} />
-                    <FormFeedback>Podaj swoj login.</FormFeedback>
+                    <FormFeedback>Podaj swój login.</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                     <Input type="password" placeholder="Hasło" invalid={isPasswordInvalid} value={password}
