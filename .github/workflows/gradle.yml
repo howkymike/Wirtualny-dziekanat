@@ -71,10 +71,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    variables:
-      SCREEN_WIDTH: 1920
-      SCREEN_HEIGHT: 1080
-
     services:
       - name: selenium/standalone-chrome:latest
 
