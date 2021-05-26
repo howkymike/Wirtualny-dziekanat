@@ -4,7 +4,7 @@ exports.config = {
   helpers: {
     Playwright: {
       url: 'http://localhost:3000/login',
-      show: true,
+      show: false,
       browser: 'chromium',
       waitForNavigation: "networkidle0"
     }
