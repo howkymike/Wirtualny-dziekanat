@@ -71,10 +71,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    dependencies:
-      - build
-      - buildfront
-
     steps:
       
       #setup codeceptjs
