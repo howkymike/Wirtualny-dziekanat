@@ -71,9 +71,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      - name: selenium/standalone-chrome:latest
-
     steps:
       
       #setup codeceptjs
@@ -92,5 +89,4 @@ jobs:
 
       # 4: run test command
       - name: Run test command
-        run: cd ${{ github.workspace }}/tests/e2e && npx codeceptjs run --steps --profile=chrome-ci
-
+        run: cd ${{ github.workspace }}/tests/e2e && npx codeceptjs run --steps
