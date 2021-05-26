@@ -87,6 +87,10 @@ jobs:
       - name: Install dependencies
         run: cd ${{ github.workspace }}/tests/e2e && npm install
 
+      # 4: Install Playwright
+      - name: Playwright
+        run: cd ${{ github.workspace }}/tests/e2e && npm install codeceptjs playwright --save  
+
       # 4: run test command
       - name: Run test command
         run: cd ${{ github.workspace }}/tests/e2e && npx codeceptjs run --steps
