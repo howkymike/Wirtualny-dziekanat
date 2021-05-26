@@ -88,7 +88,7 @@ jobs:
 
       # 4: start app
       - name: start app
-        run: cd ${{ github.workspace }}/client && npm start
+        run: cd ${{ github.workspace }}/client && npm start &
       - uses: actions/checkout@v2
       - name: Setup PostgreSQL
         uses: Harmon758/postgresql-action@v1.0.0
