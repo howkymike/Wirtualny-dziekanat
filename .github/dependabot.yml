@@ -3,8 +3,10 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/server"
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: "sunday"
   - package-ecosystem: "npm"
     directory: "/client"
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: "sunday"
