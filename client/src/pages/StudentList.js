@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Input, Table, Button, Badge, Alert } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserTimes, faUserEdit } from '@fortawesome/free-solid-svg-icons'
+import { faUserTimes, faUserEdit, faUserGraduate } from '@fortawesome/free-solid-svg-icons'
 import MessageBox from '../components/MessageBox'
 import EditUserModal from '../components/EditUserComponent/EditUserModal'
 
@@ -37,6 +37,8 @@ const StudentList =  ({ semesterFilter = false }) => {
     let [loading, setLoading] = useState(true);
     let [list, setList] = useState([]);
     const [deleteMsg, setDeleteMsg] = useState(false);
+    const [promoteMsg, setPromoteMsg] = useState(false);
+    const [userToPromote, setUserToPromote] = useState(null);
     const [editUserId, setEditUserId] = useState(-1);
     const [userToDelete, setUserToDelete] = useState(null);
     const [isOpenEditModal, toggleEditModal] = useState(false);
@@ -86,6 +88,31 @@ const StudentList =  ({ semesterFilter = false }) => {
             setDeleteMsg(false)
         } catch(e) {
             setError([true, "Wystapił błąd przy usuwaniu użytkownika"]);
+        }
+    };
+
+    const onUserPromote = (key) => {
+        setUserToPromote(key);
+        setPromoteMsg(true);
+    };
+
+    const onAcceptUserPromote = async () => {
+        try {
+            const user = list[userToPromote].user;
+
+            const [, isOk] = await fetchApi("/student/" + user.id + "/promote", {
+                method: "POST",
+            });
+
+            if (isOk) {
+                setList(list);
+            } else {
+                setError([true, "Wystapił błąd przy promowaniu użytkownika na następny semestr"]);
+            }
+
+            setPromoteMsg(false)
+        } catch(e) {
+            setError([true, "Wystapił błąd przy promowaniu użytkownika na następny semestr"]);
         }
     };
 
@@ -170,6 +197,10 @@ const StudentList =  ({ semesterFilter = false }) => {
                                 <td>{user.title}</td>
                             }
                             <td>
+                                <StyledButton color="success"
+                                              onClick={() => {onUserPromote(key)}}>
+                                    <FontAwesomeIcon icon={faUserGraduate} />
+                                </StyledButton>
                                 <StyledButton color="primary"
                                     onClick={() => {
                                         setEditUserId(user.id);
@@ -199,6 +230,20 @@ const StudentList =  ({ semesterFilter = false }) => {
                 >
                     {"Czy napewno chcesz usunąć tego użytkownika?"}
                 </MessageBox>
+            }
+
+            {   promoteMsg &&
+            <MessageBox
+                onAccept={() => {
+                    onAcceptUserPromote();
+                    setRefresh(!refresh);
+                }}
+                onReject={() => setPromoteMsg(false)}
+                cancelBtnText={"Nie"}
+                okBtnText={"Tak"}
+            >
+                {"Czy napewno chcesz promować tego użytkownika na następny semestr?"}
+            </MessageBox>
             }
 
             <EditUserModal
