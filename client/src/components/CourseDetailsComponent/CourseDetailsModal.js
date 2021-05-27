@@ -70,7 +70,7 @@ const reducer = (state, {type, payload}) => {
 };
 
 const CourseDetailsModal = props => {
-    const { isOpen, toggle, type, id } = props;
+    const { isOpen, toggle, type, id, onSave } = props;
     const { fetchApi } = useContext(userContext);
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -177,10 +177,13 @@ const CourseDetailsModal = props => {
             })
         });
 
-        if(isOk)
+        if(isOk){
+            onSave()
             toggle();
-        else
+        }
+        else{
             console.log(res);
+        }
     }
 
     return (

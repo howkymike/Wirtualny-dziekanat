@@ -331,14 +331,19 @@ public class CourseController {
     }
 
     private void editCourseStudents(CourseRequest request, Course course) {
+        Set<Long> courseStudentIds = request.getCourseStudentIds();
         if (course.getCourseStudents() != null) {
             for (CourseStudent courseStudent : course.getCourseStudents()) {
-                courseStudentRepository.deleteById(courseStudent.getId());
+                if(courseStudentIds.contains(courseStudent.getId().getStudentId())){
+                    courseStudentIds.remove(courseStudent.getId().getStudentId());
+                }else{
+                    courseStudentRepository.deleteById(courseStudent.getId());
+                }
             }
         }
 
         if (request.getCourseStudentIds() != null) {
-            for (Long courseStudentId : request.getCourseStudentIds())
+            for (Long courseStudentId : courseStudentIds)
                 studentRepository.findById(courseStudentId).ifPresent(s -> {
                     CourseStudent courseStudent = new CourseStudent(course, s);
                     courseStudentRepository.save(courseStudent);
