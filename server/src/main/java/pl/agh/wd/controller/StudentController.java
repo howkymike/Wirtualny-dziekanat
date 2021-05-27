@@ -39,6 +39,12 @@ public class StudentController {
     @Autowired
     FieldOfStudyRepository fieldOfStudyRepository;
 
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/students")
+    public List<Student> getStudents() {
+        return studentRepository.findAll();
+    }
+
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN')")
     @GetMapping("/course-of-studies")
     public ResponseEntity<?> getCourseOfStudies(Authentication authentication) {

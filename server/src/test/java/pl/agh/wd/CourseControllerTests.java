@@ -14,6 +14,7 @@ import pl.agh.wd.model.*;
 import pl.agh.wd.payload.request.CourseRequest;
 import pl.agh.wd.repository.*;
 
+import javax.swing.plaf.IconUIResource;
 import java.util.*;
 
 @Transactional
@@ -183,13 +184,22 @@ public class CourseControllerTests {
     @Test
     @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
     void testDeleteCourse() {
-        createCourse();
-        Optional<Course> course = courseRepository.findByName("Sven and Dawid");
-        assert(course.isPresent());
-        ResponseEntity<?> response = controller.deleteCourse(course.get().getId());
-        assert(response.getStatusCode().toString().equals("200 OK"));
-        Optional<Course> course2 = courseRepository.findByName("Sven and Dawid");
-//        assert(course2.isEmpty());
+
+        Course testCourse = new Course("testDeleteCourse", 5, 5,5,false);
+        ArrayList<Lecturer> testLecturer = (ArrayList<Lecturer>) lecturerRepository.findAll();
+        assert(!testLecturer.isEmpty());
+        Set<Lecturer> lecturerSet = new HashSet<Lecturer>(testLecturer.subList(0,1));
+        assert(!lecturerSet.isEmpty());
+        testCourse.setCourseLecturers(lecturerSet);
+        courseRepository.save(testCourse);
+        assert(courseRepository.findByName("testDeleteCourse").isPresent());
+        Optional<Course> getTestCourse = courseRepository.findByName("testDeleteCourse");
+        assert(getTestCourse.isPresent());
+        ResponseEntity<?> response = controller.deleteCourse(getTestCourse.get().getId());
+
+        System.out.println(response.getStatusCode());
+        Optional<Course> getDeletedCourse = courseRepository.findByName("testDeleteCourse");
+        assert(getDeletedCourse.isEmpty());
     }
 
     @Test

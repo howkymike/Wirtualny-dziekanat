@@ -19,6 +19,7 @@ import pl.agh.wd.payload.request.LoginRequest;
 import pl.agh.wd.repository.FirstTimeTokenRepository;
 import pl.agh.wd.repository.UserRepository;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -65,7 +66,7 @@ public class LoginApplicationTests {
         ResponseEntity<?> response = controller.authenticateUser(loginRequest);
 
         assert(response.getStatusCode().toString().equals("200 OK"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.JwtResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.JwtResponse"));
     }
 
     @Test
@@ -93,7 +94,7 @@ public class LoginApplicationTests {
         ResponseEntity<?> response = controller.authenticateUser(loginRequest);
 
         assert(response.getStatusCode().toString().equals("200 OK"));
-        assert (response.getBody().toString().contains("pl.agh.wd.payload.response.FirstTimeResponse"));
+        assert (Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.FirstTimeResponse"));
     }
 
     @Test
@@ -122,7 +123,7 @@ public class LoginApplicationTests {
         firstTimeRequest.setPassword2("aaabbb");
         ResponseEntity<?> response = controller.firstTime(firstTimeRequest);
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
     }
 
     @Test
@@ -137,6 +138,6 @@ public class LoginApplicationTests {
         firstTimeRequest.setPassword2("aaabbb2");
         ResponseEntity<?> response = controller.firstTime(firstTimeRequest);
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.SuccessResponse"));
     }
 }

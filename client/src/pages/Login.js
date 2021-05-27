@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Input, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Input, FormFeedback, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 
@@ -29,7 +29,11 @@ const Login = () => {
 
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
+    let [role, setRole] = useState("ROLE_STUDENT");
     let [error, setError] = useState([false, ""]);
+
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const [isLoginInvalid, setIsLoginInvalid] = useState(false);
 
     const getHomeAddress = (role) => {
         switch (role) {
@@ -41,10 +45,31 @@ const Login = () => {
         }
     }
 
+    const validate = () => {
+        let valid = true;
+
+        if (password.length === 0) {
+            valid = false;
+            setIsPasswordInvalid(true);
+        }
+
+        if (username.length === 0) {
+            valid = false;
+            setIsLoginInvalid(true);
+        }
+
+        return valid;
+    }
+
     const handleLogin = async () => {
+
+        if (!validate()) {
+            return;
+        }
+
         try {
-            if (await login(username, password))
-                history.push(getHomeAddress(roles[0]));
+            if (await login(username, password, role)) 
+                history.push(getHomeAddress(roles[0]));    
         } catch (e) {
             setError([true, e.message]);
         }
@@ -57,7 +82,6 @@ const Login = () => {
     useEffect(() => {
         if (logged)
             history.push(getHomeAddress(roles[0]));
-        console.log(roles)
     }, [logged, history, roles]);
 
     return (
@@ -66,18 +90,33 @@ const Login = () => {
                 <h4>Zaloguj się</h4>
                 <hr />
                 <FormGroup>
-                    <Input type="text" placeholder="Login" value={username} onChange={e => setUsername(e.target.value)} />
+                    <Input type="text" placeholder="Login" invalid={isLoginInvalid} value={username}
+                        onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} />
+                    <FormFeedback>Podaj swój login.</FormFeedback>
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" placeholder="Hasło" value={password} onChange={e => setPassword(e.target.value)} />
+                    <Input type="password" placeholder="Hasło" invalid={isPasswordInvalid} value={password}
+                        onChange={e => { setPassword(e.target.value); setIsPasswordInvalid(e.target.value.length === 0); }} />
+                    <FormFeedback>Wpisz hasło.</FormFeedback>
                 </FormGroup>
+                <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Rola</InputGroupText>
+                    </InputGroupAddon>
+                    <Input type="select" value={ role } onChange={ e => setRole(e.target.value) }>
+                        <option value="ROLE_STUDENT">Student</option>
+                        <option value="ROLE_LECTURER">Wykładowca</option>
+                        <option value="ROLE_CLERK">Pracownik dziekanatu</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                    </Input>
+                </InputGroup>
 
                 <ForgotPassword><Link to={"forgetPassword"}>Zapomiałem hasła</Link></ForgotPassword>
                 <FormGroup>
                     <Button block color="primary">Zaloguj</Button>
                 </FormGroup>
                 <FormGroup>
-                    <ErrorBox error={ error } />
+                    <ErrorBox error={error} />
                 </FormGroup>
             </Form>
         </LoginBox>

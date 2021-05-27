@@ -6,16 +6,13 @@ Uruchomienie wszystkiego:
 ````
     docker-compose up
 ````
-Gdyby wystąpiły problemy z React to trzeba wejśc do "client" i wykonać komendę `npm install`
+Gdyby wystąpiły problemy z React należy usunąć plik *package-lock.json* i katalog *node_modules* i uruchomić ponownie.
 
-Warto testować w trybie **Incognito**
+### Konta
 
-
-Zrzut bazy danych:
-````
-    ./dump.sh
-````
-Przywrócenie bazy danych:
-````
-    ./restore.sh
-````
+|rola|login|hasło|
+|-|-|-|
+|student|kamil|kamil|
+|pracownik dziekanatu|baba|baba|
+|prowadzący|onder|onder|
+|admin|admin|admin|

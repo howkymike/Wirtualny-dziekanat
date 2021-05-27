@@ -4,6 +4,7 @@ import PageNotFound from '../pages/PageNotFound';
 import ChangeActualPassword from '../pages/ChangeActualPassword';
 import Summary from '../pages/Summary';
 import Courses from '../pages/clerk/Courses';
+import StudentList from "../pages/StudentList";
 
 const ClerkPanelRoutes = props => {
 
@@ -17,6 +18,10 @@ const ClerkPanelRoutes = props => {
 
             <Route exact path={`${path}/courses`}>
                 <Courses />
+            </Route>
+
+            <Route exact path={`${path}/students`}>
+                <StudentList semesterFilter={true} />
             </Route>
 
             <Route exact path={`${path}/changeactualpassword`}>

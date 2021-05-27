@@ -31,7 +31,7 @@ const UserProvider = ({children}) => {
      * @param {string} password The power, must be a natural number.
      * @return {Promise<boolean>} true if success
     */
-    const login = async (username, password) => {
+    const login = async (username, password, role) => {
         const result = await fetch(api + "/auth/login", {
             method: "POST",
             headers: {
@@ -63,6 +63,11 @@ const UserProvider = ({children}) => {
             history.push("/firsttime/" + json.token);
             return;
         }
+
+        if(json.roles.find(val => val === role)) {
+            json.roles[0] = role;
+        } else 
+            throw new Error("Wybrano złą rolę");
 
         setLogin(json);
 

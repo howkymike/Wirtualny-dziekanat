@@ -30,8 +30,9 @@ const Role = styled(Badge)`
     margin: 2px 0 2px 0;
 `
 
-const StudentList = () => {
+const StudentList =  ({ semesterFilter = false }) => {
 
+    let [semesterPicked, setSemesterPicked] = useState("-1");
     let [listType, setListType] = useState("student");
     let [loading, setLoading] = useState(true);
     let [list, setList] = useState([]);
@@ -100,11 +101,28 @@ const StudentList = () => {
         <Wrapper>
             <h4>Lista użytkowników</h4>
             <hr />
-            <Input type="select" value={listType} onChange={e => setListType(e.target.value)}>
-                <option value="student">Studenci</option>
-                <option value="clerk">Pracownicy</option>
-                <option value="lecturer">Wykładowcy</option>
-            </Input>
+            {   semesterFilter &&
+                <div>
+                <h6>Wybierz semestr</h6>
+                <Input type="select" value={semesterPicked} onChange={e => setSemesterPicked(e.target.value)}>
+                    <option value="-1">Wszystkie</option>
+                    <option value="1">Pierwszy</option>
+                    <option value="2">Drugi</option>
+                    <option value="3">Trzeci</option>
+                    <option value="4">Czwarty</option>
+                    <option value="5">Piąty</option>
+                    <option value="6">Szósty</option>
+                    <option value="7">Siódmy</option>
+                </Input>
+                </div>
+            }
+            {   !semesterFilter &&
+                <Input type="select" value={listType} onChange={e => setListType(e.target.value)}>
+                    <option value="student">Studenci</option>
+                    <option value="clerk">Pracownicy</option>
+                    <option value="lecturer">Wykładowcy</option>
+                </Input>
+            }
             <hr />
             <Table striped borderless hover responsive>
                 <thead>
@@ -115,7 +133,8 @@ const StudentList = () => {
                         <th>Email</th>
                         <th>Role</th>
                         {listType === "student" &&
-                            <th>Indeks</th>
+                            <th>Indeks</th> &&
+                            <th>Semestr</th>
                         }
                         {listType === "lecturer" &&
                             <th>Tytuł</th>
@@ -130,6 +149,7 @@ const StudentList = () => {
                         </tr>
                     }
                     {list.map((user, key) => (
+                        (!semesterFilter || semesterPicked === "-1" || Number(semesterPicked) === user.semester) &&
                         <tr key={key}>
                             <td>{key + 1}</td>
                             <td>{user.user.name}</td>
@@ -143,7 +163,8 @@ const StudentList = () => {
                                 </RoleContainer>
                             </td>
                             {   listType === "student" &&
-                                <td>{user.index}</td>
+                                <td>{user.index}</td> &&
+                                <td>{user.semester}</td>
                             }
                             {   listType === "lecturer" &&
                                 <td>{user.title}</td>

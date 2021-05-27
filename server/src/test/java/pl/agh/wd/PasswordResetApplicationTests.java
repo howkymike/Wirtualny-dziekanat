@@ -17,6 +17,7 @@ import pl.agh.wd.repository.UserRepository;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -66,7 +67,7 @@ public class PasswordResetApplicationTests {
         ResponseEntity<?> response = forgetPasswordController.forgetPassword(fpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.MessageResponse"));
     }
 
     @Test
@@ -82,9 +83,6 @@ public class PasswordResetApplicationTests {
         PasswordResetToken prToken = new PasswordResetToken("TokenDlaHowkymike", user);
         prTokenRepository.save(prToken);
 
-        //Optional<PasswordResetToken> prTokenOptional = prTokenRepository....
-        // TODO: determine if the world will collapse if we change to Optional in PR repository
-
         {
             PasswordResetToken testToken  = prTokenRepository.findByToken("TokenDlaHowkymike");
             assert(testToken!=null);
@@ -95,7 +93,7 @@ public class PasswordResetApplicationTests {
 
         ResponseEntity<?> response = forgetPasswordController.changePassword(cpRequest);
         assert(response.getStatusCode().toString().equals("200 OK"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.MessageResponse"));
 
         Optional<User> testUser = userRepository.findByUsername("howkymike");
         assert(testUser.isPresent());
@@ -126,7 +124,7 @@ public class PasswordResetApplicationTests {
         ResponseEntity<?> response = forgetPasswordController.changePassword(cpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.MessageResponse"));
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Date().getTime());
@@ -142,7 +140,7 @@ public class PasswordResetApplicationTests {
         response = forgetPasswordController.changePassword(cpRequest);
 
         assert(response.getStatusCode().toString().equals("400 BAD_REQUEST"));
-        assert(response.getBody().toString().contains("pl.agh.wd.payload.response.MessageResponse"));
+        assert(Objects.requireNonNull(response.getBody()).toString().contains("pl.agh.wd.payload.response.MessageResponse"));
 
     }
 }
