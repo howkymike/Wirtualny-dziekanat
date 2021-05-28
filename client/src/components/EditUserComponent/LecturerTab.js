@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 
 import { userContext } from '../../context/userContext'
@@ -6,27 +6,33 @@ import { userContext } from '../../context/userContext'
 const LecturerTab = props => {
 
     const { fetchApi } = useContext(userContext);
-    const { onUserChange, user } = props;
+    const { state, dispatch } = props;
 
-    const [lecturer, setLecturer] = useState(user.lecturer);
     const [faculties, setFaculties] = useState([]);
 
-    useEffect(() => {
-        onUserChange( lecturer );
-    }, [lecturer, onUserChange]);
+    const setFaculty = useCallback((facultyId) => {
+        dispatch({ type: "lecturer", data: { ...state.user.lecturer, facultyId } });
+    },[dispatch, state.user.lecturer]);
+
+    const setTitle = (title) => {
+        dispatch({ type: "lecturer", data: { ...state.user.lecturer, title } });
+
+    }
 
     useEffect(() => {
         fetchApi("/faculties").then((res) => {
-            if (res[1])
+            if (res[1]) {
                 setFaculties(res[0]);
-        });
-    }, [fetchApi])
 
-    const setFaculty = (facultyId) => {
-        if (facultyId) {
-            setLecturer({ ...lecturer, facultyId });
-        }
-    }
+                if (!state.user.lecturer.facultyId) {
+                    setFaculty(res[0][0].id);
+                }
+            }
+        });
+  
+    }, [fetchApi, setFaculty, state.user.lecturer.facultyId])
+
+    if(!state.user.lecturer) return null;
 
     return (
         <Form>
@@ -37,8 +43,8 @@ const LecturerTab = props => {
                         <Input
                             type="text"
                             placeholder="Title"
-                            value={lecturer.title}
-                            onChange={(e) => setLecturer({ ...lecturer, title: e.target.value })}
+                            value={state.user.lecturer.title ?? ""}
+                            onChange={(e) => setTitle(e.target.value)}
                         />
                     </FormGroup>
 
@@ -46,7 +52,7 @@ const LecturerTab = props => {
                         <Label>Faculty:</Label>
                         <Input
                             type="select"
-                            value={lecturer.facultyId}
+                            value={state.user.lecturer.facultyId}
                             onChange={(e) => setFaculty(e.target.value)}
                         >
                             {faculties.map((faculty, key) => (

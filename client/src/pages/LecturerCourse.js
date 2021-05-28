@@ -5,7 +5,6 @@ import { Wrapper } from './StudentCourse';
 
 import { userContext } from '../context/userContext'
 import ImprovedGradientButton from '../components/ImprovedGradientButton';
-import CourseModal from "../components/EditCourseComponent/CourseModal";
 import ErrorBox from '../components/Error';
 import GradeModal from '../components/GradeModal';
 

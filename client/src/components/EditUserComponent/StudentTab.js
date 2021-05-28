@@ -1,13 +1,30 @@
-import { useState, useEffect } from 'react';
-import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { useState, useEffect} from 'react';
+import { Col, Form, FormFeedback, FormGroup, Input, Label, Row } from 'reactstrap';
 
 const StudentTab = props => {
-    const { onUserChange, user } = props;
-    const [student, setStudent] = useState(user.student);
+    const { state, dispatch } = props;
 
+    const [invalidIndex, setInvalidIndex] = useState(false);
+    
     useEffect(() => {
-        onUserChange(student);
-    }, [student, onUserChange]);
+        const student = state.user.student;
+        let error = false;
+
+        if(student.index.toString().match(/^\d{6}$/)){
+            setInvalidIndex(false);
+        }else{
+            setInvalidIndex(true);
+            error = true;
+        }
+
+        dispatch({type: "error", data: {studentError: error}});
+    }, [state.user.student ,dispatch]);
+
+    const setIndex = (index) => {
+        dispatch({type: "student", data: { ...state.user.student ,index}});
+    };
+
+    if(!state.user.student) return null;
 
     return (
         <Form>
@@ -18,9 +35,11 @@ const StudentTab = props => {
                         <Input
                             type="text"
                             placeholder="Indeks"
-                            value={student.index}
-                            onChange={(e) => setStudent({...student, index: e.target.value})}
+                            value={state.user.student.index}
+                            invalid={invalidIndex}
+                            onChange={(e) => setIndex(e.target.value)}
                         />
+                        <FormFeedback>Indeks powinien byc 6-cio cyfrowy.</FormFeedback>
                     </FormGroup>
                 </Col>
             </Row>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback, useReducer } from 'react'
+import { useState, useEffect, useContext, useReducer } from 'react'
 
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,8 +27,13 @@ const StyledButton = styled(Button)`
 `
 
 const initialState = {
-    user: {}, tabs: ["User"], activeTab: "User",
-    allRoles: [], isLoading: true, message: []
+    user: {
+        name: "", surname: "", email: "", telephone: "",
+        country: "", city: "", postalCode: "", address: "",
+        roles: []
+    }, tabs: ["User"], activeTab: "User",
+    allRoles: [], isLoading: true, message: [],
+    error: {}
 };
 
 const reducer = (state, { type, data }) => {
@@ -37,16 +42,18 @@ const reducer = (state, { type, data }) => {
         case "allRoles":
         case "activeTab":
         case "isLoading":
+        case "message":
             return { ...state, [type]: data };
-        case "lecturer":
-        case "student":
-        case "clerk":
-        case "roles":
+        case "lecturer": case "student": case "clerk":
+        case "name": case "surname": case "roles":
+        case "email": case "telephone":
+        case "country": case "city":
+        case "address": case "postalCode":
             return { ...state, user: { ...state.user, [type]: data } };
         case "tabs":
             return { ...state, tabs: ["User", ...data] };
-        case "message":
-            return { ...state, message: data };
+        case 'error':
+            return { ...state, error: { ...state.error, ...data } };
         case "initial":
             return initialState;
         default:
@@ -63,6 +70,9 @@ const EditUserModal = props => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
+
+        if(!isOpen) return;
+
         fetchApi("/roles")
             .then(res => {
                 if (res[0].roles) {
@@ -77,15 +87,14 @@ const EditUserModal = props => {
                     dispatch({ type: 'isLoading', data: false });
                 }
             });
-
-    }, [userId, fetchApi]);
+    }, [isOpen, userId, fetchApi]);
 
     useEffect(() => {
         if (state.isLoading) return;
 
         let tabs = [];
         state.user.roles.forEach((role) => {
-            if(role === "ROLE_ADMIN") 
+            if (role === "ROLE_ADMIN")
                 return;
             let newTab = role[5].toUpperCase() + role.substring(6).toLowerCase();
             tabs.push(newTab);
@@ -96,6 +105,13 @@ const EditUserModal = props => {
 
 
     const onUserUpdate = async () => {
+        for (const err in state.error) {
+            if (state.error[err]) {
+                dispatch({ type: "message", data: ["danger", "Niepopraeni wypełniony form"] });
+                return;
+            }
+        }
+
         const [res, isOk] = await fetchApi(`/users/${state.user.id}`, {
             method: "PUT",
             body: JSON.stringify(state.user)
@@ -115,7 +131,7 @@ const EditUserModal = props => {
 
         switch (role) {
             case "ROLE_ADMIN": break;
-            case "ROLE_STUDENT": dispatch({ type: 'student', data: {} }); break;
+            case "ROLE_STUDENT": dispatch({ type: 'student', data: { index: "" } }); break;
             case "ROLE_LECTURER": dispatch({ type: 'lecturer', data: {} }); break;
             case "ROLE_CLERK": dispatch({ type: 'clerk', data: {} }); break;
             default: return;
@@ -125,36 +141,20 @@ const EditUserModal = props => {
 
         dispatch({ type: "roles", data: roles });
 
-        if(role !== "ROLE_ADMIN")
+        if (role !== "ROLE_ADMIN")
             dispatch({ type: "activeTab", data: tab });
     }
-
-    const updateUser = useCallback((user) => {
-        dispatch({ type: "user", data: user });
-    }, []);
-
-    const updateLecturer = useCallback((lecturer) => {
-        dispatch({ type: "lecturer", data: lecturer });
-    }, []);
-
-    const updateClerk = useCallback((clerk) => {
-        dispatch({ type: "clerk", data: clerk });
-    }, []);
-
-    const updateStudent = useCallback((student) => {
-        dispatch({ type: "student", data: student });
-    }, []);
 
     const renderTab = tab => {
         switch (tab) {
             case "User":
-                return <UserTab user={state.user} onUserChange={updateUser} />
+                return <UserTab state={state} dispatch={dispatch} />
             case "Student":
-                return <StudentTab user={state.user} onUserChange={updateStudent} />
+                return state.user.student && <StudentTab state={state} dispatch={dispatch} />
             case "Lecturer":
-                return <LecturerTab user={state.user} onUserChange={updateLecturer} />
+                return state.user.lecturer && <LecturerTab state={state} dispatch={dispatch} />
             case "Clerk":
-                return <ClerkTab user={state.user} onUserChange={updateClerk} />
+                return state.user.clerk && <ClerkTab state={state} dispatch={dispatch} />
             default: return "";
         }
     }

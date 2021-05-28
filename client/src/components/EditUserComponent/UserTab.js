@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Col, Form, FormGroup, Input, Label, Row, Badge } from 'reactstrap';
+import { Col, Form, FormGroup, Input, Label, Row, Badge, FormFeedback } from 'reactstrap';
 
 const Role = styled(Badge)`
     margin: 2px;
@@ -17,39 +17,70 @@ const RoleButton = styled(FontAwesomeIcon)`
     }
 `
 
+const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+
 const UserTab = props => {
 
-    const { onUserChange, user } = props;
-    const [newUserData, setNewUserData] = useState(user);
+    const { state, dispatch } = props;
+
+    const [invalidName, setInvalidName] = useState(false);
+    const [invalidSurname, setInvalidSurname] = useState(false);
+    const [invalidEmail, setInvalidEmail] = useState(false);
+    const [invalidNumber, setInvalidNumber] = useState(false);
+    const [invalidPostalCode, setInvalidPostalCode] = useState(false);
+    const [invalidCountry, setInvalidCountry] = useState(false);
+    const [invalidCity, setInvalidCity] = useState(false);
+    const [invalidAddress, setInvalidAddress] = useState(false);
 
     useEffect(() => {
-        setNewUserData(user);
-    }, [user])
+        // Validate user data :)
+        let error = false;
+        const user = state.user;
 
-    useEffect(() => {
-        onUserChange(newUserData);
-    }, [newUserData, onUserChange]);
+        const validate = (callback) => {
+            const res = callback();
+            if (!res) {
+                error = true;
+            }
+            // return false if data is invalid
+            return !res;
+        }
+
+        setInvalidName(validate(() => user.name.length > 0));
+        setInvalidSurname(validate(() => user.surname.length > 0));
+
+        setInvalidEmail(validate(() => user.email.match(emailRegex)));
+        setInvalidNumber(validate(() => user.telephone.match(/^(\+\d{2}){0,1}\d{9}$/)));
+
+        setInvalidCountry(validate(() => user.country.length > 0));
+        setInvalidCity(validate(() => user.city.length > 0));
+        setInvalidPostalCode(validate(() => user.postalCode.match(/^\d{2}-\d{3}$/)));
+        setInvalidAddress(validate(() => user.address.length > 0));
+
+        dispatch({ type: "error", data: { userError: error } });
+
+    }, [state.user, dispatch]);
 
     const deleteRole = (key) => {
-        const role = newUserData.roles[key];
-        let newUser = { ...newUserData };
+        let roles = state.user.roles;
+        const role = roles[key];
 
         switch (role) {
             case "ROLE_ADMIN": break;
             case "ROLE_STUDENT":
-                newUser.student = null;
+                dispatch({ type: "student", data: null });
                 break;
             case "ROLE_LECTURER":
-                newUser.lecturer = null;
+                dispatch({ type: "lecturer", data: null });
                 break;
             case "ROLE_CLERK":
-                newUser.clerk = null;
+                dispatch({ type: "clerk", data: null });
                 break;
             default: return;
         }
 
-        newUser.roles.splice(key, 1);
-        setNewUserData(newUser);
+        const newRoles = roles.filter((value) => value !== role);
+        dispatch({ type: "roles", data: newRoles });
     }
 
     const getRoleName = (role) => {
@@ -69,9 +100,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Name"
-                            value={newUserData.name}
-                            onChange={(e) => setNewUserData({ ...newUserData, name: e.target.value })}
+                            value={state.user.name}
+                            invalid={invalidName}
+                            onChange={(e) => dispatch({ type: "name", data: e.target.value })}
                         />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
                     </FormGroup>
                 </Col>
                 <Col>
@@ -80,9 +113,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Surname"
-                            value={newUserData.surname}
-                            onChange={(e) => setNewUserData({ ...newUserData, surname: e.target.value })}
+                            value={state.user.surname}
+                            invalid={invalidSurname}
+                            onChange={(e) => dispatch({ type: "surname", data: e.target.value })}
                         />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
                     </FormGroup>
                 </Col>
             </Row>
@@ -93,9 +128,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Email"
-                            value={newUserData.email}
-                            onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
+                            value={state.user.email}
+                            invalid={invalidEmail}
+                            onChange={(e) => dispatch({ type: "email", data: e.target.value })}
                         />
+                        <FormFeedback>Email jest niepoprawny</FormFeedback>
                     </FormGroup>
                 </Col>
                 <Col>
@@ -104,9 +141,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Phone number"
-                            value={newUserData.telephone}
-                            onChange={(e) => setNewUserData({ ...newUserData, telephone: e.target.value })}
+                            value={state.user.telephone}
+                            invalid={invalidNumber}
+                            onChange={(e) => dispatch({ type: "telephone", data: e.target.value })}
                         />
+                        <FormFeedback>Numer jest niepoprawny.</FormFeedback>
                     </FormGroup>
                 </Col>
             </Row>
@@ -117,9 +156,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="Country"
-                            value={newUserData.country}
-                            onChange={(e) => setNewUserData({ ...newUserData, country: e.target.value })}
+                            value={state.user.country}
+                            invalid={invalidCountry}
+                            onChange={(e) => dispatch({ type: "country", data: e.target.value })}
                         />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
                     </FormGroup>
                 </Col>
                 <Col>
@@ -128,9 +169,11 @@ const UserTab = props => {
                         <Input
                             type="text"
                             placeholder="City"
-                            value={newUserData.city}
-                            onChange={(e) => setNewUserData({ ...newUserData, city: e.target.value })}
+                            value={state.user.city}
+                            invalid={invalidCity}
+                            onChange={(e) => dispatch({ type: "city", data: e.target.value })}
                         />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
                     </FormGroup>
                 </Col>
                 <Col>
@@ -138,10 +181,12 @@ const UserTab = props => {
                         <Label>Postal Code:</Label>
                         <Input
                             type="text"
-                            placeholder="City"
-                            value={newUserData.postalCode}
-                            onChange={(e) => setNewUserData({ ...newUserData, postalCode: e.target.value })}
+                            placeholder="Postal code"
+                            value={state.user.postalCode}
+                            invalid={invalidPostalCode}
+                            onChange={(e) => dispatch({ type: "postalCode", data: e.target.value })}
                         />
+                        <FormFeedback>Kod jest niepoprawny.</FormFeedback>
                     </FormGroup>
                 </Col>
             </Row>
@@ -150,20 +195,22 @@ const UserTab = props => {
                 <Input
                     type="text"
                     placeholder="Address"
-                    value={newUserData.address}
-                    onChange={(e) => setNewUserData({ ...newUserData, address: e.target.value })}
+                    value={state.user.address}
+                    invalid={invalidAddress}
+                    onChange={(e) => dispatch({ type: "address", data: e.target.value })}
                 />
+                <FormFeedback>To pole nie może byc puste.</FormFeedback>
             </FormGroup>
             <FormGroup>
                 <Label>Roles:</Label>
                 <div>
-                    {user.roles.map((role, key) => (
+                    {state.user.roles.map((role, key) => (
                         <Role color="primary" key={key}>
                             {getRoleName(role).toUpperCase()}
-                            { (user.roles.length > 1) &&
-                                    <RoleButton 
-                                        size="sm" icon={faTimes} 
-                                        onClick={() => { deleteRole(key)}}/>
+                            { (state.user.roles.length > 1) &&
+                                <RoleButton
+                                    size="sm" icon={faTimes}
+                                    onClick={() => { deleteRole(key) }} />
                             }
                         </Role>
                     ))}
@@ -174,9 +221,3 @@ const UserTab = props => {
 }
 
 export default UserTab;
-
-
-
-
-
-
