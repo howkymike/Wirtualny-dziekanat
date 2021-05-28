@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.agh.wd.model.FieldOfStudy;
 import pl.agh.wd.model.FieldOfStudyStudent;
 import pl.agh.wd.model.Student;
 import pl.agh.wd.model.User;
 import pl.agh.wd.payload.response.CourseOfStudiesResponse;
 import pl.agh.wd.payload.response.MessageResponse;
+import pl.agh.wd.payload.response.SuccessResponse;
 import pl.agh.wd.repository.FieldOfStudyRepository;
 import pl.agh.wd.repository.FieldOfStudyStudentRepository;
 import pl.agh.wd.repository.StudentRepository;
@@ -76,5 +75,23 @@ public class StudentController {
         }
 
         return ResponseEntity.ok(new CourseOfStudiesResponse(user, student, fieldOfStudies));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
+    @PostMapping("/{id}/promote")
+    public ResponseEntity<?> promote(@PathVariable Long id){
+        Optional<Student> student = studentRepository.findById(id);
+        if(student.isEmpty()) {
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Student not found."));
+        }
+
+        if(student.get().getSemester() >= 7) {
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Semester value too high."));
+        }
+
+        student.get().setSemester(student.get().getSemester() + 1);
+        studentRepository.save(student.get());
+
+        return ResponseEntity.ok(new SuccessResponse(true,"Student promoted."));
     }
 }
