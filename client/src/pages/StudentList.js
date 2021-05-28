@@ -92,6 +92,7 @@ const StudentList =  ({ semesterFilter = false }) => {
     };
 
     const onUserPromote = (key) => {
+        setError([false, ""]);
         setUserToPromote(key);
         setPromoteMsg(true);
     };
@@ -100,15 +101,14 @@ const StudentList =  ({ semesterFilter = false }) => {
         try {
             const user = list[userToPromote].user;
 
-            const [, isOk] = await fetchApi("/student/" + user.id + "/promote", {
+            const [result, isOk] = await fetchApi("/student/" + user.id + "/promote", {
                 method: "POST",
             });
 
             if (isOk) {
-                setList(list);
                 setRefresh(!refresh);
             } else {
-                setError([true, "Wystapił błąd przy promowaniu użytkownika na następny semestr"]);
+                setError([true, result.msg]);
             }
 
             setPromoteMsg(false)

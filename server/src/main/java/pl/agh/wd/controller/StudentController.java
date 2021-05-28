@@ -85,6 +85,10 @@ public class StudentController {
             return ResponseEntity.badRequest().body(new SuccessResponse(false, "Student not found."));
         }
 
+        if(student.get().getSemester() >= 7) {
+            return ResponseEntity.badRequest().body(new SuccessResponse(false, "Semester value too high."));
+        }
+
         student.get().setSemester(student.get().getSemester() + 1);
         studentRepository.save(student.get());
 
