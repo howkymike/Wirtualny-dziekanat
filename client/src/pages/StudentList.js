@@ -106,6 +106,7 @@ const StudentList =  ({ semesterFilter = false }) => {
 
             if (isOk) {
                 setList(list);
+                setRefresh(!refresh);
             } else {
                 setError([true, "Wystapił błąd przy promowaniu użytkownika na następny semestr"]);
             }
@@ -234,10 +235,7 @@ const StudentList =  ({ semesterFilter = false }) => {
 
             {   promoteMsg &&
             <MessageBox
-                onAccept={() => {
-                    onAcceptUserPromote();
-                    setRefresh(!refresh);
-                }}
+                onAccept={() => onAcceptUserPromote()}
                 onReject={() => setPromoteMsg(false)}
                 cancelBtnText={"Nie"}
                 okBtnText={"Tak"}
@@ -257,6 +255,6 @@ const StudentList =  ({ semesterFilter = false }) => {
             />
         </Wrapper>
     );
-}
+};
 
 export default StudentList;
