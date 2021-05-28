@@ -38,7 +38,7 @@ public class CourseStudent {
     Student student;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "courseStudent")
+    @OneToMany(mappedBy = "courseStudent", cascade = CascadeType.REMOVE)
     private List<GradeReport> report;
 
     boolean hasPassed;
