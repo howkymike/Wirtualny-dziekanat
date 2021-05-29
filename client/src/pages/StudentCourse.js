@@ -72,7 +72,7 @@ const StudentCourse = () => {
     const [alert, showAlert] = useState(-1);
     const [alertType, setAlertType] = useState("");
     const [alertMessage, setAlertMessage] = useState("");
-    const [reportGrade, setReportGrade] = useState(-1);
+    const [reportGrade, setReportGrade] = useState(null);
     const [semester, setSemester] = useState(0);
     const [selectedSemester, setSelectedSemester] = useState(0);
     const [error, setError] = useState([false, ""]);
@@ -217,7 +217,7 @@ const StudentCourse = () => {
                                                 <StyledButton
                                                     color="danger"
                                                     disabled={!course.courseStudents[0].finalGrade}
-                                                    onClick={() => { setReportGrade(key) }}
+                                                    onClick={() => { setReportGrade(course) }}
                                                 >
                                                     Zglos problem
                                                 </StyledButton>
@@ -253,9 +253,9 @@ const StudentCourse = () => {
             <ErrorBox error={ error } />
 
             <ReportGradeModal
-                isOpen={reportGrade > -1}
-                toggle={() => setReportGrade(-1)}
-                course={list[reportGrade]} />
+                isOpen={reportGrade !== null}
+                toggle={() => setReportGrade(null)}
+                course={reportGrade} />
         </Wrapper>
     );
 }

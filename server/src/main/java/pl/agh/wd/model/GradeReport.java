@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -17,6 +18,10 @@ public class GradeReport {
     private String message;
 
     private Long lecturerId;
+    
+    private Date sendDate;
+
+    private boolean isRead;
 
     @JsonBackReference
     @ManyToOne

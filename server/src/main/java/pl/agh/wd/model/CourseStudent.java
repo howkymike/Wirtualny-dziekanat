@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,11 @@ public class CourseStudent {
         this.id = new CourseStudentKey(course.getId(), student.getId());
         this.course = course;
         this.student = student;
+    }
+
+    public void setFinalGrade(double finalGrade){
+        this.finalGrade = finalGrade;
+        this.finalGradeDate = Date.from(Instant.now());
     }
 
     @Override

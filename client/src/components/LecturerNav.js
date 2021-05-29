@@ -10,6 +10,7 @@ const LecturerNav = () => {
             </Link>
 
             <Link to="/lecturer/course">Kursy</Link>
+            <Link to="/lecturer/reports">Zgłoszenia</Link>
             <Link to="/lecturer/changeactualpassword">Zmien haslo</Link>
         </>
     )

@@ -68,7 +68,7 @@ const ReportGradeModal = (props) => {
         });
     }
 
-    if (!isOpen) {
+    if (!isOpen || !course) {
         return null;
     }
 

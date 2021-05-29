@@ -4,6 +4,7 @@ import PageNotFound from '../pages/PageNotFound';
 import ChangeActualPassword from '../pages/ChangeActualPassword';
 import Summary from '../pages/Summary';
 import LecturerCourse from '../pages/LecturerCourse';
+import Reports from '../pages/Reports'
 
 const LecturerPanelRoutes = props => {
 
@@ -24,6 +25,10 @@ const LecturerPanelRoutes = props => {
 
             <Route exact path={`${path}/course`}>
                 <LecturerCourse />
+            </Route>
+
+            <Route exact path={`${path}/reports`}>
+                <Reports />
             </Route>
 
             { /* Page not found */ }
