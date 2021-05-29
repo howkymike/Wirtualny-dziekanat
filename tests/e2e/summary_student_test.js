@@ -1,0 +1,32 @@
+Feature('summary');
+
+Scenario('test something', ({ I }) => {
+	I.amOnPage('http://localhost:3000/login');
+        I.fillField('Login', 'kamil');
+        I.fillField('Hasło','kamil');
+        I.selectOption('form select','ROLE_STUDENT');
+        I.click('Zaloguj');
+	I.see('Podsumowanie');
+	I.see('Dane kontaktowe');
+	I.see('Imię');
+	I.see('Nazwisko');
+	I.see('Email');
+	I.see('Państwo');
+	I.see('Miasto');
+	I.see('Adres');
+	I.see('Kod pocztowy');
+	I.see('Telefon');
+	I.see('Kamil');
+	I.see('Wiercik');
+	I.see('wirtualnt@gmail.com');
+	I.see('Polska');
+	I.see('Kraków');
+	I.see('Al. Mickiewicza 25');
+	I.see('31-445');
+	I.see('696969696');
+	I.see('Podsumowanie');
+	I.see('Przebieg Studiów');
+	I.see('Kursy');
+	I.see('Zmien haslo');
+	I.see('Wyloguj');
+});
