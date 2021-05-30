@@ -20,15 +20,14 @@ import pl.agh.wd.repository.*;
 import pl.agh.wd.service.UserDetailsImpl;
 import pl.agh.wd.service.UserDetailsServiceImpl;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -150,6 +149,23 @@ public class GradeReportControllerTests {
                 .andExpect(status().isOk()).andReturn();
 
         verify(gradeReportRepository, times(1)).save(Mockito.any(GradeReport.class));
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin",password = "admin", roles={"ADMIN"})
+    void setReadReport() throws Exception {
+
+        when(gradeReportRepository.setIsReadFor(any(), eq(true))).thenReturn(1);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/api/gradeReports/5/read")
+                .accept(MediaType.APPLICATION_JSON)
+                .with(user(adminUser));
+
+
+        MvcResult result = mvc.perform(request)
+                .andExpect(status().isMethodNotAllowed()).andReturn();
 
     }
 }
