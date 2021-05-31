@@ -4,19 +4,11 @@ import { Input, Table, Button, Badge, Alert } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTimes, faUserEdit, faUserGraduate } from '@fortawesome/free-solid-svg-icons'
-import MessageBox from '../components/MessageBox'
-import EditUserModal from '../components/EditUserComponent/EditUserModal'
+import MessageBox from '../components/MessageBox';
+import EditUserModal from '../components/EditUserComponent/EditUserModal';
+import Wrapperd from '../components/Wrapper';
 
 import { userContext } from '../context/userContext';
-
-export const Wrapper = styled.div` 
-    margin: 2em;
-    background-color: #fff;
-    border-radius: 10px;
-    color: #000;
-    padding: 1em;
-    text-align: center;
-`;
 
 const StyledButton = styled(Button)`
     margin: 5px;
@@ -29,6 +21,16 @@ const RoleContainer = styled.div`
 const Role = styled(Badge)`
     margin: 2px 0 2px 0;
 `
+
+const Select = styled.select` 
+    background-color: #2c3e50;
+    width: 100%;
+    padding: 0.5em;
+    border: none;
+    color: #fff;
+`;
+
+export const Wrapper = Wrapperd;
 
 const StudentList =  ({ semesterFilter = false }) => {
 
@@ -45,9 +47,11 @@ const StudentList =  ({ semesterFilter = false }) => {
     const [refresh, setRefresh] = useState(false);
     const [error, setError] = useState([false, ""]);
 
-    const { fetchApi } = useContext(userContext);
+    const { fetchApi, setHeader } = useContext(userContext);
 
     useEffect(() => {
+        setHeader("Lista użytkowników");
+
         const fetchUsers = async () => {
             try {
                 const [result, isOk] = await fetchApi("/users/" + listType + "/");
@@ -64,7 +68,7 @@ const StudentList =  ({ semesterFilter = false }) => {
         } 
 
         fetchUsers();
-    }, [refresh, listType, fetchApi]);
+    }, [refresh, listType, fetchApi, setHeader]);
 
     const onUserDelete = (key) => {
         setUserToDelete(key);
@@ -127,13 +131,10 @@ const StudentList =  ({ semesterFilter = false }) => {
 
     return (
         <Wrapper>
-            <h4>Lista użytkowników</h4>
-            <hr />
             {   semesterFilter &&
                 <div>
-                <h6>Wybierz semestr</h6>
-                <Input type="select" value={semesterPicked} onChange={e => setSemesterPicked(e.target.value)}>
-                    <option value="-1">Wszystkie</option>
+                <Select value={semesterPicked} onChange={e => setSemesterPicked(e.target.value)}>
+                    <option value="-1">Wszystkie semestry</option>
                     <option value="1">Pierwszy</option>
                     <option value="2">Drugi</option>
                     <option value="3">Trzeci</option>
@@ -141,17 +142,16 @@ const StudentList =  ({ semesterFilter = false }) => {
                     <option value="5">Piąty</option>
                     <option value="6">Szósty</option>
                     <option value="7">Siódmy</option>
-                </Input>
+                </Select>
                 </div>
             }
             {   !semesterFilter &&
-                <Input type="select" value={listType} onChange={e => setListType(e.target.value)}>
+                <Select value={listType} onChange={e => setListType(e.target.value)}>
                     <option value="student">Studenci</option>
                     <option value="clerk">Pracownicy</option>
                     <option value="lecturer">Wykładowcy</option>
-                </Input>
+                </Select>
             }
-            <hr />
             <Table striped borderless hover responsive>
                 <thead>
                     <tr>
@@ -198,10 +198,10 @@ const StudentList =  ({ semesterFilter = false }) => {
                                 <td>{user.title}</td>
                             }
                             <td>
-                                <StyledButton color="success"
+                                {listType === "student" && <StyledButton color="success"
                                               onClick={() => {onUserPromote(key)}}>
                                     <FontAwesomeIcon icon={faUserGraduate} />
-                                </StyledButton>
+                                </StyledButton> }
                                 <StyledButton color="primary"
                                     onClick={() => {
                                         setEditUserId(user.id);

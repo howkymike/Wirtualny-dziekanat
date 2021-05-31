@@ -2,10 +2,11 @@ import { useEffect, useContext, useReducer } from 'react';
 import styled from 'styled-components';
 import classnames from 'classnames';
 import {
-    Modal, ModalBody, ModalFooter, ModalHeader, Nav, 
+    ModalBody, ModalFooter, ModalHeader, Nav, 
     NavItem, NavLink, TabContent, Row, Container, Col, Button
 } from "reactstrap";
 
+import { Modal } from '../Wrapper';
 import { userContext } from '../../context/userContext';
 import CourseStudentsPanel from './CourseStudentsPanel';
 import CoursePanel from './CoursePanel';

@@ -15,17 +15,6 @@ const AuthRoutes = props => {
                 <Login />
             </Route>
 
-            <Route exact path="/forgetPassword">
-                <ForgetPassword />
-            </Route>
-
-            <Route exact path="/changePassword/:token">
-                <ChangePassword />
-            </Route>
-
-            <Route exact path="/firsttime/:token">
-                <FirstTime />
-            </Route>
 
             { /* Page not found */ }
             <Route path="*">

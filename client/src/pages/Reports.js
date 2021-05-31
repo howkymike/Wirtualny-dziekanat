@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { userContext } from '../context/userContext'
 
-import { Wrapper } from './StudentList'
+import Wrapper, { Header } from '../components/Wrapper'
 import ShowReportModal from '../components/ShowReportModal'
 
 const StyledTr = styled.tr`
@@ -20,7 +20,7 @@ const FiltersContainer = styled.div`
 
 const Reports = (props) => {
 
-    const { fetchApi } = useContext(userContext);
+    const { fetchApi, setHeader } = useContext(userContext);
 
     const [isLoading, setIsLoading] = useState(true);
     const [reports, setReports] = useState([]);
@@ -35,7 +35,9 @@ const Reports = (props) => {
                 setIsLoading(false)
                 console.log(res[0]);
             }
-        })
+        });
+
+        setHeader("Zgłoszenia")
     }, [fetchApi])
 
     useEffect(() => {
@@ -68,7 +70,7 @@ const Reports = (props) => {
 
     return (
         <Wrapper>
-            <h3>Zgłoszenia:</h3>
+            <Header>Lista zgłoszeń</Header>
             <FiltersContainer>
                 <Row>
                     <Col sm={{ size: 'auto', offset: 0 }}>

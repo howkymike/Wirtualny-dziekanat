@@ -1,19 +1,19 @@
 import styled from "styled-components"
+import Wrapperd from '../components/Wrapper';
+import { Link } from 'react-router-dom';
 
-const Wrapper = styled.div`
+const Wrapper = styled(Wrapperd)`
     width: 30em;
-    padding: 1em;
-    border-radius: 10px;
-    background-color: #F5F3F5;
-    color: #303030;
     margin: auto;
     text-align: center;
-`
+    padding: 2em;
+`;
 
 const PageNotFound = () => {
     return(
         <Wrapper>
-            <h3>404 not found</h3>
+            <h3>404 Nie znaleziono</h3>
+            <Link to="/">Powrót na stronę główną</Link>
         </Wrapper>
     );
 }

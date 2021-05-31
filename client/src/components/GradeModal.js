@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { Modal, ModalBody, ModalHeader, ModalFooter, Container, Row, Col, Button, Table, Input, Alert } from 'reactstrap';
+import { ModalBody, ModalHeader, ModalFooter, Container, Row, Col, Button, Table, Input, Alert } from 'reactstrap';
 import { userContext } from '../context/userContext';
-
+import { Modal } from './Wrapper';
 import ErrorBox from '../components/Error';
 
 const BiggerModal = styled(Modal)` 

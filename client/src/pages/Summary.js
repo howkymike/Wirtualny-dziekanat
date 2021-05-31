@@ -5,9 +5,9 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { userContext } from '../context/userContext';
-import { Wrapper } from './StudentList';
 
 import GradientButton from '../components/GradientButton';
+import Wrapper from '../components/Wrapper';
 import Editable from '../components/Editable';
 import ErrorBox from '../components/Error';
 
@@ -64,6 +64,8 @@ const Th = styled.th`
 
 const Thead = styled.th` 
     position: relative;
+    background-color: #2c3e50;
+    color: #fff;
 `;
 
 const FaEdit = styled(Fa)`
@@ -75,10 +77,11 @@ const FaEdit = styled(Fa)`
 
 const Summary = ({ type }) => {
 
-    const { fetchApi } = useContext(userContext);
+    const { fetchApi, setHeader } = useContext(userContext);
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
+        setHeader("Podsumowanie");
 
         const getUser = async () => {
             try {
@@ -96,7 +99,7 @@ const Summary = ({ type }) => {
 
         getUser();
 
-    }, [fetchApi, type]);
+    }, [fetchApi, type, setHeader]);
 
     const updateData = async () => {
         try {
@@ -133,8 +136,6 @@ const Summary = ({ type }) => {
 
     return(
         <Wrapper>
-            <h4>Podsumowanie</h4>
-            <hr />
             <Table hover striped>
                 <thead>
                     <tr>

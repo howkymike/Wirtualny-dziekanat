@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MainFooter = styled.footer`  
-    padding: 2em;
     text-align: center;
+    grid-area: footer;
+    line-height: 3em;
 `;
 
 const Footer = () => {

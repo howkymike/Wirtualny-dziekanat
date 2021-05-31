@@ -2,20 +2,12 @@ import React, {useContext, useState} from "react";
 
 import styled from "styled-components";
 import {Alert, Button, Form, FormGroup, Input} from "reactstrap";
-
+import { LoginBox } from './Login';
 import {userContext} from "../context/userContext";
 
 import {Link} from "react-router-dom";
 
-const Box = styled.div` 
-    width: 30em;
-    padding: 1em;
-    border-radius: 10px;
-    background-color: #F5F3F5;
-    color: #303030;
-    margin: auto;
-    text-align: center;
-`;
+
 
 const LinkWrapper = styled.div`
     width: 100%;  
@@ -47,18 +39,18 @@ const ForgetPassword = () => {
     };
 
     return(
-        <Box>
+        <LoginBox>
             <Form onSubmit={e => {e.preventDefault(); handleSendUsername();}}>
                 <h4>Zapomiałeś hasła?</h4>
                 <hr/>
                 <p >Wprowadź swój login, a wyślemy ci link do zmiany hasła.</p>
                 <hr/>
                 <FormGroup>
-                    <Input  type="text" placeholder="Login" name="username" value={username} onChange={ e => setUsername(e.target.value)}/>
+                    <input  type="text" placeholder="Login" name="username" value={username} onChange={ e => setUsername(e.target.value)}/>
                 </FormGroup>
                 <LinkWrapper><Link to="/login">Powrót do logowania</Link></LinkWrapper>
                 <FormGroup>
-                    <Button block color="primary">Wyślij</Button>
+                    <input type="submit" value="Wyślij" />
                 </FormGroup>
                 <FormGroup>
                     {
@@ -67,7 +59,7 @@ const ForgetPassword = () => {
                     }
                 </FormGroup>
             </Form>
-        </Box>
+        </LoginBox>
     )
 };
 

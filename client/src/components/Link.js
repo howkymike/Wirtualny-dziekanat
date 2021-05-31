@@ -4,16 +4,19 @@ import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom'
 
 const MenuOption = styled.li`
-    display: block;
-    padding: 0.5em 0;
-    border-bottom: 1px solid #fff;
+    a {
+        color: #fff;
+        padding: 2em 0.5em;
+        display: block;
+        border-left:  ${props => props.selected ? "0.5em solid rgba(35,132,230,1)" : "0 solid transparent"};
+        transition: 0.3s border-left-width ease-in-out;
+    }
 
-    background-color: ${props => props.selected ? "#fff" : ""};
-    color: ${props => props.selected ? "#000" : "#fff"};
-
-    &:hover {
-        background-color: #d9d9d9;
-        color: #000;
+    a:hover {
+        background-color: #18191b;
+        color: #fff;
+        text-decoration: none;
+        border-left: 0.5em solid  ${props => props.selected ? "rgba(35,132,230,1)" : "transparent"};
     }
 `;
 
@@ -26,11 +29,11 @@ const LinkComponent = ({to, children, onClick}) => {
     const location = useLocation();
 
     return(
-        <Link to={to} onClick={ onClick }>
-            <MenuOption selected={ location.pathname === to }>
+        <MenuOption selected={ location.pathname === to }>
+            <Link to={to} onClick={ onClick }>
                 {children}
-            </MenuOption>
-        </Link>
+            </Link>
+        </MenuOption>
     );
 }
 

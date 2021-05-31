@@ -96,7 +96,7 @@ const UserTab = props => {
             <Row>
                 <Col>
                     <FormGroup>
-                        <Label>Name:</Label>
+                        <Label>Imię:</Label>
                         <Input
                             type="text"
                             placeholder="Name"
@@ -109,7 +109,7 @@ const UserTab = props => {
                 </Col>
                 <Col>
                     <FormGroup>
-                        <Label>Surname:</Label>
+                        <Label>Nazwisko:</Label>
                         <Input
                             type="text"
                             placeholder="Surname"
@@ -137,7 +137,7 @@ const UserTab = props => {
                 </Col>
                 <Col>
                     <FormGroup>
-                        <Label>Phone number:</Label>
+                        <Label>Telefon:</Label>
                         <Input
                             type="text"
                             placeholder="Phone number"
@@ -152,7 +152,7 @@ const UserTab = props => {
             <Row form>
                 <Col>
                     <FormGroup>
-                        <Label>Country:</Label>
+                        <Label>Kraj:</Label>
                         <Input
                             type="text"
                             placeholder="Country"
@@ -165,7 +165,7 @@ const UserTab = props => {
                 </Col>
                 <Col>
                     <FormGroup>
-                        <Label>City:</Label>
+                        <Label>Miasto:</Label>
                         <Input
                             type="text"
                             placeholder="City"
@@ -178,7 +178,7 @@ const UserTab = props => {
                 </Col>
                 <Col>
                     <FormGroup>
-                        <Label>Postal Code:</Label>
+                        <Label>Kod pocztowy:</Label>
                         <Input
                             type="text"
                             placeholder="Postal code"
@@ -191,7 +191,7 @@ const UserTab = props => {
                 </Col>
             </Row>
             <FormGroup>
-                <Label>Address:</Label>
+                <Label>Adres:</Label>
                 <Input
                     type="text"
                     placeholder="Address"
@@ -202,7 +202,7 @@ const UserTab = props => {
                 <FormFeedback>To pole nie może byc puste.</FormFeedback>
             </FormGroup>
             <FormGroup>
-                <Label>Roles:</Label>
+                <Label>Role:</Label>
                 <div>
                     {state.user.roles.map((role, key) => (
                         <Role color="primary" key={key}>

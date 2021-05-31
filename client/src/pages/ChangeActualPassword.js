@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
 
-import {Alert, Button, Form, FormGroup, Input, InputGroupAddon, InputGroup, InputGroupText} from "reactstrap";
+import {Alert, Button, Form, FormGroup, InputGroupAddon, InputGroupText} from "reactstrap";
 
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import {faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 import {userContext} from "../context/userContext";
-import {Box} from "./ChangePassword";
+import Wrapper, { Header, Padding, Input, InputGroup, Submit } from '../components/Wrapper';
 
 const ChangeActualPassword = props => {
 
@@ -19,7 +19,7 @@ const ChangeActualPassword = props => {
     let [showNewPassword, setShowNewPassword] = useState("password");
     let [showNewSecondPassword, setShowNewSecondPassword] = useState("password");
 
-    const {fetchApi} = useContext(userContext);
+    const {fetchApi, setHeader} = useContext(userContext);
 
     const handleSendPassword = async () => {
         if(error) return;
@@ -52,61 +52,65 @@ const ChangeActualPassword = props => {
         }
     }, [newPassword, repeatPassword]);
 
+    useEffect(() => {
+        setHeader("Zmień hasło");
+    }, [setHeader]);
+
     return(
-        <Box>
-            <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
-                <h4>Zmien aktualne hasło</h4>
-                <hr/>
-                <p >Wprowadź aktualne hasło.</p>
-                <hr/>
-                <FormGroup>
-                    <InputGroup>
-                        <Input type={showActualPassword} placeholder="Aktualne haslo" value={actualPassword}
-                               onChange={e => setActualPassword(e.target.value)}/>
-                        <InputGroupAddon addonType="append">
-                            <InputGroupText onMouseDown={() => setShowActualPassword("text")}
-                                            onMouseUp={() => setShowActualPassword("password")}><Fa
-                                icon={faEyeSlash} size="1x"/></InputGroupText>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </FormGroup>
-                <hr/>
-                <p >Wprowadź nowe hasło.</p>
-                <hr/>
-                <FormGroup>
-                    <InputGroup>
-                        <Input type={showNewPassword} placeholder="Nowe hasło" name="password" value={newPassword}
-                               onChange={e => setNewPassword(e.target.value)}/>
-                        <InputGroupAddon addonType="append">
-                            <InputGroupText onMouseDown={() => setShowNewPassword("text")}
-                                            onMouseUp={() => setShowNewPassword("password")}><Fa
-                                icon={faEyeSlash} size="1x"/></InputGroupText>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <Input type={showNewSecondPassword} placeholder="Wpisz ponownie hasło" name="repeatPassword"
-                               value={repeatPassword}
-                               onChange={e => setRepeatPassword(e.target.value)}/>
-                        <InputGroupAddon addonType="append">
-                            <InputGroupText onMouseDown={() => setShowNewSecondPassword("text")}
-                                            onMouseUp={() => setShowNewSecondPassword("password")}><Fa
-                                icon={faEyeSlash} size="1x"/></InputGroupText>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <Button block color="primary">Zmień</Button>
-                </FormGroup>
-                <FormGroup>
-                    {
-                        message ?
-                            <Alert color={ error ? "danger" : "success"  }>{message}</Alert> : ""
-                    }
-                </FormGroup>
-            </Form>
-        </Box>
+        <Wrapper>
+            <Header>Zmień aktualne hasło</Header>
+            <Padding>
+                <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
+                    <p >Wprowadź aktualne hasło.</p>
+                    <hr/>
+                    <FormGroup>
+                        <InputGroup>
+                            <Input type={showActualPassword} placeholder="Aktualne haslo" value={actualPassword}
+                                onChange={e => setActualPassword(e.target.value)}/>
+                            <div className="append">
+                                <InputGroupText onMouseDown={() => setShowActualPassword("text")}
+                                                onMouseUp={() => setShowActualPassword("password")}><Fa
+                                    icon={faEyeSlash} size="1x"/></InputGroupText>
+                            </div>
+                        </InputGroup>
+                    </FormGroup>
+                    <p >Wprowadź nowe hasło.</p>
+                    <hr/>
+                    <FormGroup>
+                        <InputGroup>
+                            <Input type={showNewPassword} placeholder="Nowe hasło" name="password" value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}/>
+                            <div className="append">
+                                <InputGroupText onMouseDown={() => setShowNewPassword("text")}
+                                                onMouseUp={() => setShowNewPassword("password")}><Fa
+                                    icon={faEyeSlash} size="1x"/></InputGroupText>
+                            </div>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <Input type={showNewSecondPassword} placeholder="Wpisz ponownie hasło" name="repeatPassword"
+                                value={repeatPassword}
+                                onChange={e => setRepeatPassword(e.target.value)}/>
+                            <div className="append">
+                                <InputGroupText onMouseDown={() => setShowNewSecondPassword("text")}
+                                                onMouseUp={() => setShowNewSecondPassword("password")}><Fa
+                                    icon={faEyeSlash} size="1x"/></InputGroupText>
+                            </div>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <Submit type="submit" value="Zmień"></Submit>
+                    </FormGroup>
+                    <FormGroup>
+                        {
+                            message ?
+                                <Alert color={ error ? "danger" : "success"  }>{message}</Alert> : ""
+                        }
+                    </FormGroup>
+                </Form>
+            </Padding>
+        </Wrapper>
     )
 };
 

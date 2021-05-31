@@ -10,14 +10,11 @@ import ErrorBox from '../components/Error';
 
 import { userContext } from '../context/userContext';
 
-export const Wrapper = styled.div` 
-    margin: 2em;
-    background-color: #fff;
-    border-radius: 10px;
-    color: #000;
-    padding: 1em; 
+import WrapperB, { Header, Padding } from '../components/Wrapper';
+
+const Wrapper = styled(WrapperB)`
     text-align: center;
-`;
+`;  
 
 const StyledButton = styled(Button)`
     margin: 1em;
@@ -78,9 +75,11 @@ const StudentCourse = () => {
     const [error, setError] = useState([false, ""]);
 
 
-    const { fetchApi, userId } = useContext(userContext);
+    const { fetchApi, userId, setHeader } = useContext(userContext);
 
     useEffect(() => {
+        setHeader("Moje Kursy");
+
         const getData = async () => {
             try {
                 const data = await Promise.all([fetchApi(`/student/course-of-studies`), fetchApi("/courses/my/student")]);
@@ -102,7 +101,7 @@ const StudentCourse = () => {
 
         getData();
 
-    }, [fetchApi]);
+    }, [fetchApi, setHeader]);
 
     const confirmGrades = async (courseKey) => {
         try {
@@ -141,121 +140,122 @@ const StudentCourse = () => {
 
     return (
         <Wrapper>
-            <h4>Moje Kursy</h4>
-            <hr />
-            <Selector>
-                <FaArrow icon={faArrowLeft} 
-                    active={ selectedSemester > 1 ? "true" : undefined }
-                    onClick={ () => changeSemester(-1) }
-                ></FaArrow>
-                <SelBadge>
-                    { semester === selectedSemester ?
-                        "Obecny semestr" :
-                        "Semestr " + selectedSemester
-                    }
-                </SelBadge>
-                <FaArrow 
-                    icon={faArrowRight} active={ selectedSemester < semester ? "true" : undefined }
-                    onClick={ () => changeSemester(1) }
-                ></FaArrow>
-            </Selector>
-            <Table striped borderless>
-                <thead>
-                    <tr>
-                        <th>Lp.</th>
-                        <th>Nazwa</th>
-                        <th>ECTS</th>
-                        <th>Egzamin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ?
+            <Header>Kursy</Header>
+            <Padding>
+                <Selector>
+                    <FaArrow icon={faArrowLeft} 
+                        active={ selectedSemester > 1 ? "true" : undefined }
+                        onClick={ () => changeSemester(-1) }
+                    ></FaArrow>
+                    <SelBadge>
+                        { semester === selectedSemester ?
+                            "Obecny semestr" :
+                            "Semestr " + selectedSemester
+                        }
+                    </SelBadge>
+                    <FaArrow 
+                        icon={faArrowRight} active={ selectedSemester < semester ? "true" : undefined }
+                        onClick={ () => changeSemester(1) }
+                    ></FaArrow>
+                </Selector>
+                <Table striped borderless>
+                    <thead>
                         <tr>
-                            <td colSpan="4">Ładowanie</td>
+                            <th>Lp.</th>
+                            <th>Nazwa</th>
+                            <th>ECTS</th>
+                            <th>Egzamin</th>
                         </tr>
-                        :
-                        list.filter( value => value.semester === selectedSemester ).map((course, key) => ([
-                            <Tr key={key} onClick={() => setSelectedCourse((selectedCourse === key) ? -1 : key)}>
-                                <td>{key + 1}</td>
-                                <td>{course.name}</td>
-                                <td>{course.ects}</td>
-                                <td>{course.exam ? ("Tak") : ("Nie")}</td>
-                            </Tr>,
-                            <tr key={`${key}_grades`}>
-                                <td colSpan={4}>
-                                    <Collapse
-                                        isOpen={key === selectedCourse}
-                                    >
-                                        <GradeContainer>
-                                            <Grade>
-                                                <h6>Ćwiczenia: </h6>
-                                                { course.courseStudents[0].laboratoryGrade ? course.courseStudents[0].laboratoryGrade : "-" }
-                                            </Grade>
-                                            { course.exam &&
-                                            <Grade>
-                                                <h6>Egzamin: </h6>
-                                                { course.courseStudents[0].examGrade ? course.courseStudents[0].examGrade : "-" }
-                                            </Grade>
-                                            }
-                                            <Grade>
-                                                <h6>Koncowa: </h6>
-                                                { course.courseStudents[0].finalGrade ? course.courseStudents[0].finalGrade : "-" }
-                                            </Grade>
-                                        </GradeContainer>
+                    </thead>
+                    <tbody>
+                        {loading ?
+                            <tr>
+                                <td colSpan="4">Ładowanie</td>
+                            </tr>
+                            :
+                            list.filter( value => value.semester === selectedSemester ).map((course, key) => ([
+                                <Tr key={key} onClick={() => setSelectedCourse((selectedCourse === key) ? -1 : key)}>
+                                    <td>{key + 1}</td>
+                                    <td>{course.name}</td>
+                                    <td>{course.ects}</td>
+                                    <td>{course.exam ? ("Tak") : ("Nie")}</td>
+                                </Tr>,
+                                <tr key={`${key}_grades`}>
+                                    <td colSpan={4}>
+                                        <Collapse
+                                            isOpen={key === selectedCourse}
+                                        >
+                                            <GradeContainer>
+                                                <Grade>
+                                                    <h6>Ćwiczenia: </h6>
+                                                    { course.courseStudents[0].laboratoryGrade ? course.courseStudents[0].laboratoryGrade : "-" }
+                                                </Grade>
+                                                { course.exam &&
+                                                <Grade>
+                                                    <h6>Egzamin: </h6>
+                                                    { course.courseStudents[0].examGrade ? course.courseStudents[0].examGrade : "-" }
+                                                </Grade>
+                                                }
+                                                <Grade>
+                                                    <h6>Koncowa: </h6>
+                                                    { course.courseStudents[0].finalGrade ? course.courseStudents[0].finalGrade : "-" }
+                                                </Grade>
+                                            </GradeContainer>
 
-                                        {course.courseStudents.find((c => parseInt(userId, 10) === c.id.studentId)).gradeAccepted ?
-                                            <h6>Oceny zostaly zatwierdzone.</h6>
-                                            :
-                                            <>
-                                                <StyledButton
-                                                    color="primary"
-                                                    disabled={!course.courseStudents[0].finalGrade}
-                                                    onClick={() => { toggleMessage(key) }}
-                                                >
-                                                    Potwierdz oceny
-                                                </StyledButton>
-                                                <StyledButton
-                                                    color="danger"
-                                                    disabled={!course.courseStudents[0].finalGrade}
-                                                    onClick={() => { setReportGrade(course) }}
-                                                >
-                                                    Zglos problem
-                                                </StyledButton>
-                                            </>
+                                            {course.courseStudents.find((c => parseInt(userId, 10) === c.id.studentId)).gradeAccepted ?
+                                                <h6>Oceny zostaly zatwierdzone.</h6>
+                                                :
+                                                <>
+                                                    <StyledButton
+                                                        color="primary"
+                                                        disabled={!course.courseStudents[0].finalGrade}
+                                                        onClick={() => { toggleMessage(key) }}
+                                                    >
+                                                        Potwierdz oceny
+                                                    </StyledButton>
+                                                    <StyledButton
+                                                        color="danger"
+                                                        disabled={!course.courseStudents[0].finalGrade}
+                                                        onClick={() => { setReportGrade(course) }}
+                                                    >
+                                                        Zglos problem
+                                                    </StyledButton>
+                                                </>
+                                            }
+
+                                            <Alert
+                                                color={alertType}
+                                                isOpen={alert === key}
+                                                toggle={() => showAlert(-1)}
+                                            >
+                                                {alertMessage}
+                                            </Alert>
+                                        </Collapse>
+
+                                        {showMessage === key &&
+                                            <MessageBox
+                                                onAccept={() => { confirmGrades(key) }}
+                                                onReject={() => { toggleMessage(-1) }}
+                                                cancelBtnText="Nie"
+                                                okBtnText="Tak"
+                                            >
+                                                Czy jestes pewien ze oceny sa poprawne?
+                                            </MessageBox>
                                         }
 
-                                        <Alert
-                                            color={alertType}
-                                            isOpen={alert === key}
-                                            toggle={() => showAlert(-1)}
-                                        >
-                                            {alertMessage}
-                                        </Alert>
-                                    </Collapse>
+                                    </td>
+                                </tr>
+                            ]))}
+                    </tbody>
+                </Table>
+                
+                <ErrorBox error={ error } />
 
-                                    {showMessage === key &&
-                                        <MessageBox
-                                            onAccept={() => { confirmGrades(key) }}
-                                            onReject={() => { toggleMessage(-1) }}
-                                            cancelBtnText="Nie"
-                                            okBtnText="Tak"
-                                        >
-                                            Czy jestes pewien ze oceny sa poprawne?
-                                        </MessageBox>
-                                    }
-
-                                </td>
-                            </tr>
-                        ]))}
-                </tbody>
-            </Table>
-            
-            <ErrorBox error={ error } />
-
-            <ReportGradeModal
-                isOpen={reportGrade !== null}
-                toggle={() => setReportGrade(null)}
-                course={reportGrade} />
+                <ReportGradeModal
+                    isOpen={reportGrade !== null}
+                    toggle={() => setReportGrade(null)}
+                    course={reportGrade} />
+            </Padding>
         </Wrapper>
     );
 }

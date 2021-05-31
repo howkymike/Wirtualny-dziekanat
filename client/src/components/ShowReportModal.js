@@ -1,9 +1,10 @@
 import React from 'react'
 
 import {
-    Modal, ModalBody, ModalFooter, ModalHeader,
+    ModalBody, ModalFooter, ModalHeader,
     Button, FormGroup, Input, Row, Col
 } from 'reactstrap'
+import { Modal } from './Wrapper';
 
 const ShowReportModal = (props) => {
     const { report, isOpen, toggle } = props;

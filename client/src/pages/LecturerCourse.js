@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 
 import { Table } from 'reactstrap';
-import { Wrapper } from './StudentCourse';
+import Wrapper, { Header } from '../components/Wrapper';
 
 import { userContext } from '../context/userContext'
 import ImprovedGradientButton from '../components/ImprovedGradientButton';
@@ -11,7 +11,7 @@ import GradeModal from '../components/GradeModal';
 import CourseDetailsModal from '../components/CourseDetailsComponent/CourseDetailsModal';
 
 const LecturerCourse = props => {
-    const { fetchApi } = useContext(userContext)
+    const { fetchApi, setHeader } = useContext(userContext)
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
     const [modal, setModal] = useState([false, 0, "details"]);
@@ -20,16 +20,18 @@ const LecturerCourse = props => {
     const [refresh, toggleRefresh] = useState(false);
 
     useEffect(() => {
+        setHeader("Twoje kursy")
         fetchApi("/courses/my/lecturer").then(res => {
             setLoading(false);
             setList(res[0]);
         }).catch(e => {
             setError(true, "Wystąpił błąd przy pobieraniu listy kursów");
         })
-    }, [fetchApi, refresh]);
+    }, [fetchApi, refresh, setHeader]);
 
     return (
         <Wrapper>
+            <Header>Kursy</Header>
             <Table striped borderless hover>
                 <thead>
                     <tr>

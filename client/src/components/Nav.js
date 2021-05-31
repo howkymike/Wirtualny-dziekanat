@@ -1,36 +1,41 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { userContext } from '../context/userContext';
-import AdminNav from './AdminNav';
-import StudentNav from './StudentNav';
-import ClerkNav from './ClerkNav';
-import LecturerNav from './LecturerNav';
+import AdminNav from './Navs/AdminNav';
+import StudentNav from './Navs/StudentNav';
+import ClerkNav from './Navs/ClerkNav';
+import LecturerNav from './Navs/LecturerNav';
 import Link from './Link';
 
+
 const NavPanel = styled.nav` 
-    background: #1D4350; 
-    background: -webkit-linear-gradient(to bottom, #A43931, #1D4350);  
-    background: linear-gradient(to bottom, #A43931, #1D4350); 
-    color: #fff;
+    grid-area: nav;
+    background-color: #1f2124;
+    padding: 1em 0;
+    font-size: 0.9em;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .20);
-    width: 20em;
-    height: 100vh;
-    padding: 1em;
-    text-align: center;
 `;
 
 const Menu = styled.ul` 
-    margin: 0;
-    padding: 2em 0;
     list-style-type: none;
+    margin: 0;
+    padding: 0;
+`;
 
-    a {
-        color: #fff;
+export const Fa = styled(FontAwesomeIcon)` 
+    margin: 0 0.5em;
+`;
 
-        &:hover {
-            text-decoration: none;
-        }
+const User = styled.div` 
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+
+    h6 {
+        margin: 0.5em 0;
     }
 `;
 
@@ -40,7 +45,11 @@ const Nav = () => {
     
     return(
         <NavPanel>
-            <h3>Witaj, {username }</h3>
+            <User>
+                <FontAwesomeIcon icon={faUser} size="7x"></FontAwesomeIcon>
+                <h6>Witaj, {username }</h6>
+            </User>
+            
             <Menu>
                 {   
                     roles[0] && roles[0] === "ROLE_ADMIN" && <AdminNav />
@@ -55,7 +64,7 @@ const Nav = () => {
                     roles[0] && roles[0] === "ROLE_LECTURER" && <LecturerNav />
                 }
                 <Link to="/" onClick={ () => logout() }>
-                    Wyloguj
+                    <Fa icon={faSignOutAlt} />Wyloguj
                 </Link>
             </Menu>
         </NavPanel>

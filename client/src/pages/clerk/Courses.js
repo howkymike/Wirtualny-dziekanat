@@ -5,10 +5,10 @@ import { Table, Alert, Button } from 'reactstrap';
 
 import CourseModal from '../../components/EditCourseComponent/CourseModal';
 import { userContext } from '../../context/userContext';
-import { Wrapper } from '../StudentList';
+import Wrapper, { Header, Button as ButtonA } from '../../components/Wrapper';
 
 const Courses = () => {
-    const { fetchApi } = useContext(userContext);
+    const { fetchApi, setHeader } = useContext(userContext);
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
     const [modal, setModal] = useState([false, 0, "edit"]);
@@ -29,11 +29,12 @@ const Courses = () => {
 
         if(!modal[0])
             getCourses();
+
+        setHeader("Kursy")
     },[fetchApi, modal]);
     return(
         <Wrapper>
-            <h4>Kursy</h4>
-            <hr />
+            <Header>Zarządzaj kursami</Header>
             <Table hover striped>
                 <thead>
                     <tr>
@@ -79,7 +80,7 @@ const Courses = () => {
                 </tbody>
 
             </Table>
-            <Button color="success" size="lg" onClick={ () => setModal([!modal[0], null, "create"]) }> New course </Button>
+            <ButtonA onClick={ () => setModal([!modal[0], null, "create"]) }>Nowy kurs</ButtonA>
 
             { modal[0] &&
                 <CourseModal

@@ -33,7 +33,7 @@ const ClerkTab = props => {
             <Row form>
                 <Col>
                     <FormGroup>
-                        <Label>Faculty:</Label>
+                        <Label>Wydział:</Label>
                         <Input
                             type="select"
                             value={state.user.clerk.facultyId}

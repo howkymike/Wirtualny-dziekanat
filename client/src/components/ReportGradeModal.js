@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { Alert, FormGroup, Input, Modal, ModalBody, ModalFooter, Button, ModalHeader, Label, FormFeedback } from 'reactstrap';
+import { Alert, FormGroup, Input, ModalBody, ModalFooter, Button, ModalHeader, Label, FormFeedback } from 'reactstrap';
+import { Modal } from './Wrapper';
 
 import { userContext } from '../context/userContext';
 

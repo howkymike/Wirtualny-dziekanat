@@ -39,7 +39,7 @@ const LecturerTab = props => {
             <Row form>
                 <Col>
                     <FormGroup>
-                        <Label>Title:</Label>
+                        <Label>Tytuł:</Label>
                         <Input
                             type="text"
                             placeholder="Title"
@@ -49,7 +49,7 @@ const LecturerTab = props => {
                     </FormGroup>
 
                     <FormGroup>
-                        <Label>Faculty:</Label>
+                        <Label>Wydział:</Label>
                         <Input
                             type="select"
                             value={state.user.lecturer.facultyId}

@@ -5,16 +5,7 @@ import {Alert, Button, Form, FormGroup, Input} from "reactstrap";
 import {Link, useParams} from "react-router-dom";
 
 import {userContext} from "../context/userContext";
-
-export const Box = styled.div` 
-    width: 30em;
-    padding: 1em;
-    border-radius: 10px;
-    background-color: #F5F3F5;
-    color: #303030;
-    margin: auto;
-    text-align: center;
-`;
+import { LoginBox } from './Login';
 
 export const LinkWrapper = styled.div`
     width: 100%;  
@@ -64,23 +55,23 @@ const ChangePassword = props => {
     }, [newPassword, repeatPassword]);
 
     return(
-        <Box>
+        <LoginBox>
             <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
                 <h4>Zmien hasło</h4>
                 <hr/>
                 <p >Wprowadź nowe hasło.</p>
                 <hr/>
                 <FormGroup>
-                    <Input  type="password" placeholder="Nowe hasło" name="password" value={newPassword}
+                    <input  type="password" placeholder="Nowe hasło" name="password" value={newPassword}
                             onChange={ e => setNewPassword(e.target.value)}/>
                 </FormGroup>
                 <FormGroup>
-                    <Input  type="password" placeholder="Wpisz ponownie hasło" name="repeatPassword" value={repeatPassword}
+                    <input  type="password" placeholder="Wpisz ponownie hasło" name="repeatPassword" value={repeatPassword}
                             onChange={ e => setRepeatPassword(e.target.value)}/>
                 </FormGroup>
                 <LinkWrapper><Link to="/login">Powrót do logowania</Link></LinkWrapper>
                 <FormGroup>
-                    <Button block color="primary">Zmień</Button>
+                    <input type="submit" value="Zmień" />
                 </FormGroup>
                 <FormGroup>
                     {
@@ -89,7 +80,7 @@ const ChangePassword = props => {
                     }
                 </FormGroup>
             </Form>
-        </Box>
+        </LoginBox>
     )
 };
 

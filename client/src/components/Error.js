@@ -5,7 +5,7 @@ const ErrorDiv = styled.div`
     background: linear-gradient(108deg, #e82941, #e89029, #852a2a);
     background-size: 600% 600%;
     padding: 1em;
-    border-radius: 5px;
+    border-bottom: 0.25em solid #2c3e50;
 
     animation: AnimationName 9s ease infinite;
 

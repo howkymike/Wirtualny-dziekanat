@@ -4,61 +4,42 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 
-const CenterBox = styled.div` 
-    width: 34em;
-    margin: auto;
-    padding: 1em;
-    display: flex;
+const H = styled.h1` 
+    text-align: center;
+    color: #fff;
+`;
+
+const P = styled.p` 
+    text-align: center;
 
     a {
+        box-shadow:0px 5px 20px #607382;
+        min-width:170px;
+        padding:17px 20px;
+        border-radius:30px;
+        background-color:#878dde;
+        border:0;
+        margin:5px 5px 0 5px;
+        display:inline-block;
+        font-weight:300;
         color: #fff;
+        margin: 1em;
     }
 
     a:hover {
         text-decoration: none;
-        color: #d9d9d9;
+        color: #fff;
     }
-`;
-
-const Box = styled.div` 
-    width: 15em;
-    height: 15em;
-    background: #1D4350; 
-    background: -webkit-linear-gradient(to bottom, #A43931, #1D4350);  
-    background: linear-gradient(to bottom, #A43931, #1D4350); 
-    margin: 0.5em;
-    text-align: center;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .20);
-    
-    &:hover {
-        transform: scale(1.1);
-    }
-    transition: transform .2s;
 `;
 
 const Home = () => {
     return(
-        <div>
-            <CenterBox>
-                <Link to="/login">
-                    <Box>
-                        <Fa icon={faUserGraduate} size="4x" />
-                        <p>Zaloguj jako student</p>
-                    </Box>
-                </Link>
-                <Link to="login">
-                    <Box>
-                        <Fa icon={faChalkboardTeacher} size="4x" />
-                        <p>Zaloguj jako wykładowca</p>
-                    </Box>
-                </Link>
-            </CenterBox>
-        </div>
+        <>
+            <H>WIRTUALNY DZIEKANAT</H>
+            <P>
+                <Link to="/login"><i class="fas fa-sign-in-alt"></i> Zaloguj</Link>
+            </P>
+        </>
     );
 }
 

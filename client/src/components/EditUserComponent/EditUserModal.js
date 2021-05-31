@@ -13,10 +13,12 @@ import ClerkTab from './ClerkTab';
 import styled from 'styled-components';
 
 import {
-    Button, Modal, ModalBody, ModalFooter, ModalHeader, Nav, NavLink,
+    Button, ModalBody, ModalFooter, ModalHeader, Nav, NavLink,
     NavItem, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     TabContent, TabPane, Alert, Row, Col, Container
 } from "reactstrap";
+
+import { Modal } from '../Wrapper';
 
 const StyledTabContent = styled(TabContent)`
     margin: 20px 10px 20px 10px;
@@ -166,7 +168,7 @@ const EditUserModal = props => {
     return (
         <Modal isOpen={props.isOpen}>
             <ModalHeader>
-                Editing User
+                Edytowanie użytkownika
             </ModalHeader>
             <ModalBody>
 
@@ -196,7 +198,7 @@ const EditUserModal = props => {
                                     <FontAwesomeIcon icon={faPlus} />
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem header>Add new role</DropdownItem>
+                                    <DropdownItem header>Dodaj nową rolę</DropdownItem>
                                     {state.allRoles.map((role, key) => (
                                         !state.user.roles.includes(role) &&
                                         <DropdownItem key={key} onClick={() => addNewRole(role)}>
@@ -222,8 +224,8 @@ const EditUserModal = props => {
                 <Container>
                     <Row>
                         <Col sm="12" md={{ size: 6, offset: 3 }}>
-                            <StyledButton color="danger" onClick={() => { dispatch({ type: "initial" }); onClose(); }}>Close</StyledButton>
-                            <StyledButton color="primary" onClick={() => onUserUpdate()}>Save</StyledButton>
+                            <StyledButton color="danger" onClick={() => { dispatch({ type: "initial" }); onClose(); }}>Zamknij</StyledButton>
+                            <StyledButton color="primary" onClick={() => onUserUpdate()}>Zapisz</StyledButton>
                         </Col>
                     </Row>
                     <Row>

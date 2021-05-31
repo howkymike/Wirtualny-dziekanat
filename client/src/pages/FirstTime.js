@@ -5,7 +5,8 @@ import {Link, useParams} from "react-router-dom";
 
 import {userContext} from "../context/userContext";
 
-import { Box, LinkWrapper } from './ChangePassword';
+import { LinkWrapper } from './ChangePassword';
+import { LoginBox } from './Login';
 
 const ChangePassword = props => {
 
@@ -52,23 +53,23 @@ const ChangePassword = props => {
     }, [password, password2]);
 
     return(
-        <Box>
+        <LoginBox>
             <Form onSubmit={e => {e.preventDefault(); handleSendPassword();}}>
                 <h4>Ustaw Hasło</h4>
                 <hr/>
                 <p >Zmień przed pierwszym zalogowaniem</p>
                 <hr/>
                 <FormGroup>
-                    <Input  type="password" placeholder="Nowe hasło" value={password}
+                    <input  type="password" placeholder="Nowe hasło" value={password}
                             onChange={ e => setPassword(e.target.value) }/>
                 </FormGroup>
                 <FormGroup>
-                    <Input  type="password" placeholder="Wpisz ponowie hasło" value={password2}
+                    <input  type="password" placeholder="Wpisz ponowie hasło" value={password2}
                             onChange={ e => setPassword2(e.target.value) }/>
                 </FormGroup>
                 <LinkWrapper><Link to="/login">Powrót do logowania</Link></LinkWrapper>
                 <FormGroup>
-                    <Button block color="primary">Zmien</Button>
+                    <input type="submit" value="Zmień" />
                 </FormGroup>
                 <FormGroup>
                     {
@@ -77,7 +78,7 @@ const ChangePassword = props => {
                     }
                 </FormGroup>
             </Form>
-        </Box>
+        </LoginBox>
     )
 };
 

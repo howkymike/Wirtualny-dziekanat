@@ -6,14 +6,40 @@ import styled from 'styled-components';
 import { userContext } from '../context/userContext';
 import ErrorBox from '../components/Error';
 
-const LoginBox = styled.div` 
-    width: 30em;
-    padding: 1em;
-    border-radius: 10px;
-    background-color: #F5F3F5;
-    color: #303030;
+export const LoginBox = styled.div` 
+    background-color: #fff;
+    padding: 2em;
+    max-width: min(100%, 30em);
     margin: auto;
-    text-align: center;
+    border-bottom: 0.5em solid #2c3e50;
+    color: #000;
+
+    h6 {
+        text-align: center;
+    }
+
+    input, select {
+        width: 100%;
+        margin-bottom: 1em;
+        height: 2.5em;
+        border-radius: 0;
+        border: 0;
+        border-bottom: 0.25em solid #bdc3c7;
+        outline: 0;
+        background-color: #fff;
+        padding: 0 1em;
+    }
+
+    input[type="submit"] {
+        background-color: #bdc3c7;
+        border: 0;
+        margin: 1em 0;
+    }
+
+    input:focus, select:focus {
+        border: 0;
+        border-bottom: 0.25em solid #2384e6;
+    }
 `;
 
 const ForgotPassword = styled.div`
@@ -87,11 +113,40 @@ const Login = () => {
     return (
         <LoginBox>
             <Form onSubmit={e => { e.preventDefault(); handleLogin() }}>
-                <h4>Zaloguj się</h4>
+                <h6>ZALOGUJ</h6>
                 <hr />
-                <FormGroup>
-                    <Input type="text" placeholder="Login" invalid={isLoginInvalid} value={username}
-                        onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} />
+                <label for="login">LOGIN:</label>
+                <input 
+                    type="text" id="login" placeholder="Login" invalid={isLoginInvalid}  value={username} 
+                    onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} 
+                />
+
+                <label for="password">HASŁO:</label>
+                <input 
+                    type="password" id="password" placeholder="Hasło" invalid={isPasswordInvalid} value={password}
+                    onChange={e => { setPassword(e.target.value); setIsPasswordInvalid(e.target.value.length === 0); }}
+                />
+                <label for="role">ROLA:</label>
+                <select id="role" value={ role } onChange={ e => setRole(e.target.value) }>
+                    <option value="ROLE_STUDENT">Student</option>
+                    <option value="ROLE_LECTURER">Wykładowca</option>
+                    <option value="ROLE_CLERK">Pracownik dziekanatu</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                </select>
+                <Link to="/forgetpassword">Zapomiałem hasła</Link>
+                <br />
+
+                <input type="submit" value="Zaloguj się" />
+            </Form>
+
+            <ErrorBox error={error} />
+        </LoginBox>
+    );
+}
+export default Login;
+
+/*<FormGroup>
+                    <Input type="text" placeholder="Login"  />
                     <FormFeedback>Podaj swój login.</FormFeedback>
                 </FormGroup>
                 <FormGroup>
@@ -118,8 +173,4 @@ const Login = () => {
                 <FormGroup>
                     <ErrorBox error={error} />
                 </FormGroup>
-            </Form>
-        </LoginBox>
-    );
-}
-export default Login;
+            </Form>*/

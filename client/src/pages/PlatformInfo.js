@@ -1,8 +1,10 @@
 import React, {useCallback, useContext, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {userContext} from "../context/userContext";
 import ErrorBox from '../components/Error';
 import { Container, Table} from 'reactstrap';
-import {CanvasJSChart} from 'canvasjs-react-charts'
+import {CanvasJSChart} from 'canvasjs-react-charts';
+import Wrapper, { Header } from '../components/Wrapper';
 
 let memoryUsageData = []; // memory usage data points
 let memoryCommittedData = []; // memory committed data points
@@ -45,7 +47,7 @@ const genUsageData = () => ({
 const PlatformInfo = () => {
     let xVal = 1;
     const UPDATE_INTERVAL = 3000;
-    const {fetchApi} = useContext(userContext);
+    const {fetchApi, setHeader} = useContext(userContext);
     const [error, setError] = useState([false, ""]);
 
     const [fetchResponse, setFetchResponse] = React.useState({
@@ -60,6 +62,8 @@ const PlatformInfo = () => {
 
     const fetchNewData = useCallback(async () => {
         try {
+            setHeader("Platforma");
+
             const [result, isOk] = await fetchApi("/admin/platforminfo", {
                 method: 'GET'
             })
@@ -82,7 +86,7 @@ const PlatformInfo = () => {
         } catch(e) {
             setError([true, "Wystąpił problem"]);
         }
-    }, [fetchApi, xVal]);
+    }, [fetchApi, xVal, setHeader]);
 
 
     useEffect(() => {
@@ -95,48 +99,48 @@ const PlatformInfo = () => {
 
 
     return (
-    <Container style={{color: "black",fontSize: 20}}>
-        <ErrorBox error={error} />
-        <div className='card'>
-            <h3 className='m-2'>System: {os}</h3>
-        </div>
-        <div className='mt-5 card' style={{background: "#ECEFF1"}}>
-            <div className='m-2'>
-            <div className='s'>Pamięć</div>
-            <div color="primary">Initial memory: {memoryInit} GB</div>
-            <div>Max memory: {memoryMax} GB</div>
-            </div>
-            <div className='mt-2'>
-                <CanvasJSChart options = {memoryOptions}/>
-            </div>
-        </div>
-        <div className='mt-5 card' style={{background: "#B0BEC5"}}>
-            <div style={{fontSize: 30, background: "#ECEFF1"}}>
-                <p style={{margin: 8}}>Wątki</p>
-            </div>
-            <Table>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>State</th>
-                    <th>CPU time</th>
-                </tr>
-                </thead>
-                <tbody>
-                { threadsData.map((thread,index) => (
-                    <tr key={ index }>
-                        <td>{index}</td>
-                        <td>{thread['name']}</td>
-                        <td>{thread['state']}</td>
-                        <td>{thread['cpu_time']}</td>
-                    </tr>
-                )) }
-                </tbody>
-            </Table>
-        </div>
+        <Wrapper>
+            <Header>System: {os}</Header>
+            <Container style={{color: "black",fontSize: 20}}>
+                <ErrorBox error={error} />
+                <div className='mt-5 card' style={{background: "#ECEFF1"}}>
+                    <div className='m-2'>
+                    <div className='s'>Pamięć</div>
+                    <div color="primary">Initial memory: {memoryInit} GB</div>
+                    <div>Max memory: {memoryMax} GB</div>
+                    </div>
+                    <div className='mt-2'>
+                        <CanvasJSChart options = {memoryOptions}/>
+                    </div>
+                </div>
+                <div className='mt-5 card' style={{background: "#B0BEC5"}}>
+                    <div style={{fontSize: 30, background: "#ECEFF1"}}>
+                        <p style={{margin: 8}}>Wątki</p>
+                    </div>
+                    <Table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>State</th>
+                            <th>CPU time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { threadsData.map((thread,index) => (
+                            <tr key={ index }>
+                                <td>{index}</td>
+                                <td>{thread['name']}</td>
+                                <td>{thread['state']}</td>
+                                <td>{thread['cpu_time']}</td>
+                            </tr>
+                        )) }
+                        </tbody>
+                    </Table>
+                </div>
 
-    </Container>
+            </Container>
+        </Wrapper>
     );
 }
 

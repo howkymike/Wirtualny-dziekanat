@@ -3,7 +3,7 @@ import { Table } from 'reactstrap';
 import styled from 'styled-components';
 
 import { userContext } from '../context/userContext';
-import { Wrapper } from './StudentList';
+import Wrapper from '../components/Wrapper';
 import ErrorBox from '../components/Error';
 
 const initialState = {
@@ -44,16 +44,19 @@ const Th = styled.th`
 
 const Thead = styled.th` 
     position: relative;
+    background-color: #2c3e50;
+    color: #fff;
 `;
 
 const CourseOfStudies = ({ type }) => {
 
-    const { fetchApi } = useContext(userContext);
+    const { fetchApi, setHeader } = useContext(userContext);
     const [state, dispatch] = useReducer(reducer, initialState);
 
     let [list, setList] = useState([]);
 
     useEffect(() => {
+        setHeader("Przebieg studiów");
 
         const getCourseOfStudies = async () => {
             try {
@@ -72,12 +75,10 @@ const CourseOfStudies = ({ type }) => {
 
         getCourseOfStudies();
 
-    }, [fetchApi, type]);
+    }, [fetchApi, type, setHeader]);
 
     return(
         <Wrapper>
-            <h4>Przebieg Studiów</h4>
-            <hr />
             <Table hover striped>
                 <thead>
                 <tr>
@@ -115,11 +116,7 @@ const CourseOfStudies = ({ type }) => {
                 }
                 </tbody>
                 <thead>
-                <tr>
-                    <Thead colSpan="2">
-                        <span>Kierunki studiów</span>
-                    </Thead>
-                </tr>
+
                 <tr>
                     <Thead colSpan="1">
                         <span>Kierunek</span>
