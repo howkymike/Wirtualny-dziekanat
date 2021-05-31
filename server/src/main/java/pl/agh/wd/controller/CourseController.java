@@ -59,9 +59,6 @@ public class CourseController {
         if(optional.isPresent()) {
 
             Course course = optional.get();
-            System.out.println("DWWDDDDDDDDDDDDDDDDDDDDDDDDD");
-            System.out.println(course.getCourseStudents().size());
-
             return course;
         }
 

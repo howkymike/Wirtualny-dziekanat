@@ -233,4 +233,29 @@ public class CourseControllerTests {
         assert(course.get().getLaboratory_time() == 11);
         assert(!course.get().isExam());
     }
+
+    @Test
+    void testGetCourse() {
+        Course testCourse = new Course("testGetCourse", 5, 5,5,false);
+
+        Optional<Course> optionalCourse = courseRepository.findById(999L);
+        assert(optionalCourse.isEmpty());
+
+        boolean caught = false;
+        try {
+            controller.getCourse(999L);
+        } catch (NoSuchElementException e ) {
+            caught = true;
+        }
+
+        assert(caught);
+
+        courseRepository.save(testCourse);
+        optionalCourse = courseRepository.findByName("testGetCourse");
+        assert(optionalCourse.isPresent());
+        Optional<Course> returnCourse = Optional.ofNullable(controller.getCourse(optionalCourse.get().getId()));
+
+        assert(returnCourse.isPresent());
+        assert(returnCourse.get().getName().equals("testGetCourse"));
+    }
 }
