@@ -105,12 +105,16 @@ test('test if password and login is valid', async () => {
     expect(history.location.pathname).toEqual('/admin');
 });
 
+const setHeader = (address) => {
+
+}
+
 test('test if user is logged', () => {
     const history = createMemoryHistory();
     const roles = ['ROLE_ADMIN'];
 
     render(
-        <userContext.Provider value={{roles, logged: true}}>
+        <userContext.Provider value={{roles, logged: true, setHeader}}>
             <Router history={history}>
                 <Login />
             </Router>
@@ -125,7 +129,7 @@ test('test forgot password link', () => {
     const history = createMemoryHistory();
 
     render(
-        <userContext.Provider value={login}>
+        <userContext.Provider value={login, setHeader}>
             <Router history={history}>
                 <Login />
             </Router>

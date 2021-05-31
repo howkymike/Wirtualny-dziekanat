@@ -7,14 +7,16 @@ import Nav from '../components/Nav';
 const username = "Kamilek";
 const logout = () => {};
 
+const setHeader = (address) => {
 
+}
 
 test('renders nav', () => {
     const history = createMemoryHistory();
     const roles = ["ROLE_STUDENT"];
     render(
         <Router history={history}>
-            <userContext.Provider value={{username, logout, roles}}>
+            <userContext.Provider value={{username, logout, roles, setHeader}}>
                 <Nav />
             </userContext.Provider>
         </Router>
@@ -29,7 +31,7 @@ test('renders student navbar', () => {
     const roles = ["ROLE_STUDENT"];
     render(
         <Router history={history}>
-            <userContext.Provider value={{username, logout, roles}}>
+            <userContext.Provider value={{username, logout, roles, setHeader}}>
                 <Nav />
             </userContext.Provider>
         </Router>
@@ -49,7 +51,7 @@ test('renders admin navbar', () => {
     const roles = ["ROLE_ADMIN"];
     render(
         <Router history={history}>
-            <userContext.Provider value={{username, logout, roles}}>
+            <userContext.Provider value={{username, logout, roles, setHeader}}>
                 <Nav />
             </userContext.Provider>
         </Router>

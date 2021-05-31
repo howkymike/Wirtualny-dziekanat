@@ -9,11 +9,14 @@ let fetchApi = (address, params) => {
     return {ok: true, msg: "DD"};
 }
 
+const setHeader = (address) => {
+
+}
 
 test('renders form', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi}>
+        <userContext.Provider value={fetchApi, setHeader}>
         <Router history={history}>
             <FirstTime />
         </Router>
@@ -31,7 +34,7 @@ test('renders form', () => {
 test('test if password length is lesser than 5', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi}>
+        <userContext.Provider value={fetchApi, setHeader}>
         <Router history={history}>
             <FirstTime />
         </Router>
@@ -58,7 +61,7 @@ test('test if password length is lesser than 5', () => {
 test('test if password are diffrent', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi}>
+        <userContext.Provider value={fetchApi, setHeader}>
         <Router history={history}>
             <FirstTime />
         </Router>
