@@ -48,6 +48,10 @@ const ForgotPassword = styled.div`
     text-align: left;
 `;
 
+const Wrong = styled.div` 
+    color: red;
+`;
+
 const Login = () => {
 
     const { login, logged, roles } = useContext(userContext);
@@ -115,28 +119,34 @@ const Login = () => {
             <Form onSubmit={e => { e.preventDefault(); handleLogin() }}>
                 <h6>ZALOGUJ</h6>
                 <hr />
-                <label for="login">LOGIN:</label>
+                <label htmlFor="login">LOGIN:</label>
                 <input 
-                    type="text" id="login" placeholder="Login" invalid={isLoginInvalid}  value={username} 
+                    type="text" id="login" placeholder="Login"  value={username} 
                     onChange={e => { setUsername(e.target.value); setIsLoginInvalid(e.target.value.length === 0); }} 
                 />
+                { isLoginInvalid &&
+                    <Wrong>Podaj swój login.</Wrong>
+                }
 
-                <label for="password">HASŁO:</label>
+                <label htmlFor="password">HASŁO:</label>
                 <input 
-                    type="password" id="password" placeholder="Hasło" invalid={isPasswordInvalid} value={password}
+                    type="password" id="password" placeholder="Hasło" value={password}
                     onChange={e => { setPassword(e.target.value); setIsPasswordInvalid(e.target.value.length === 0); }}
                 />
-                <label for="role">ROLA:</label>
+                { isPasswordInvalid &&
+                    <Wrong>Wpisz hasło.</Wrong>
+                }
+                <label htmlFor="role">ROLA:</label>
                 <select id="role" value={ role } onChange={ e => setRole(e.target.value) }>
                     <option value="ROLE_STUDENT">Student</option>
                     <option value="ROLE_LECTURER">Wykładowca</option>
                     <option value="ROLE_CLERK">Pracownik dziekanatu</option>
                     <option value="ROLE_ADMIN">Admin</option>
                 </select>
-                <Link to="/forgetpassword">Zapomiałem hasła</Link>
+                <Link to="/forgetPassword">Zapomiałem hasła</Link>
                 <br />
 
-                <input type="submit" value="Zaloguj się" />
+                <input type="submit" value="Zaloguj" />
             </Form>
 
             <ErrorBox error={error} />
