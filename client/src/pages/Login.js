@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Input, FormFeedback, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Form } from 'reactstrap';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 
@@ -40,12 +40,6 @@ export const LoginBox = styled.div`
         border: 0;
         border-bottom: 0.25em solid #2384e6;
     }
-`;
-
-const ForgotPassword = styled.div`
-    width: 100%;  
-    padding: 10px;
-    text-align: left;
 `;
 
 const Wrong = styled.div` 

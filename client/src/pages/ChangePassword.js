@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 
 import styled from "styled-components";
-import {Alert, Button, Form, FormGroup, Input} from "reactstrap";
+import {Alert, Form, FormGroup } from "reactstrap";
 import {Link, useParams} from "react-router-dom";
 
 import {userContext} from "../context/userContext";

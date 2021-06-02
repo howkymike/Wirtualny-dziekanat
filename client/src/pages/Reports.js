@@ -38,7 +38,7 @@ const Reports = (props) => {
         });
 
         setHeader("Zgłoszenia")
-    }, [fetchApi])
+    }, [fetchApi, setHeader])
 
     useEffect(() => {
         if (filter) {

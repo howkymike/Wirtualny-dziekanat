@@ -11,6 +11,7 @@ const UserProvider = ({children}) => {
     let [roles, setRoles] = useState(JSON.parse(localStorage.getItem("roles") || "[]"));
     let [userId, setUserId] = useState(localStorage.getItem('userId') || -1);
     let [logged, setLogged] = useState(!!username.length);
+    let [header, setHeader] = useState("");
     
     const [attemptsRemaining, setAttemptsRemaining] = useState(3);
 
@@ -113,8 +114,8 @@ const UserProvider = ({children}) => {
 
     return(
         <userContext.Provider value={{
-            logged, username, roles, userId,
-            login, logout, fetchApi
+            logged, username, roles, userId, header,
+            login, logout, fetchApi, setHeader
         }}>
             { children }
         </userContext.Provider>

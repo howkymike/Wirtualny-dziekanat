@@ -31,7 +31,7 @@ const Courses = () => {
             getCourses();
 
         setHeader("Kursy")
-    },[fetchApi, modal]);
+    },[fetchApi, modal, setHeader]);
     return(
         <Wrapper>
             <Header>Zarządzaj kursami</Header>

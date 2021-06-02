@@ -15,7 +15,7 @@ let setHeader = (address) => {
 test('renders form', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi, setHeader}>
+        <userContext.Provider value={{fetchApi, setHeader}}>
             <Router history={history}>
                 <ChangeActualPassword />
             </Router>
@@ -23,7 +23,7 @@ test('renders form', () => {
     )
 
 
-    const linkElement = screen.getByText(/Zmien aktualne hasło/i);
+    const linkElement = screen.getByText(/Zmień aktualne hasło/i);
     expect(linkElement).toBeInTheDocument();
 
     expect(screen.getByPlaceholderText(/Aktualne haslo/i)).toBeInTheDocument();
@@ -34,7 +34,7 @@ test('renders form', () => {
 test('test if password length is lesser than 5', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi, setHeader}>
+        <userContext.Provider value={{fetchApi, setHeader}}>
             <Router history={history}>
                 <ChangeActualPassword />
             </Router>
@@ -60,7 +60,7 @@ test('test if password length is lesser than 5', () => {
 test('test if password are diffrent', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi, setHeader}>
+        <userContext.Provider value={{fetchApi, setHeader}}>
             <Router history={history}>
                 <ChangeActualPassword />
             </Router>
@@ -92,7 +92,7 @@ test('test if password are diffrent', () => {
 test('test show password function', () => {
     const history = createMemoryHistory()
     render(
-        <userContext.Provider value={fetchApi, setHeader}>
+        <userContext.Provider value={{fetchApi, setHeader}}>
             <Router history={history}>
                 <ChangeActualPassword />
             </Router>

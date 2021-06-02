@@ -1,9 +1,6 @@
 import { Route, Switch } from "react-router";
 
 import Login from '../pages/Login';
-import ForgetPassword from "../pages/ForgetPassword";
-import ChangePassword from "../pages/ChangePassword";
-import FirstTime from '../pages/FirstTime';
 import PageNotFound from '../pages/PageNotFound';
 
 

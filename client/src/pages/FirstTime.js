@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import { useHistory } from 'react-router-dom';
-import {Alert, Button, Form, FormGroup, Input} from "reactstrap";
+import {Alert, Form, FormGroup } from "reactstrap";
 import {Link, useParams} from "react-router-dom";
 
 import {userContext} from "../context/userContext";

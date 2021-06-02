@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 
 const H = styled.h1` 
@@ -37,7 +35,7 @@ const Home = () => {
         <>
             <H>WIRTUALNY DZIEKANAT</H>
             <P>
-                <Link to="/login"><i class="fas fa-sign-in-alt"></i> Zaloguj</Link>
+                <Link to="/login"><i className="fas fa-sign-in-alt"></i> Zaloguj</Link>
             </P>
         </>
     );

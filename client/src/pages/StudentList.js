@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Input, Table, Button, Badge, Alert } from 'reactstrap';
+import { Table, Button, Badge, Alert } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTimes, faUserEdit, faUserGraduate } from '@fortawesome/free-solid-svg-icons'
