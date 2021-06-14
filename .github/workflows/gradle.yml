@@ -73,7 +73,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+        
+      - name: setup
+        run: ./run.sh
 
-      run: ./run.sh
-      run: npm install codeceptjs playwright --save
-      run: npx codeceptjs run --steps
+      - name: install playwright
+        run: npm install codeceptjs playwright --save
+
+      - name: run tests
+        run: npx codeceptjs run --steps
