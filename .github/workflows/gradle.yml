@@ -75,7 +75,7 @@ jobs:
     steps:
         
       - name: setup
-        run: .${{ github.workspace }}/run.sh
+        run: cd ${{ github.workspace }} && bash run.sh
 
       - name: install playwright
         run: cd ${{ github.workspace }}/tests/e2e && npm install codeceptjs playwright --save
