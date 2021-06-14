@@ -96,7 +96,7 @@ const Reports = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {isLoading ? "loading" :
+                    {isLoading ? <tr><td>Ładowanie</td></tr> :
                         showReports.map((report, key) => (
                             <StyledTr key={key} onClick={() => onReportOpen(key)} style={report.report.read ? {} : { fontWeight: 'bold' }}>
                                 <td>{key + 1}</td>
