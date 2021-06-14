@@ -4,10 +4,9 @@ import { Table, Button, Badge, Alert, ModalBody, ModalFooter, ModalHeader, Conta
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTimes, faUserEdit, faUserGraduate } from '@fortawesome/free-solid-svg-icons'
-import MessageBox from '../components/MessageBox';
 import EditUserModal from '../components/EditUserComponent/EditUserModal';
 import Wrapperd from '../components/Wrapper';
-import { Modal } from '../components/Wrapper';
+import { Modal, Button as ButtonA } from '../components/Wrapper';
 
 import { userContext } from '../context/userContext';
 
@@ -47,6 +46,7 @@ const StudentList =  ({ semesterFilter = false }) => {
     const [isOpenEditModal, toggleEditModal] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [error, setError] = useState([false, ""]);
+    const [type, setType] = useState("edit");
 
     const { fetchApi, setHeader } = useContext(userContext);
 
@@ -218,6 +218,8 @@ const StudentList =  ({ semesterFilter = false }) => {
                     ))}
                 </tbody>
             </Table>
+            
+            <ButtonA onClick={ () => { setType("create"); toggleEditModal(true) } }>Nowy użytkownik</ButtonA>
 
             {
                 error[0] && <Alert color={"danger"}>{ error[1] }</Alert>
@@ -271,8 +273,10 @@ const StudentList =  ({ semesterFilter = false }) => {
                 onClose={() => {
                     setEditUserId(-1);
                     toggleEditModal(false);
+                    setType("edit");
                 }}
                 onUserSave={() => {setRefresh(!refresh)}}
+                type={ type }
             />
         </Wrapper>
     );

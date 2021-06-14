@@ -32,7 +32,7 @@ const initialState = {
     user: {
         name: "", surname: "", email: "", telephone: "",
         country: "", city: "", postalCode: "", address: "",
-        roles: []
+        roles: [], login: "", password: ""
     }, tabs: ["User"], activeTab: "User",
     allRoles: [], isLoading: true, message: [],
     error: {}
@@ -49,6 +49,7 @@ const reducer = (state, { type, data }) => {
         case "lecturer": case "student": case "clerk":
         case "name": case "surname": case "roles":
         case "email": case "telephone":
+        case "username": case "password":
         case "country": case "city":
         case "address": case "postalCode":
             return { ...state, user: { ...state.user, [type]: data } };
@@ -74,13 +75,18 @@ const EditUserModal = props => {
     useEffect(() => {
 
         if(!isOpen) return;
-
+        
         fetchApi("/roles")
             .then(res => {
                 if (res[0].roles) {
                     dispatch({ type: "allRoles", data: res[0].roles });
                 }
             });
+
+        if(props.type === "create") {
+            dispatch({ type: 'isLoading', data: false });
+            return;
+        }
 
         fetchApi(`/users/user/${userId}`)
             .then((res) => {
@@ -89,7 +95,7 @@ const EditUserModal = props => {
                     dispatch({ type: 'isLoading', data: false });
                 }
             });
-    }, [isOpen, userId, fetchApi]);
+    }, [isOpen, userId, fetchApi, props.type]);
 
     useEffect(() => {
         if (state.isLoading) return;
@@ -114,16 +120,30 @@ const EditUserModal = props => {
             }
         }
 
-        const [res, isOk] = await fetchApi(`/users/${state.user.id}`, {
-            method: "PUT",
-            body: JSON.stringify(state.user)
-        })
-
-        if (isOk) {
-            dispatch({ type: "message", data: ["success", res.message] });
-            onUserSave();
+        if(props.type === "edit") {
+            const [res, isOk] = await fetchApi(`/users/${state.user.id}`, {
+                method: "PUT",
+                body: JSON.stringify(state.user)
+            })
+    
+            if (isOk) {
+                dispatch({ type: "message", data: ["success", res.message] });
+                onUserSave();
+            } else {
+                dispatch({ type: "message", data: ["danger", res.message] });
+            }
         } else {
-            dispatch({ type: "message", data: ["danger", res.message] });
+            const [res, isOk] = await fetchApi(`/users/`, {
+                method: "POST",
+                body: JSON.stringify(state.user)
+            })
+    
+            if (isOk) {
+                dispatch({ type: "message", data: ["success", res.message] });
+                onUserSave();
+            } else {
+                dispatch({ type: "message", data: ["danger", res.message] });
+            }
         }
     };
 
@@ -150,7 +170,7 @@ const EditUserModal = props => {
     const renderTab = tab => {
         switch (tab) {
             case "User":
-                return <UserTab state={state} dispatch={dispatch} />
+                return <UserTab state={state} dispatch={dispatch} type={props.type} />
             case "Student":
                 return state.user.student && <StudentTab state={state} dispatch={dispatch} />
             case "Lecturer":
@@ -168,7 +188,7 @@ const EditUserModal = props => {
     return (
         <Modal isOpen={props.isOpen}>
             <ModalHeader>
-                Edytowanie użytkownika
+                { props.type === "edit" ? "Edytowanie użytkownika" : "Tworzenie użytkownika" }
             </ModalHeader>
             <ModalBody>
 

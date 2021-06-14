@@ -68,6 +68,23 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void createUser(@NotNull User user, @NotNull UpdateUserRequest request) {
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setCity(request.getCity());
+        user.setCountry(request.getCountry());
+        user.setPostalCode(request.getPostalCode());
+        user.setTelephone(request.getTelephone());
+        user.setAddress(request.getAddress());
+
+        Set<Role> newRoles = updateRoles(user, request);
+
+        user.setRoles(newRoles);
+        userRepository.save(user);
+    }
+
     public void deleteUser(@NotNull User user){
         for (Role role : user.getRoles()) {
             switch (role.getName()){

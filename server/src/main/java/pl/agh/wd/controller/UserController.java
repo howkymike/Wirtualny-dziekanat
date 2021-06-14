@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import pl.agh.wd.model.*;
@@ -27,6 +28,10 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
 
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_LECTURER')  or hasRole('ROLE_ADMIN')")
     @GetMapping("/{type}")
@@ -57,9 +62,20 @@ public class UserController {
         }
         else {
             userService.updateUser(user, request);
-            return ResponseEntity.ok(new MessageResponse("User updated."));
+            return ResponseEntity.ok(new MessageResponse("Zaaktualizowano użytkownika."));
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLERK')")
+    @PostMapping("/")
+    public ResponseEntity<?> createUser(@RequestBody UpdateUserRequest request) {
+        User user = new User(request.getUsername(), request.getEmail(), encoder.encode(request.getPassword()));
+
+        userService.updateUser(user, request);
+        return ResponseEntity.ok(new MessageResponse("Utworzono użytkownika."));
+    }
+
+    
 
     @PatchMapping("/update")
     public ResponseEntity<?> updateData(@Valid @RequestBody EditDataRequest request) {

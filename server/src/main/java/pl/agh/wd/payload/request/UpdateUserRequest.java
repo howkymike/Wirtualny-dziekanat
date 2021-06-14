@@ -49,6 +49,8 @@ public class UpdateUserRequest {
     @NotBlank
     private String address;
 
+    private String password;
+
     @NotBlank
     private Set<String> roles;
 

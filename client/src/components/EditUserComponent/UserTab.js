@@ -31,6 +31,8 @@ const UserTab = props => {
     const [invalidCountry, setInvalidCountry] = useState(false);
     const [invalidCity, setInvalidCity] = useState(false);
     const [invalidAddress, setInvalidAddress] = useState(false);
+    const [invalidLogin, setInvalidLogin] = useState(false);
+    const [invalidPassword, setInvalidPassword] = useState(false);
 
     useEffect(() => {
         // Validate user data :)
@@ -48,6 +50,11 @@ const UserTab = props => {
 
         setInvalidName(validate(() => user.name.length > 0));
         setInvalidSurname(validate(() => user.surname.length > 0));
+
+        if(user.username && user.password) {
+            setInvalidLogin(validate(() => user.username.length > 0));
+            setInvalidPassword(validate(() => user.password.length > 0));
+        }
 
         setInvalidEmail(validate(() => user.email.match(emailRegex)));
         setInvalidNumber(validate(() => user.telephone.match(/^(\+\d{2}){0,1}\d{9}$/)));
@@ -121,6 +128,36 @@ const UserTab = props => {
                     </FormGroup>
                 </Col>
             </Row>
+            { props.type === "create" &&
+            <Row>
+                <Col>
+                    <FormGroup>
+                        <Label>Login:</Label>
+                        <Input
+                            type="text"
+                            placeholder="Login"
+                            value={state.user.username}
+                            invalid={invalidLogin}
+                            onChange={(e) => dispatch({ type: "username", data: e.target.value })}
+                        />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
+                    </FormGroup>
+                </Col>
+                <Col>
+                    <FormGroup>
+                        <Label>Hasło:</Label>
+                        <Input
+                            type="password"
+                            placeholder="Password"
+                            value={state.user.password}
+                            invalid={invalidPassword}
+                            onChange={(e) => dispatch({ type: "password", data: e.target.value })}
+                        />
+                        <FormFeedback>To pole nie moze byc puste.</FormFeedback>
+                    </FormGroup>
+                </Col>
+            </Row>
+            }
             <Row form>
                 <Col>
                     <FormGroup>

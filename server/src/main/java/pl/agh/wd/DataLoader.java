@@ -204,11 +204,11 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void createFieldOfStudy() {
-        FieldOfStudy it = new FieldOfStudy("Computer Science");
+        FieldOfStudy it = new FieldOfStudy("Informatyka");
         facultyRepository.findByName("IET").ifPresent(it::setFaculty);
         fieldOfStudyRepository.save(it);
 
-        FieldOfStudy wildlife = new FieldOfStudy("Wildlife");
+        FieldOfStudy wildlife = new FieldOfStudy("Dzicz");
         facultyRepository.findByName("GGIOS").ifPresent(wildlife::setFaculty);
         fieldOfStudyRepository.save(wildlife);
 
@@ -222,8 +222,8 @@ public class DataLoader implements ApplicationRunner {
         Optional<Student> us2 = studentRepository.findByUserUsername("michal");
         Optional<Lecturer> lect1 = lecturerRepository.findByUserUsername("onder");
         Optional<Lecturer> lect2 = lecturerRepository.findByUserUsername("dulin");
-        Optional<FieldOfStudy> fos = fieldOfStudyRepository.findByName("Wildlife");
-        Optional<FieldOfStudy> fos2 = fieldOfStudyRepository.findByName("Computer Science");
+        Optional<FieldOfStudy> fos = fieldOfStudyRepository.findByName("Dzicz");
+        Optional<FieldOfStudy> fos2 = fieldOfStudyRepository.findByName("Informatyka");
         if(!us.isPresent() || !fos.isPresent() ||
                 !us2.isPresent() || !fos2.isPresent()||
                 !lect1.isPresent() || !lect2.isPresent())
@@ -322,7 +322,7 @@ public class DataLoader implements ApplicationRunner {
         /*Course ecoCourse = new Course("Ecological space and sustainable development",
                 30,15,3,false);
 
-        fieldOfStudyRepository.findByName("Wildlife").ifPresent(ecoCourse::setFieldOfStudy);
+        fieldOfStudyRepository.findByName("Dzicz").ifPresent(ecoCourse::setFieldOfStudy);
 
         lecturerRepository.findByUserUsername("onder").ifPresent(l -> ecoCourse.setCourseLecturers(new HashSet<>(Collections.singletonList(l))));
         //studentRepository.findByUserUsername("kamil").ifPresent(s -> ecoCourse.setCourseStudents(new HashSet<>(Collections.singletonList(new CourseStudent(ecoCourse, s)))));
@@ -333,7 +333,7 @@ public class DataLoader implements ApplicationRunner {
                 15,15,3,true);
 
 
-        fieldOfStudyRepository.findByName("Computer Science").ifPresent(blockChainCourse::setFieldOfStudy);
+        fieldOfStudyRepository.findByName("Informatyka").ifPresent(blockChainCourse::setFieldOfStudy);
         courseRepository.save(blockChainCourse);
 
         Course c1 = new Course("Aspekty ekonomiczno-prawne w informatyce", 30, 0, 2, false);
