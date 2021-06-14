@@ -19,9 +19,9 @@ import StudentPanelRoutes from './routes/StudentPanelRoutes';
 import ClerkPanelRoutes from './routes/ClerkPanelRoutes';
 import LecturerPanelRoutes from './routes/LecturerPanelRoutes';
 import Logo from './components/Logo';
+import agh from './agh_1.jpg';
 
 const Landing = styled.div`
-    background-image:url(agh_1.jpg);
     background-attachment:inherit;
     background-position:50% 50%;
     background-repeat:no-repeat;
@@ -68,7 +68,7 @@ function App() {
             <UserProvider>
                 <Switch>
                     <Route exact path={["/", "/login", "/forgetPassword", "/changePassword/:token", "/firsttime/:token"]}>
-                        <Landing>
+                        <Landing style={{ backgroundImage: `url('${agh}')`  }}>
                             <Route exact path="/" component={ Home } />
                             <Route exact path="/login" component={ Login } />
                             <Route exact path="/forgetPassword" component={ ForgetPassword } />

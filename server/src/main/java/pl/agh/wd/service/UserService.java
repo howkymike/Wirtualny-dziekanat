@@ -1,6 +1,7 @@
 package pl.agh.wd.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import pl.agh.wd.model.*;
@@ -86,15 +87,15 @@ public class UserService {
     }
     
     public Iterable<Student> getStudentList() {
-        return studentRepository.findAll();
+        return studentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Iterable<Clerk> getClerkList() {
-        return clerkRepository.findAll();
+        return clerkRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Iterable<Lecturer> getLecturerList() {
-        return lecturerRepository.findAll();
+        return lecturerRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     private Set<Role> updateRoles(@NotNull User user, @NotNull UpdateUserRequest request) {

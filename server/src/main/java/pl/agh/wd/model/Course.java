@@ -20,6 +20,7 @@ public class Course {
 
     @Id
     @GeneratedValue
+    @OrderColumn
     private long id;
 
     @Column(name="lecture_time", nullable = true)

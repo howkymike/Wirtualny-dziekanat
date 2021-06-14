@@ -2,6 +2,7 @@ package pl.agh.wd.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -49,7 +50,7 @@ public class CourseController {
 
     @GetMapping
     public List<Course> getCourses(){
-        return courseRepository.findAll();
+        return courseRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @GetMapping("/{id}")
@@ -112,7 +113,6 @@ public class CourseController {
         return lecturers;
     }
 
-    // TODO: for now it just recreate the course, maybe it's alright maybe it's not
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     Course replaceCourse(@RequestBody Course newCourse, @PathVariable Long id) {
@@ -236,7 +236,8 @@ public class CourseController {
         }
 
         CourseStudent courseStudent = course.get();
-
+        // coś tu nie działa
+        System.out.println(courseStudent.getFinalGrade());
         if(courseStudent.getFinalGrade() > 0){
             if(!courseStudent.isGradeAccepted()){
                 courseStudent.setGradeAccepted(true);

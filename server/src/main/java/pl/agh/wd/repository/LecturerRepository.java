@@ -1,6 +1,6 @@
 package pl.agh.wd.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import pl.agh.wd.model.Lecturer;
@@ -8,6 +8,6 @@ import pl.agh.wd.model.Lecturer;
 import java.util.Optional;
 
 @Repository
-public interface LecturerRepository extends CrudRepository<Lecturer, Long> {
+public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
     Optional<Lecturer> findByUserUsername(String username);
 }

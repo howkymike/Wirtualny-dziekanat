@@ -18,12 +18,12 @@ const Courses = () => {
     useEffect(() => {
         const getCourses = async () => {
             const [result, isOk] = await fetchApi(`/courses`);
-
+            
             if(isOk) {
                 setCourses(result);
                 setLoading(false);
             } else {
-                setError([true, result]);
+                setError([true, "Wystąpił problem przy pobieraniu listy kursów"]);
             }       
         }
 

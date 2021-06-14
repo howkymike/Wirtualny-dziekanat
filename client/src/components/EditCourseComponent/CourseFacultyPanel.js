@@ -68,7 +68,7 @@ const CourseFacultyPanel = props => {
                         <Input 
                             type="number" id="semester"
                             value={ state.semester }
-                            onChange={ e => dispatch({ type: "semester", payload: Number(e.target.value) })}
+                            onChange={ e => dispatch({ type: "semester", payload: e.target.value })}
                         >
                         </Input>
                     </FormGroup>

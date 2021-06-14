@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.badRequest().body(new SuccessResponse(false, "DDD"));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLERK')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest request, @PathVariable Long userId) {
         User user = userService.getUserById(request.getId());
@@ -88,7 +88,7 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Zaktualizowano dane"));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLERK')")
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id){
 
@@ -122,7 +122,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLERK')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId){
         User user = userService.getUserById(userId);

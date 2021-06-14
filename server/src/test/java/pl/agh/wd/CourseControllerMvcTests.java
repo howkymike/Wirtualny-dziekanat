@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.agh.wd.service.UserDetailsImpl;
 import pl.agh.wd.service.UserDetailsServiceImpl;
@@ -81,7 +82,7 @@ public class CourseControllerMvcTests {
 
         List<Course> allCourses = Arrays.asList(courseOne, courseTwo);
 
-        given(courseRepository.findAll()).willReturn(allCourses);
+        given(courseRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).willReturn(allCourses);
 
         mvc.perform(get("/api/courses")
                 .contentType(MediaType.APPLICATION_JSON))

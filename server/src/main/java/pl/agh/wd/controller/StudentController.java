@@ -1,6 +1,7 @@
 package pl.agh.wd.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -42,7 +43,7 @@ public class StudentController {
     @PreAuthorize("hasRole('ROLE_CLERK') or hasRole('ROLE_ADMIN')")
     @GetMapping("/students")
     public List<Student> getStudents() {
-        return studentRepository.findAll();
+        return studentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN')")

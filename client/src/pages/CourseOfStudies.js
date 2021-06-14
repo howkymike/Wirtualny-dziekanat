@@ -109,6 +109,10 @@ const CourseOfStudies = ({ type }) => {
                             <Td>{ state.user.levelOfStudies }</Td>
                         </tr>
                         <tr>
+                            <Th scope="row">Semestr</Th>
+                            <Td>{ state.user.semester }</Td>
+                        </tr>
+                        <tr>
                             <Th scope="row">Data rozpoczęcia studiów</Th>
                             <Td>{ state.user.commencmentOfStudies }</Td>
                         </tr>

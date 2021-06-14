@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.agh.wd.payload.response.RolesResponse;
 import pl.agh.wd.repository.RoleRepository;
 
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLERK')")
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {

@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Table, Button, Badge, Alert } from 'reactstrap';
+import { Table, Button, Badge, Alert, ModalBody, ModalFooter, ModalHeader, Container, Row, Col } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTimes, faUserEdit, faUserGraduate } from '@fortawesome/free-solid-svg-icons'
 import MessageBox from '../components/MessageBox';
 import EditUserModal from '../components/EditUserComponent/EditUserModal';
 import Wrapperd from '../components/Wrapper';
+import { Modal } from '../components/Wrapper';
 
 import { userContext } from '../context/userContext';
 
@@ -223,25 +224,45 @@ const StudentList =  ({ semesterFilter = false }) => {
             }
 
             {   deleteMsg &&
-                <MessageBox
-                    onAccept={() => onAcceptUserDelete()}
-                    onReject={() => setDeleteMsg(false)}
-                    cancelBtnText={"Nie"}
-                    okBtnText={"Tak"}
-                >
-                    {"Czy napewno chcesz usunąć tego użytkownika?"}
-                </MessageBox>
+                <Modal isOpen={ deleteMsg }>
+                    <ModalHeader>Usuwanie użytkownika</ModalHeader>
+                    <ModalBody>
+                        Czy napewno chcesz usunąć tego użytkownika?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Container>
+                            <Row>
+                                <Col sm="12" md={{ size: 3, offset: 3 }}>
+                                    <Button block color="primary" onClick={() => onAcceptUserDelete() }>Tak</Button>
+                                </Col>
+                                <Col sm="12" md={{ size: 3 }}>
+                                    <Button block color="danger" onClick={ () => setDeleteMsg(false) }>Nie</Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </ModalFooter>
+                </Modal>
             }
 
             {   promoteMsg &&
-            <MessageBox
-                onAccept={() => onAcceptUserPromote()}
-                onReject={() => setPromoteMsg(false)}
-                cancelBtnText={"Nie"}
-                okBtnText={"Tak"}
-            >
-                {"Czy napewno chcesz promować tego użytkownika na następny semestr?"}
-            </MessageBox>
+                <Modal isOpen={ promoteMsg }>
+                    <ModalHeader>Promowanie studenta</ModalHeader>
+                    <ModalBody>
+                        Czy napewno chcesz promować tego użytkownika na następny semestr?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Container>
+                            <Row>
+                                <Col sm="12" md={{ size: 3, offset: 3 }}>
+                                    <Button block color="primary" onClick={() => onAcceptUserPromote() }>Tak</Button>
+                                </Col>
+                                <Col sm="12" md={{ size: 3 }}>
+                                    <Button block color="danger" onClick={ () => setPromoteMsg(false) }>Nie</Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </ModalFooter>
+                </Modal>
             }
 
             <EditUserModal
