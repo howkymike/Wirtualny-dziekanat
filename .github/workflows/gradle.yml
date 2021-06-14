@@ -69,7 +69,11 @@ jobs:
 
   builde2etests: 
 
+
     runs-on: ubuntu-latest
-    run: ./run.sh
-    run: npm install codeceptjs playwright --save
-    run: npx codeceptjs run --steps
+
+    steps:
+
+      run: ./run.sh
+      run: npm install codeceptjs playwright --save
+      run: npx codeceptjs run --steps
