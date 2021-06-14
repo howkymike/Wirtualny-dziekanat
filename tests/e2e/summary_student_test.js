@@ -7,7 +7,6 @@ Scenario('test something', ({ I }) => {
         I.selectOption('form select','ROLE_STUDENT');
         I.click('Zaloguj');
 	I.see('Podsumowanie');
-	I.see('Dane kontaktowe');
 	I.see('Imię');
 	I.see('Nazwisko');
 	I.see('Email');
@@ -27,6 +26,6 @@ Scenario('test something', ({ I }) => {
 	I.see('Podsumowanie');
 	I.see('Przebieg Studiów');
 	I.see('Kursy');
-	I.see('Zmien haslo');
+	I.see('Zmień hasło');
 	I.see('Wyloguj');
 });
