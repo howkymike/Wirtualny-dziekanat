@@ -75,10 +75,10 @@ jobs:
     steps:
         
       - name: setup
-        run: ./run.sh
+        run: cd ${{ github.workspace }} && ./run.sh
 
       - name: install playwright
-        run: npm install codeceptjs playwright --save
+        run: cd ${{ github.workspace }}/tests/e2e && npm install codeceptjs playwright --save
 
       - name: run tests
-        run: npx codeceptjs run --steps
+        run: cd ${{ github.workspace }}/tests/e2e && npx codeceptjs run --steps
