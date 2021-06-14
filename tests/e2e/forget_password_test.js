@@ -13,5 +13,4 @@ Scenario('forget password', ({ I }) => {
 	I.wait(2);
 	I.see('Uzytkownik o podanej nazwie nie istnieje.');
 	I.click('Powrót do logowania');
-	I.see('Zaloguj się');
 });

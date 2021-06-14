@@ -66,3 +66,10 @@ jobs:
       # 4: run test command
       - name: Run test command
         run: cd ${{ github.workspace }}/client && npm run test
+
+  builde2etests: 
+
+    runs-on: ubuntu-latest
+    run: ./run.sh
+    run: npm install codeceptjs playwright --save
+    run: npx codeceptjs run --steps
